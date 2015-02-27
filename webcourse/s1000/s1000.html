@@ -1,0 +1,77 @@
+<style>
+
+/* 
+	Control specialized instances of styling by id, not class where possible 
+	Because the JiveMax framework uses ids in most instances, this should not complicate things too much
+*/
+
+#movie{
+	margin-top:30%
+}
+
+#movie *{
+	margin:0;
+	padding:0;
+}
+
+#l4{
+	margin-top:-0.5em;
+}
+
+#l5{
+	margin-top:-1.5em;
+}
+
+</style>
+<div id='movie' class='routine col-12'>
+
+	<div class='title'>
+		<h1 id='l1' class='title-norm'>The Future</h1>
+		<h1 id='l2' class ='title-norm'>of Webcourses</h1>
+	</div>
+
+	<div class='title'>
+		<h3 id='l3' class='title-twice'>Is here<h3>
+	</div>
+
+	<div class='title'>
+		<h2 id='l4' class='title-logo'>JiveMax</h2>
+		<p id='l5' class='title-also'>The Interactive Web Presentation Framework</p>
+	</div>
+
+</div>
+</div>
+
+<script>
+
+
+var speed = 0.5;
+var scene = new Scene({paused:true, ease:'Back.easeOut', transformOrigin:'50% 50%'}) 
+// you should be able to set a few global vars for you tween instances, for instance here every instance of a tween in this scene unless specified will share 'Expo.easeOut'
+
+	.jig('#l1','chromaZoom',{},{sync:0})
+	.to('#l1',speed,{opacity:0,scale:2},{sync:2.0})
+
+	.jig('#l2','chromaZoom',{rotation:'-=200'},{sync:0.9})
+	.to('#l2',speed,{opacity:0,scale:2},{sync:2.3})
+
+	.jig('#l3','chromaZoom',{rotation:'+=200'},{sync:2.2})
+	.to('#l3',speed,{opacity:0,scale:2},{sync:3.8})
+
+	.jig('#l4','chromaZoom',{},{sync:4.0})
+	.from('#l5',speed,{opacity:0,rotation:'+=90',y:80},{sync:4.4})
+
+	.endAt(7967); // Ensures our timeline is as long as we want it in milliseconds.
+	/*
+		The reason we need to be able to manually adjust the length of the timeline is because
+		when dealing with audio syncing, the audio files playback is bound relativley to the scrubbar, meaning
+		that the scrubbar's length (playback, progress etc...) must be the same as our audio files length in milliseconds. 
+
+		For this reason our scenes need to be as long as our audio, otherwise syncing issues will occur.
+	*/
+
+_root._scene = scene;
+
+_ready = true;
+
+</script>

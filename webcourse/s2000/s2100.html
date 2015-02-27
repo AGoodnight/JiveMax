@@ -1,0 +1,133 @@
+<style>
+
+#question{
+	margin-top:30%;
+}
+
+#choices, #question{
+	overflow:hidden;
+	height:300px;
+}
+
+.card-holder{
+	width:120px;
+	display:inline-block;
+}
+
+.card{
+	width:120px;
+	display:block;
+}
+
+.ace .front{
+	background-image:url('img/card_ace.png');
+}
+
+.jack .front{
+	background-image:url('img/card_jack.png');
+}
+
+.king .front{
+	background-image:url('img/card_king.png');
+}
+
+.face{
+	width:120px;
+	height:168px;
+	opacity:1;
+	position:absolute;
+}
+
+.back{
+	background-image:url('img/card_back.png');
+	opacity:0;
+}
+
+</style>
+
+<div class = 'routine col-6'>
+	<div id='question'>
+		<h3>Flip the face cards</h3>
+		<div id='choices'>
+			<div class = 'card-holder'>
+				<div class='king card'>
+					<div class='front face'></div>
+					<div class='back face'></div>
+				</div>
+			</div>
+			<div class = 'card-holder'>
+				<div class='ace card'>
+					<div class='front face'></div>
+					<div class='back face'></div>
+				</div>
+			</div>
+			<div class = 'card-holder'>
+				<div class='jack card'>
+					<div class='front face'></div>
+					<div class='back face'></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id='feedback' class = 'stage-hide'>
+			<div id='right-feedback'>
+				Bingo, Now Click Next!
+			</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = Scene({paused:true});
+var right = Scene({paused:true}).show('#feedback').from('#right-feedback',1,{opacity:0},{sync:0});
+
+_scene.question = ButtonList(Choice,{
+	wrapper:'#choices',
+	id:'cards',
+	nodes:'.card',
+	answers:[0,2],
+	onChoose:function(self,scene){
+
+		// the first argument passed here is the instance of the button made by the Choice constructor, each 'choice' is a button
+		// the second argument is the buttons scene associated with this choice event.
+
+		// this function is realtive to each instance of your choices, so each '.card' get this function on the event 'onChoose'
+
+		var front = getNodes(self.id+' .front');
+		var back = getNodes(self.id+' .back');
+
+		scene.to(self,.5,{rotationY:90})
+			.set(front,{opacity:0})
+			.set(back,{opacity:1})
+			.to(self,.5,{rotationY:180})
+
+	},
+	onUnChoose:function(self,scene){
+
+		var front = getNodes(self.id+' .front');
+		var back = getNodes(self.id+' .back');
+
+		scene.to(self,.5,{rotationY:90})
+			.set(front,{opacity:1})
+			.set(back,{opacity:0})
+			.to(self,.5,{rotationY:0})
+
+	},
+	onSolve:function(){
+		return function(){
+			right.play();
+			_root.controller.completeScene();
+			_root.controller.userAction = false;
+		}
+	},
+	onWrong:function(){
+		return function(){
+			right.gotoAndStop(0);
+		}
+	}
+})
+
+_root._scene = _scene;
+
+_ready = true;
+</script>

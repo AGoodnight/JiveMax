@@ -1,0 +1,137 @@
+/* DOM */
+body{
+	background:#000000;
+}
+
+/* Actors */
+.square{
+	width:40px;
+	height:40px;
+	background-color:orange;
+}
+
+.drop{
+	opacity:0.6;
+}
+
+.red{
+	background-color:red;
+}
+.orange{
+	background-color:orange;
+}
+.yellow{
+	background-color:yellow;
+}
+.green{
+	background-color:green;
+}
+.blue{
+	background-color:blue;
+}
+.purple{
+	background-color:purple;
+}
+
+/* JiveMax Objects */
+
+.scene{
+	width:670px;
+	height:668px;
+	overflow:hidden;
+}
+
+.scene_title{
+	font:400 20px arial,'sans-serif';
+	color:white;
+	padding-left:1em;
+}
+
+.container{
+	width:670px;
+	margin:0 auto;
+	position:relative;
+	display:block;
+}
+
+.stage{
+	width:670px;
+	height:710px;
+	overflow:hidden;
+	position:absolute;
+	background:#1e1e1e;
+}
+
+.scrubber{
+	height:20px;
+	width:50px;
+	background:#d8a034;
+	position:absolute;
+	cursor:pointer;
+
+	-webkit-transition: background .5s;
+	transition: background .5s;
+
+}
+
+.scrubber:hover{
+	background:white;
+}
+
+.scrub_bar{
+	height:20px;
+	width:600px;
+	background:#3e4e1e;
+	display:inline-block;
+	position:relative;
+}
+
+.progress_bar{
+	height:20px;
+	width:600px;
+	background:#3d4d1e;
+	position:absolute;
+}
+
+.fill_bar{
+	height:20px;
+	width:600px;
+	background:#b4852b;
+	position:absolute;	
+}
+
+.controls{
+	width:670px;
+	height:42px;
+	background:black;
+	position:absolute;
+	opacity:0;
+}
+
+.play_btn{
+	width:30px;
+	height:30px;
+	padding:10px 20px 10px 10px;
+	display:inline-block;
+	position:relative;
+}
+
+.play_btn .active{
+	display:block;
+	-webkit-transition: color .5s;
+	transition: color .5s;
+}
+
+.play_btn .active:hover{
+	color:white;
+}
+
+.play_btn .inactive{
+	display:none;
+}
+
+.fa {
+	color:#d8a034;
+	font-size:30px;
+	margin:0px;
+}

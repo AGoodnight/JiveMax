@@ -1,0 +1,67 @@
+@import "../modules/all";
+
+.quiz{
+	
+	&-buttonlist{
+
+		position:relative;
+		padding:0;
+		margin:0;
+
+		li{
+			list-style:none;
+			cursor:pointer;
+			color:$orange;
+			font:stack-lato;
+			padding: 0.5em 0em 0.5em 0em; 
+			display:block;
+
+			@include transition(color .5s);
+			&:hover{
+				color:$white;
+			}
+		}
+
+		.checkbox{
+
+			width:9px;
+			height:9px;
+			display:inline-block;
+
+			background-color:black;
+			border:solid 1px white;
+
+			margin-right:4px;
+
+			&.active{
+				background-color:white;
+				border:solid 1px white;
+			}
+
+			&.complete{
+				background-color:orange;
+				border:solid 1px white;
+			}
+
+		}
+	}
+
+	&-dragondrop{
+
+		.drags{
+
+			.drag{
+				
+			}
+
+			.single-drop{
+
+			}
+
+
+		}
+
+	}
+
+
+}

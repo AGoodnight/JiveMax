@@ -1,0 +1,34 @@
+.title{
+	text-align:center;
+	position:absolute;
+	margin:auto;
+	top:0; left:0; right:0; bottom:0;
+	font-weight:900;
+	font-family:$stack-robot;
+	line-height:1.1em;
+}
+
+.title-norm{
+	@extend .title;
+	font-size:3em;
+	position:relative;
+}
+
+.title-twice{
+	@extend .title;
+	font-size:5.6em;
+	position:relative;
+}
+
+.title-also{
+	@extend .title;
+	font-size:1.3em;
+	position:relative;
+}
+
+.title-logo{
+	@extend .title;
+	font:900 8em 'Fugaz One',sans-serif;
+	position:relative;
+	letter-spacing:-0.03em;
+}

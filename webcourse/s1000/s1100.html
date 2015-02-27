@@ -1,0 +1,97 @@
+<style>
+
+/* 	
+	The drag and drop constructor identifies drags and drops on a class basis, 
+	so you will need to customzie the class sometimes, per slide 
+*/
+
+#instructions{
+	margin-top:35%;
+}
+
+.drop{
+	background-image:url('img/empty_trash.png');
+	width:200px;
+	height:200px;
+	float:right;
+}
+
+.drop.full{
+	background-image:url('img/full_trash.png') !important;
+	width:200px;
+	height:200px;
+}
+
+
+.drag{
+	width:128px;
+	height:128px;
+	background-image:url('img/flash_icon.png');
+}
+
+#feedback{
+	visibility:hidden;
+	position:absolute;
+	width:100px;
+}
+
+.drags{
+	float:right;
+	margin-right:10%;
+}
+
+
+</style>
+
+<div class='routine col-6'>
+	
+	<div id='instructions' class = 'col-12'>
+		<h2>Throw Flash in the trash.</h2>
+		<p>The purpose of this course is to show you what can be done now with HTML that at one point could only be done with flash!</p>
+	</div>
+	<div class='col-12 dragondrop' style='padding-top:40px'>
+		<div id='drop' class='drop'></div>
+		<div class='drags'>
+			<div id='feedback'><h3>Awesome!</h3><p>Click to right arrow!</p></div>
+			<div class='drag'></div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = new Scene({paused:true});
+
+// You can treat your animations in an object oriented manner if you wish too.
+
+var feedback = new Item('#feedback',{paused:true}).from(1,{opacity:0});
+var right = new Item('#drop').jig('squish',{speed:0.4});
+var flash = new Item('.drag').jig('wiggle',{speed:0.4},{loop:100});
+
+
+// An instance bound to no timeline
+TweenMax.from('#instructions h2',0.5,{opacity:0,y:-100});
+
+
+_scene.dragAndDrop = new DragAndDrop(Choice,'.drags','#drop',{
+	answers:[0],
+	onDrag:function(){
+		flash.play();
+	},
+	onSolve:function(drag,drops,scene){
+		return function(){
+			console.log(drag,scene,drops)
+			_root.controller.completeScene();
+			jQuery(drops[drag.index].id).addClass('full');
+			drag.hide();
+			feedback.show();
+			feedback.play();
+			right.play();
+		}
+	}
+})
+
+_root._scene = _scene;
+_ready = true;
+
+</script>

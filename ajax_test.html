@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+<title>JiveMax Template</title>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script>
+<script src='js/gsap.min.js' type='text/javascript'></script>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='css/jive_style.css' rel='stylesheet'></link>
+
+<script src='js/src/services.js' type='text/javascript'></script>
+<script src='js/src/factory.js' type='text/javascript'></script>
+<script src='js/src/controllers.js' type='text/javascript'></script>
+<script src='js/src/jig.js' type='text/javascript'></script>
+
+</head>
+
+<body>
+	<div class='container'>
+		<div id='stage' class='stage'></div>
+	</div>
+</body>
+
+<script>
+
+// GLOBAL SCOPE
+
+// this is a global variable used to track the loaded scenes ( html fragment ) javascript intialization status.
+var _ready = true; 
+
+// we bind our root level objects and functions to this, keeping th actual global namespace clean.
+var _root = {}; 
+
+jQuery(document).ready(function(){
+	_root.controls = new SceneController().load('#stage','01.html','homeMovies',false);
+});
+
+</script>
+</html>

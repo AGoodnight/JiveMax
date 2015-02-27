@@ -1,0 +1,152 @@
+<style>
+
+
+#slides{
+	height:250px;
+	overflow:hidden;
+	margin:0 auto;
+	margin-top:25%;
+}
+
+#nav{
+	padding-top:16px;
+	border-top:#888888 dashed 1px;
+	text-align:center;
+}
+
+#next, #previous{
+	width:100px;
+	color:black;
+}
+
+</style>
+
+<div class = 'routine col-9 present'>
+	<div id='slides'>
+		<div id='slide_1' class='col-12 present-slide'> 
+			<img class='col-5 left' src='img/greensock-logo.svg'/>
+			<div class='col-6 right'>
+				<h3>Green Sock Animation Platform</h3>
+				<p>This Javascript framework allows us to control almost any aspect of the pages css and manipulate the DOM elements on our page easily. Unlike CSS3 Trnasitions, thhis javascript animation engine does not need HTML5 Compliant browsers, it is compatibale all the way back to IE8.</p>
+			</div>
+		</div>
+		<div id='slide_2' class='col-12 present-slide'> 
+			<img class='col-5 left' src='img/Logo_jQuery.png'/>
+			<div class='col-6 right'>
+				<h3>jQuery</h3>
+				<p>This Javascript framework allows us to control almost any aspect of the pages css and manipulate the DOM elements on our page easily. Unlike CSS3 Trnasitions, thhis javascript animation engine does not need HTML5 Compliant browsers, it is compatibale all the way back to IE8.</p>
+			</div>
+		</div>
+		<div id='slide_3' class='col-12 present-slide'> 
+			<img class='col-4 left' src='img/sass.svg'/>
+			<div class='col-6 right'>
+				<h3>SCSS</h3>
+				<p>This Javascript framework allows us to control almost any aspect of the pages css and manipulate the DOM elements on our page easily. Unlike CSS3 Trnasitions, thhis javascript animation engine does not need HTML5 Compliant browsers, it is compatibale all the way back to IE8.</p>
+			</div>
+		</div>
+		<div id='slide_4' class='col-12 present-slide'> 
+			<img class='col-4 left' src='img/HTML5-logo.svg'/>
+			<div class='col-6 right'>
+				<h3>HTML5</h3>
+				<p>This Javascript framework allows us to control almost any aspect of the pages css and manipulate the DOM elements on our page easily. Unlike CSS3 Trnasitions, thhis javascript animation engine does not need HTML5 Compliant browsers, it is compatibale all the way back to IE8.</p>
+			</div>
+		</div>
+	</div>
+	<div id='nav' class='stage-block'>
+			<div id='previous' class ='present-trigger'> Previous </div>
+			<div id='next' class='present-trigger'> Next </div> 
+	</div>
+</div>
+
+<script>
+
+
+	// -------------------------------------------------------------
+	// Let's declare all our variables and instances first
+
+	var _scene = Scene(),
+		GSAPImg = new Button('#slide_1 img'), // we are going to add some mousever events to these buttons
+		jQueryImg = new Button('#slide_2 img'),
+		sassImg = new Button('#slide_3 img'),
+		html5Img = new Button('#slide_4 img'),
+
+		// You'll notice we have a lot of scenes here, that's ok these scenes are for a ClickToPresent instance we will declare later.
+		slide_1 = new Scene({
+			id:'GSAP',
+			wrapper:'#slide_1',
+			paused:true,
+			speed:0.5,
+			ease:'Back.easeOut'
+		})
+		.from(GSAPImg,1,{rotationY:100,y:40,opacity:0, ease:'Expo.easeOut'},{sync:0})
+		.from('#slide_1 h3',0.7,{y:30,opacity:0},{sync:0.5})
+		.from('#slide_1 p',0.7,{y:20,opacity:0},{sync:0.7}),
+
+		slide_2 = new Scene({
+			id:'jQuery',
+			wrapper:'#slide_2',
+			paused:true,
+			speed:0.5,
+			ease:'Back.easeOut'
+		})
+		.from(jQueryImg,1,{rotationY:100,y:40,opacity:0, ease:'Expo.easeOut'},{sync:0})
+		.from('#slide_2 h3',0.7,{y:30,opacity:0},{sync:0.5})
+		.from('#slide_2 p',0.7,{y:20,opacity:0},{sync:0.7}),
+
+		slide_3 = new Scene({
+			id:'SCSS',
+			wrapper:'#slide_3',
+			paused:true,
+			speed:0.5,
+			ease:'Back.easeOut'
+		})
+		.from(sassImg,1,{rotationY:100,y:40,opacity:0,ease:'Expo.easeOut'},{sync:0})
+		.from('#slide_3 h3',0.7,{y:30,opacity:0},{sync:0.5})
+		.from('#slide_3 p',0.7,{y:20,opacity:0},{sync:0.7}),
+
+		slide_4 = new Scene({
+			id:'HTML5',
+			wrapper:'#slide_4',
+			paused:true,
+			speed:0.5,
+			ease:'Back.easeOut'
+		})
+		.from(html5Img,1,{rotationY:100,y:40,opacity:0, ease:'Expo.easeOut'},{sync:0})
+		.from('#slide_4 h3',0.7,{y:30,opacity:0},{sync:0.5})
+		.from('#slide_4 p',0.7,{y:20,opacity:0},{sync:0.7});
+
+
+	// We don't need the following animation to scrub, so we use TweenMax to create an anonymous instance of animation
+	TweenMax.from('#nav',.2,{y:20});
+
+
+	// -----------------------------------------------------
+	// Now we can assign some rollover animations 
+	// (ideally these would be css animations, however to allow for IE9 and IE8 we choose to use javascript)
+
+	GSAPImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_1,from:0,until:1}); 
+	// Calling 'freeze()' on the buttons until '1' means no mouse events will register until the controller sees the timeline instance 'on' is past '1'
+	jQueryImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_2,from:0,until:1});
+	sassImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_3,from:0,until:1});
+	html5Img.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_4,from:0,until:1});
+
+
+	// -----------------------------------------------------
+	// Finally lets setup the scene and it's ClickToPresent instance
+
+	_scene.slides = [ slide_1, slide_2, slide_3, slide_4 ];
+	_scene.clickToPresent = new ClickToPresent('#slides',_scene.slides,{
+		onComplete:function(){
+			_root.controller.completeScene();
+			console.log('userComplete')
+		}
+	});
+
+	_scene.clickToPresent.triggers({next:'#next',previous:'#previous'});
+	_scene.clickToPresent.goTo(0);
+
+	_root._scene = _scene;
+
+	_ready = true;
+
+</script>

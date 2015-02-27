@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+<title>JiveMax Template</title>
+
+<link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine-2.0.0/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine-2.0.0/jasmine.css"> 
+
+<!--<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/jasmine.js"></script>
+<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/jasmine-html.js"></script>
+<script type="text/javascript" src="jasmine/lib/jasmine-2.0.0/boot.js"></script>-->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script>
+<script src='vendor/gsap.min.js' type='text/javascript'></script>
+<link href='WebCourse/css/global.css' rel='stylesheet'></link>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src='src/services.js' type='text/javascript'></script>
+<script src='src/factory.js' type='text/javascript'></script>
+<script src='src/controllers.js' type='text/javascript'></script>
+<script src='src/jig.js' type='text/javascript'></script>
+<script src='src/test.js' type='text/javascript'></script>
+<script src='src/present.js' type='text/javascript'></script>
+
+</head>
+
+<style>
+
+body{
+	background-color:#888888;
+}
+
+.box{
+	width:100px;
+	height:100px;
+	margin:20px;
+	background-color:orange;
+	display:inline-block;
+}
+
+#choices{
+	display:block;
+	overflow:hidden;
+	height:140px;
+	width:100px;
+}
+
+#drags{
+	position:absolute;
+	width:100px;
+	height:140px;
+	background:red;
+}
+
+#drops{
+	position:absolute;
+	width:100px;
+	height:140px;
+	background:orange;
+}
+
+#ding{
+	position:absolute;
+	width:100px;
+	height:140px;
+	background:blue;
+}
+
+.btn{
+	background:aqua;
+	padding:10px;
+	display:inline-block;
+}
+
+.btn:hover{
+	background:black;
+}
+
+</style>
+
+<body>
+
+<div>
+
+	<div class='present-collage .polaroid'>
+		<div id='video'><img src='img/photo2.png'/></div>
+		<div id='image'><img src='img/photo1.png'/></div>
+		<div id='text'><img src='img/photo3.jpg'/></div>
+		<div id='drag'><img src='img/photo4.jpg'/></div>
+		<div id='button'><img src='img/photo5.jpg'/></div>
+	</div>
+
+	<!--<img id='salad' style='position:absolute; pointer-events:none;' src='img/salad.png'/>-->
+
+</div>
+
+
+</body>
+<script>
+
+jQuery('window').ready(function(){
+	var _i1 = new Button( '#text').to(0.5,{rotationY:'+=360'}).bind('onmouseover');
+	var _i2 = new Button( '#video').to(0.5,{rotationZ:'+=360'}).bind('onmouseover');
+	var _i3 = new Button( '#image').to(0.5,{rotationX:'+=360'}).bind('onmouseover');
+	var _i4 = new Button( '#drag').to(0.5,{rotationZ:'+=360'}).bind('onmouseover');
+	var _i5 = new Button('#button').to(0.5,{rotationY:'+=360'}).bind('onmouseover');
+
+	var _album = [ _i1,_i2,_i3,_i4,_i5 ];
+	var album1 = Collage(_album,'wild',{gutter:'-100px',x:1});
+
+	console.log(album1);
+})
+		
+</script>
+</html>

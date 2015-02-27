@@ -1,0 +1,152 @@
+<style>
+
+
+#slides{
+	z-index:10;
+	height:600px;
+	background-color:rgba(0,0,0,0.5);
+}
+
+#browsers{
+	width:600px;
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.instructions{
+	position:absolute;
+	margin-top:20%;
+}
+
+#firefox{
+	margin-top:25%;
+	width:255px;
+	height:256px;
+	background-image: url('img/firefox_icon.png');
+	background-position:0% 0%;
+	background-repeat:no-repeat;
+	position:absolute;
+	left:0;
+}
+
+#firefox:hover{
+	background-position:100% 0%;
+}
+
+#chrome{
+	margin-top:25%;
+	width:255px;
+	height:256px;
+	background-image: url('img/chrome_icon.png');
+	background-position:0% 0%;
+	background-repeat:no-repeat;
+	position:absolute;
+	left:30%;
+}
+
+#chrome:hover{
+	background-position:100% 0%;
+}
+
+#ie{
+	margin-top:25%;
+	width:255px;
+	height:256px;
+	background-image: url('img/ie_icon.png');
+	background-position:0% 0%;
+	background-repeat:no-repeat;
+	position:absolute;
+	left:60%;
+}
+
+#ie:hover{
+	background-position:100% 0%;
+}
+
+</style>
+ 
+<div class = 'routine present col-12'>
+	
+	<div id='browsers' class='col-8'>
+		<div class='instructions'><mark>Click</mark> any of the icons</div>'
+		<div id='firefox' class='present-hotspot'>
+		</div>
+		<div id='chrome' class='present-hotspot'>
+		</div>
+		<div id='ie' class='present-hotspot'>
+		</div>
+	</div>
+	<!--<div class='col-6'>Click any icon to learn more</div>-->
+
+</div>
+
+<div id='slides' class='stage-overlay-inner'>
+		<div id='slide_1' class='present-modal'>
+			<h1>It runs in Firefox!</h1>
+
+				<dl>
+					<dt>
+						<abbr title='Mozilla Browser'> Firefox </abbr>
+					</dt>
+					<dd>
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus magna vel erat tristique semper. Integer eget luctus est. Vivamus commodo sem vel urna rutrum, vitae cursus sapien interdum. Nam quis velit interdum, malesuada orci eget, egestas lectus.
+					</dd>
+				</dl>
+
+			<div id='close_1' class='fa fa-close'></div>
+		</div>
+		<div id='slide_2' class='present-modal'>
+			<h1>It runs in Chrome!</h1>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus magna vel erat tristique semper. Integer eget luctus est. Vivamus commodo sem vel urna rutrum, vitae cursus sapien interdum. Nam quis velit interdum, malesuada orci eget, egestas lectus.</p>
+			<div id='close_2' class='fa fa-close'></div>
+		</div>
+		<div id='slide_3' class='present-modal'>
+			<h1>It runs in IE9!</h1>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus magna vel erat tristique semper. Integer eget luctus est. Vivamus commodo sem vel urna rutrum, vitae cursus sapien interdum. Nam quis velit interdum, malesuada orci eget, egestas lectus.</p>
+			<div id='close_3' class='fa fa-close'></div>
+		</div>
+	</div>
+
+<script>
+
+var _scene = Scene({paused:true});
+
+var modal_1 = new Scene({id:'firefox',wrapper:'#slide_1',paused:true,ease:'Elastic.easeOut'})
+	.from('#slide_1',0.5,{y:100,scale:0.9})
+	.from('#slide_1 h1',0.8,{opacity:0,scale:0.8})
+	.from('#slide_1 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+
+
+var modal_2 = new Scene({ id:'chrome', wrapper:'#slide_2', paused:true,ease:'Elastic.easeOut'})
+	.from('#slide_2',0.5,{y:100,scale:0.9})
+	.from('#slide_2 h1',0.8,{opacity:0,scale:0.8})
+	.from('#slide_2 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+
+
+var modal_3 = new Scene({id:'ie',wrapper:'#slide_3',paused:true,ease:'Elastic.easeOut'})
+	.from('#slide_3',0.5,{y:100,scale:0.9})
+	.from('#slide_3 h1',0.8,{opacity:0,scale:0.8})
+	.from('#slide_3 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+
+
+_scene.slides = [ modal_1, modal_2, modal_3 ];
+_scene.clickToPresent = new ClickToPresent('#slides',_scene.slides,{
+	onComplete:function(){
+		_root.controller.completeScene();
+	}
+})
+
+_scene.clickToPresent.hotspot('#firefox',0).exit('#close_1',0); 
+// including the exit method allows us to close or stop our hotspots scene with the element passed to the exit method
+// good for when the hotspots are not available while the scenes are active.
+_scene.clickToPresent.hotspot('#chrome',1).exit('#close_2',1);
+_scene.clickToPresent.hotspot('#ie',2).exit('#close_3',2);
+
+_root._scene = _scene;
+
+_ready = true;
+</script>

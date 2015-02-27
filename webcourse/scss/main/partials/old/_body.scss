@@ -1,0 +1,17 @@
+
+body{
+	background-color:#222222;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	color:$header;
+}
+
+.wc-container{
+	width:970px;
+	margin:0 auto;
+	overflow:hidden;
+	color:$copy;
+	font:$font-default;
+	position:relative;
+}

@@ -1,0 +1,56 @@
+<div class = 'wc-block col-3 col-offset-2' style="top:130px;">
+	<div id='purpose'>
+		<h2>Now lets answer some questions!</h2>
+
+		<div id='question'>
+			<h3>Our Sun will become a:</h3>
+			<ul id='choices' class='wc-choices'>
+				<li><div class='check-box'></div>Brown Dwarf</li>
+				<li><div class='check-box'></div>Red Giant</li>
+				<li><div class='check-box'></div>Super Nova</li>
+				<li><div class='check-box'></div>Black Hole</li>
+			</ul>
+		</div>
+		<div class = 'wc-hide'>
+			<div class ='wc-feedback' id='right-feedback'>
+				Bingo, Now Click Next!
+			</div>
+			<div class ='wc-feedback' id='wrong-feedback'>
+				Oops, try again.
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = Scene({paused:true})
+			.from('#purpose',1,{opacity:0},{sync:0})
+			.from('#question',1,{opacity:0},{sync:0.3})
+			.staggerFrom('#choices li',0.5,{opacity:0, x:40, rotationY:20},{sync:0.4,offset:0.2});
+
+
+var right = Scene({paused:true}).set('.wc-hide',{opacity:1}).set('#wrong-feedback',{opacity:0}).from('#right-feedback',1,{opacity:0},{sync:0});
+var wrong = Scene({paused:true}).set('.wc-hide',{opacity:1}).set('#right-feedback',{opacity:0}).from('#wrong-feedback',1,{opacity:0},{sync:0});
+
+var choice = new Choice('#choices',{ 
+	id:'ourSun',
+	answers:[1],
+	choices:'li',
+	flag:'.check-box',
+	onSolve:function(){ // returning a function allows you to have custom events not tied to each choice in the Choice instance.
+		return function(){
+			right.play();
+		}
+	},
+	onWrong:function(){
+		return function(){
+			wrong.play();
+		}
+	},
+});
+
+_root._scene = _scene;
+
+_ready = true;
+</script>

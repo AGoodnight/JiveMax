@@ -1,0 +1,191 @@
+/* DOM */
+body{
+	background:#000000;
+}
+
+/* Actors */
+#robot_chin{
+	position:absolute;
+	top:205px;
+	left:155px;	
+	background-image:url('../img/robot_chin.png');
+	width:87px;
+	height:86px;
+}
+
+#robot_mustache{
+	position:absolute;
+	top:187px;
+	left:132px;
+	background-image:url('../img/robot_mustache.png');	
+	width:145px;
+	height:44px;
+}
+
+#robot_nose{
+	position:absolute;
+	top:147px;
+	left:158px;	
+	background-image:url('../img/robot_nose.png');
+	width:51px;
+	height:60px;
+}
+
+#robot_tounge{
+	position:absolute;
+	top:224px;
+	left:187px;
+	background-image:url('../img/robot_tounge.png');	
+	width:44px;
+	height:25px;
+}
+
+#robot_body{
+	position:absolute;
+	top:;
+	left:;	
+	background-image:url('../img/robot_body.png');
+	width:417px;
+	height:455px;
+}
+
+#shadow{
+	position:absolute;
+	top:410px;
+	left:50px;
+	background-image:url('../img/shadow.png');	
+	width:380px;
+	height:65px;
+}
+
+#floor{
+	position:absolute;
+	top:526px;
+	background-image:url('../img/floor.jpg');	
+	width:970px;
+	height:142px;
+}
+
+#play_icon{
+	position:absolute;
+	top:374px;
+	left:67px;	
+	background-image:url('../img/play_icon.png');
+	width:75px;
+	height:86px;
+}
+
+#ornament{
+	position:absolute;
+	top:;
+	left:240px;
+	background-image:url('../img/ornament.png');	
+	width:176px;
+	height:500px;
+}
+
+#bubble{
+	position:absolute;
+	top:40px;
+	left:80px;
+	background-image:url('../img/text_bubble.png');	
+	width:333px;
+	height:397px;
+}
+
+/* JiveMax Objects */
+
+.scene{
+	width:670px;
+	height:668px;
+	overflow:hidden;
+}
+
+.container{
+	width:670px;
+	margin:0 auto;
+	position:relative;
+	display:none;
+}
+
+.stage{
+	width:670px;
+	height:710px;
+	overflow:hidden;
+	position:absolute;
+	background:#ebd09d;
+}
+
+.scrubber{
+	height:20px;
+	width:50px;
+	background:#d8a034;
+	position:absolute;
+	cursor:pointer;
+
+	-webkit-transition: background .5s;
+	transition: background .5s;
+
+}
+
+.scrubber:hover{
+	background:white;
+}
+
+.scrub_bar{
+	height:20px;
+	width:600px;
+	background:#3e4e1e;
+	display:inline-block;
+	position:relative;
+}
+
+.progress_bar{
+	height:20px;
+	width:600px;
+	background:#3d4d1e;
+	position:absolute;
+}
+
+.fill_bar{
+	height:20px;
+	width:600px;
+	background:#b4852b;
+	position:absolute;	
+}
+
+.controls{
+	width:670px;
+	height:42px;
+	background:black;
+	position:absolute;
+	opacity:0;
+}
+
+#play_btn{
+	width:30px;
+	height:30px;
+	padding:10px 20px 10px 10px;
+	display:inline-block;
+	position:relative;
+}
+
+#play_btn .active{
+	display:block;
+	-webkit-transition: color .5s;
+	transition: color .5s;
+}
+
+#play_btn .active:hover{
+	color:white;
+}
+
+#play_btn .inactive{
+	display:none;
+}
+
+.fa {
+	color:#d8a034;
+	font-size:30px;
+	margin:0px;
+}

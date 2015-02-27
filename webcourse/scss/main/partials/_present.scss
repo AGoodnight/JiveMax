@@ -1,0 +1,123 @@
+@import "../modules/all";
+
+.present{
+	
+	/* Generalzations */
+	margin-left:auto;
+	margin-right:auto;
+
+	&-slide{
+		position:absolute;
+	}
+
+
+	&-modal{
+
+		padding:20px;
+		position:absolute;
+		width:70%;
+		height:40%;
+		top:25%;
+		bottom:15%;
+		left:15%;
+		right:15%;
+		text-align:center;
+		overflow:hidden;
+		background-color:black;
+
+		h1{
+			font-size:24px;
+			text-align:center;
+		}
+
+		p{
+			padding:0 10% 0 10%;
+			text-align:left;
+		}
+
+		dl{
+			text-align:left !important;
+			padding:0 10% 0 10%;
+		}
+
+		.fa-close{
+			color:$lghtgrey;
+			position:absolute;
+			right:10px;
+			top:10px;
+			font-size:30px;
+
+			transition: color 0.4s ;
+
+			&:hover{
+				color:$white;
+			}
+
+		}
+	}
+
+	&-hotpot{
+		color:$orange;
+	}
+
+	&-trigger{
+		padding: 5px;
+		background-color:$orange;
+		color: white;
+		border-radius:0.3em;
+		display: inline-block;
+
+		transition: color 0.4s;
+
+		&.disabled{
+			background-color:#444444 !important;
+			color:$disabled;
+			pointer-events:none;
+		}
+
+		&:hover{
+			background-color:$hover !important;
+			color:$drkgrey;
+		}
+	}
+
+	&-collage{
+
+		div{
+			position:absolute;
+			float:none !important;
+			display:inline-block;
+		}
+
+		&-polaroids{
+
+			& > div{
+				position:absolute;
+				border:white 10px solid;
+				box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
+
+				img{
+					display:block;
+				}
+			}
+
+			& > img{
+				position:absolute;
+				border:white 10px solid;
+				box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
+			}
+
+			& > video{
+				position:absolute;
+				border:white 10px solid;
+				box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
+			}
+		}
+	}
+
+}
+
+.polaroid{
+	border:white 10px solid;
+	box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
+}

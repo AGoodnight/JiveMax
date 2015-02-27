@@ -1,0 +1,80 @@
+<style>
+
+#drags{
+	z-index:100;
+	padding-bottom:40px;
+	height:160px;
+	position:relative;
+}
+
+#drops{
+	z-index:50;
+	padding-top:30px;
+	height:100px;
+	position:relative;
+	clear:both;
+}
+
+.match-a, .match-b{
+	float:left;
+	margin-left:40px;
+	border:none;
+}
+
+.match_b{
+	opacity:0.6;
+}
+
+.match-b.active{
+	opacity:1;
+}
+
+</style>
+
+<div class = 'wc-block col-10 center' style='top:80px;'>
+	<div id='question'>
+		<h3>Match the picture with the word</h3>
+		<div id='choices'>
+			<div id='drags'>
+				<div class='match-a'><img src='img/redspot.png'></div>
+				<div class='match-a'><img src='img/dog.png'></div>
+				<div class='match-a'><img src='img/cookie.png'></div>
+			</div>
+			<div id='drops'>
+				<div class='match-b'><img src='img/travel-word.png'></div>
+				<div class='match-b'><img src='img/storm-word.png'></div>
+				<div class='match-b'><img src='img/sweet-word.png'></div>
+			</div>
+		</div>
+	</div>
+	<div class = 'wc-hide'>
+			<div class ='wc-feedback' id='right-feedback'>
+				Bingo, Now Click Next!
+			</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = Scene({paused:true});
+var right = Scene({paused:true}).set('.wc-hide',{opacity:1}).from('#right-feedback',1,{opacity:0},{sync:0});
+
+_scene.question = DragAndDrop('#drags','#drop',{
+	answers:[1,0,2],
+	orientation:'horizontal',
+	onSolve:function(){
+		return function(){
+			console.log('correct 2')
+		}
+	},
+	onChoose:function(self){
+		return function(){
+			console.log('choose')
+		}
+	}
+})
+
+_root._scene = _scene;
+
+_ready = true;
+</script>

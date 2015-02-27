@@ -1,0 +1,29 @@
+@import "partials/stage";
+@import "partials/wc";
+@import "partials/present";
+@import "partials/titles";
+@import "partials/quiz";
+@import "partials/grid";
+
+
+body{
+	background-color:$stage;
+	font-family:$stack-robot;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	color:$header;
+}
+
+kbd{
+	color:#666666;
+}
+
+dt{
+	font-weight:900;
+}
+
+abbr{
+	font-size:20px;
+	font-style:normal;
+}

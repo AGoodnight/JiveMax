@@ -1,0 +1,128 @@
+<div class='block col-md-12'>
+					<h4>at()</h4>
+					<pre>at( sync:Number, callback:Function, name:String);
+
+GSAPObject.at( 4, myFunction, 'myEvent');</pre>
+					<p> the 'at' method is a way to assign callbacks to a point on the GSAPObject's timeline, it is a shortcut for the addCallback method native to GSAP. </p>
+					<ul>
+						<li>sync - <i>NUMBER</i> When on the timeline in seconds the callback should occur</li>
+						<li>callback - <i>FUNCTION</i> The callback method to be perormed.</li>
+						<li>name - You can give your callbakc a label that will allow you to reference it by that label using native GSAP methods</li>
+					</ul>
+				</div>
+
+				<!-- endAt -->
+				<div class='block col-md-12'>
+					<h4>endAt()</h4>
+					<pre>endAt(miliseconds:Number);
+
+GSAPObject.endAt(1201);</pre>
+					<p> Sometimes you want the animations timeline to extend beyond the actual instances of animation, this method allows you to do this, it is in milliseconds for increased accuracy.</p>
+				</div>
+
+				<!-- addLabel -->
+				<div class='block col-md-12'>
+					<h4>addLabel()</h4>
+					<pre>addLabel(label:String, sync:Number)
+
+GSAPObject.addLabel('Blast Off',10);</pre>
+					<p> This is a shorcut to the native addLabel method within the TimelineMax instance.</p>
+				</div>
+
+				<!-- hideAll -->
+				<div class='block col-md-12'>
+					<h4>hideAll()</h4>
+					<pre>GSAPObject.jig('#danny','fly');
+
+GSAPObject.hideAll(); // danny will now be hidden</pre>
+					<p>All elements animated on the timeline of the GSAPObject will be hidden using the 'visibility' attribute. So this will not affect your layout. The elements, if GSAPObjects will also be frozen, meaning they are no longer accepting any user interaction.</p>
+				</div>
+
+				<!-- showAll -->
+				<div class='block col-md-12'>
+					<h4>showAll()</h4>
+					<pre>GSAPObject.jig('#danny','fly');
+GSAPObject.jig('#sarah','hop');
+
+GSAPObject.showAll(); // danny and sarah will now be visible</pre>
+					<p>All elements animated on the timeline of the GSAPObject will be shown using the 'visibility' attribute. So this will not affect your layout. The elements, if GSAPObjects will also be un-frozen, meaning they are able to accept user interaction.</p>
+				</div>
+
+				<!-- addAffectee -->
+				<div class='block col-md-12'>
+					<h4>affect()</h4>
+					<pre>affect(name:String ,item:GSAPObject);
+
+GSAPObject.affect('rocko', characters.rocko); 
+// above we have an object called characters, in it is a GSAP instance called rocko.</pre>
+					<p>Affectee's are other instances of GSAPObjects that the developer can pass into the GSAPObject in question. This grants the GSAPObject control over certain aspects of the other GSAPObjects, the most common being the playback. So if you had two animating elements on screen, controled by indpendent timelines ( within thier GSAPObjects ), you could pause or play one, and it will pause or play the other one if you use this method to 'bind' them together in this manner.</p>
+					<ul>
+						<li>name - <i>STRING</i> this string will be used to set the key of the object within the Affectees array inside the GSAPObject</li>
+						<li>item - <i>OBJECT</i> passing the reference to the GSAPObject you wish to affect binds the GSAPObject to this GSAPObject</li>
+					</ul>
+				</div>
+
+				<!-- removeAffectee -->
+				<div class='block col-md-12'>
+					<h4>removeAffectee()</h4>
+					<p>We can remove affectee's at anytime via it's name/key.</p>
+					<ul>
+						<li>name - <i>STRING</i> this string will be used to remove the object associated with this key within the Affectees array inside the GSAPObject</li>
+					</ul>
+				</div>
+
+
+				<div class='block col-md-12'>
+					<h4>gotoAndStop()</h4>
+					<p>For those of us who have used Flash in the past, this method does exactly what you think it would. It goes to the point indicated on the timeline and stops or pauses the playback.</p>
+					<ul>
+						<li>label/seconds - <i>STRING / NUMBER</i> You can either jump to a GSAP lable or a time in seconds.</li>
+					</ul>
+				</div>
+
+				<div class='block col-md-12'>
+					<h4>gotoAndPlay()</h4>
+					<p>Same as gotoAndStop, however this one resumes playback immediatley.</p>
+				</div>
+
+
+				<!-- NATIVE GSAP -->
+
+				<div class='block col-md-12'>
+					<h4>Common GSAP animation methods</h4>
+					<pre>GSAPObject.to( id:String, duration:Number, vars:Object, timeVars:Object ); // same for from()
+
+	.staggerFromTo( id:String, duration:Number, fromVars:Object, toVars:Object, timeVars:Object ); 
+	// same for fromTo and yoyo()
+					</pre>
+					<p>since JiveMax is just an extension of GSAP, you can access GSAP native methods directly through the GSAPObject. Listed below are the native animation methods supported.</p>
+					<p>Jivemax extends the native functions to support timeVars, as seen in the jig method. So you can loop, offset and sync.</p>
+					<ul>
+						<li>to</li>
+						<li>from</li>
+						<li>fromTo</li>
+						<li>*staggerTo</li>
+						<li>*staggerFrom</li>
+						<li>*staggerFromTo</li>
+						<li>**yoyo</li>
+					</ul>
+					<p>* - to use the native offset ability of stagger, include it in the timeVars paired with the key 'offset'.</p>
+					<p>** - this method has been modified to create actual instances of animation keyframes on the timeline to simulate the looping effects of the original yoyo method, view yoyo for more information about how it used to work.</p>
+					
+				</div>
+
+				<div class='block col-md-12'>
+					<h4>Common GSAP playback methods</h4>
+					<pre></pre>
+					<p>Since JiveMax is just an extension of GSAP, you can access GSAP native methods directly through the GSAPObject. Listed below are the native playback methods supported.</p>
+					<ul>
+						<li>play(from, ignoreAffectees, suppressEvents, callback)</li>
+						<li>pause(atTime, ignoreAffectees, suppressEvents)</li>
+						<li>kill(vars, ignoreAffecttees, suppressEvents)</li>
+						<li>restart(includeDelay, ignoreAffectees, suppressEvents, callback)</li>
+						<li>reverse()</li>
+						<li>set(id, vars, ignoreAffectees)</li>
+						<li>clear()</li>
+					</ul>
+					<p> The only syntax change you may have noticed is that these methods have an additional variable, ignoreAffectees, this parameter does what it sounds like, it ignores any affectees associated with the GSAPObject, when executing a method, so if you call play and include 'true' for this varaible, than it will not play the affectees.</p>
+				</div>

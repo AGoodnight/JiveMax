@@ -1,0 +1,44 @@
+<style>
+#collage,#content{
+	display:inline-block;
+}
+</style>
+
+<div class = 'stage-block col-10 present'>
+	<div id='content' class='stage-block col-6' style='margin-top:20%;'>
+		<h1>Images are Cool</h1>
+		<hr/>
+		<p>Compact disc (CD) is a digital optical disc data storage format. The format was originally developed to store and play only sound recordings but was later adapted for storage of data (CD-ROM).</p>
+	</div>
+	<div class='stage-block col-6 right' style='margin-top:20%;'>
+		<div id='collage' class='present-collage-polaroids right'>
+			<div id='frontyard'><img src='img/photo1.png'/></div>
+			<div id='mmo'><img src='img/photo2.png'/></div>
+			<div id='waterfall'><img src='img/photo3.jpg'/></div>
+			<div id='painting'><img src='img/photo4.jpg'/></div>
+			<div id='dog'><img src='img/photo5.jpg'/></div>
+		</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = Scene({paused:true});
+var album = ['#frontyard','#mmo','#waterfall','#painting','#dog'];
+
+_scene.collage = new Collage('#collage',album,'pile',{gutter:'100px'},function(){
+	/*
+		Since the collage function affects CSS we must place the _ready in the optional callback, 
+		to ensure it is actually ready to be modified by the scenes timeline
+	*/
+	_ready = true;
+});
+
+_scene.jig('#content h1','slideIn');
+_scene.jig('#content hr','slideIn',{},{sync:0.2});
+_scene.from('#content p',0.6,{opacity:0},{sync:0.8});
+_scene.staggerFrom(album,0.3,{opacity:0,scale:2,y:-100,x:100},{sync:1,offset:0.1})
+
+_root._scene = _scene;
+
+</script>

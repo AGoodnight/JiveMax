@@ -1,0 +1,231 @@
+@import "../modules/all";
+
+$height-dock:62px;
+$width-scrubber: 550px;
+$height-scrubber: 20px;
+$height-dock-btn:30px;
+
+.wc{
+
+	width:970px;
+	margin:0 auto;
+	overflow:hidden;
+	color:$copy;
+	font:$font-default;
+	position:relative;
+
+	&-header{
+		position:absolute;
+		padding-left:0.7em;
+		padding-top:0.5em;
+		z-index:100;
+		left:15%;
+
+		.module{
+			color:$module;
+			font:400 1em $stack-lato;
+		}
+
+		.scene{
+			color:$scene;
+			font:400 1.4em $stack-lato;
+		}
+	}
+
+	&-btn{
+
+		&-cta{
+			padding:10px 14px 10px 14px;
+			font-size:16px;
+			color:$drkgrey;
+			background-color:$orange;
+			border-radius:10px;
+			border:none;
+			display:block;
+			cursor:pointer;
+
+			@include transition(background-color .5s);
+			&:hover{
+				background-color:$hover;
+			}
+		}
+
+	}
+
+
+	&-sidebar{
+		position:absolute;
+		width:15%;
+		height:100%;
+		background-color:$stage;
+		overflow:hidden;
+		z-index:1000;
+		opacity:0.6;
+
+		transition: opacity 2s;
+
+		&:hover{
+			opacity:1;
+			transition: opacity 0.2s;
+		}
+
+		ul{
+			font-family:$stack-lato;
+			padding:0;
+			margin:0;
+		}
+
+		li{
+			list-style:none;
+			cursor:pointer;
+			color:$orange;
+			padding: 0.5em 0em 0.5em 0em; 
+			font-size:16px;
+			font-weight:400;
+
+			@include transition(color .2s);
+			&:hover{
+				color:$white;
+			}
+		}
+
+		.checkbox{
+
+			width:6px;
+			height:6px;
+			display:inline-block;
+
+			background-color:black;
+
+			margin-right:0.4em;
+
+			border-radius:3px;
+
+			&.active{
+				background-color:white;
+			}
+
+			&.complete{
+				background-color:orange;
+			}
+
+		}
+	}
+
+	&-dock{
+		z-index:200;
+		width:85%;
+		height:$height-dock;
+		background-color:#000000;
+		position:absolute;
+		bottom:0;
+		right:0;
+		opacity:0.6;
+
+		transition: opacity 2s;
+
+		&:hover{
+			opacity:1;
+			transition: opacity 0.2s;
+		}
+
+		.btn{
+			width:30px;
+			height:$height-dock-btn;
+			float:left;
+			display:block;
+			padding:($height-dock - $height-dock-btn)/2 8px 0 8px;
+
+			.fa {
+				color:$orange;
+				font-size:30px;
+				margin:0px;
+				position:absolute;
+				@include transition(color .5s);
+				&:hover{
+					color:$hover;
+				}
+			}
+
+			&:first-child{
+				margin-left:15px;
+			}
+
+			&.active{
+				visibility:visible;
+				pointer-events:auto;
+			}
+
+			&.inactive{
+				visibility:hidden;
+				pointer-events:none;
+			}
+
+			&.disabled{
+				color:$disabled;
+			}
+		}
+
+		&-toggle{
+			@extend .btn;
+
+			.fa{
+				display:block;
+
+				&.disabled{
+					color:$disabled;
+				}
+
+			}
+
+			.active{
+				visibility:visible;
+				pointer-events:auto;
+			}
+
+			.inactive{
+				visibility:hidden;
+				pointer-events:none;
+			}
+
+		}
+
+		&-scrubber{
+			height:$height-scrubber;
+			width:$width-scrubber;
+			background:$module;
+			float:left;
+			display:block;
+			margin:($height-dock - $height-scrubber)/2 6px 0 6px;
+
+			.bug{
+				height:20px;
+				width:50px;
+				background:$orange;
+				position:absolute;
+				cursor:pointer;
+
+				@include transition(background-color .5s);
+
+				&:hover{
+					background-color:white;
+				}
+
+			}
+
+			.bar{
+				height:$height-scrubber;
+				width:$width-scrubber;
+				background:$disabled;
+				position:absolute;
+			}
+
+			.fill{
+				height:$height-scrubber;
+				background-color:$umber !important;
+				width:0%;
+				position:absolute;
+			}
+		}
+	}
+}

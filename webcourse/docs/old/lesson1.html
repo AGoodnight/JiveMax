@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create an item</title>
+	<script src='jivemax.min.js' type='text/javascript'></script>
+</head>
+<body>
+	<h1>Item</h1>
+	<p>The item constructor instantiates an object with a timeline, this timeline is owned by a DOM element, or perhaps a list of DOM elements. You assign ownership of the timeline to an object or list of objects in the same way you bind an object to a jQuery instance. This is possible because the item class like many of the other classes in JiveMax uses jQuery's selector, it's just throwing out the jQuery instance after it has stripped it of the elements reference.</p>
+	<p>So let's make our item:</p>
+	<pre>var myItem = new Item('#mydiv');</pre>
+	<p>Now we have an item, and it has a timeline, and we can control that timeline using methods such as play(), pause(), and restart().</p>
+	<p>We can further customize our item by including a vars object as the second argument as such</p>
+	<pre>var myItem = new Item('#mydiv',{ ease:'Expo.easeOut' });</pre>
+	<p>We now have an item with a timlein and a default ease of 'Expo.easeOut', so every animation we appedn to the timeline of our item will share this ease, unless we override it later. Consider the following:</p>
+	<pre>myItem.to(1,{ x:100 },{loop:20});</pre>
+	<p>There is more going on here, and if you have reviewes the documentation at Greensock, you will recognize the format of the vars object as being identical to that of a TweenMax or TimelineMax method. That is because it is calling that method you are familiar with, only in context of the item. But something is a biut different, there is a second vars object. The second vars object is called timeVars, and it is here we can utilize something unique to JiveMax. Looping, we can loop our animation commands. THis looping will result in creating 20 instances of the same animation, back to back, this is useful for</p>
+
+</body>
+<script>
+</script>
+</html>

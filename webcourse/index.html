@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+<title>Webcourse Sample</title>
+
+<!-- STYLES -->
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fugaz+One' rel='stylesheet' type='text/css'>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='css/global.css' rel='stylesheet'></link>
+
+<!-- JASMINE -->
+<!--
+<link rel="shortcut icon" type="image/png" href="../jasmine/lib/jasmine-2.0.0/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="../jasmine/lib/jasmine-2.0.0/jasmine.css"> 
+<script type="text/javascript" src="../jasmine/lib/jasmine-2.0.0/jasmine.js"></script>
+<script type="text/javascript" src="../jasmine/lib/jasmine-2.0.0/jasmine-html.js"></script>
+<script type="text/javascript" src="../jasmine/lib/jasmine-2.0.0/boot.js"></script>-->
+<!-- http://www.html5rocks.com/en/mobile/fullscreen/ -->
+
+<!-- Vendor Packages -->
+<script src = '../vendor/sm/script/soundmanager2-nodebug-jsmin.js'></script>
+<!-- JiveMax Development Packages -->
+<script src='js/scripts.js' type='text/javascript'></script>
+
+</head>
+
+<style>
+.debug-modal{
+	color:black;
+	background-color:rgba(256,256,256,0.9);
+	overflow:scroll;
+	z-index:1000;
+	height:300px;
+	width:300px;
+	position:absolute;
+	right:0;
+}
+</style>
+
+<body>
+	<div class='wc'>
+		
+		<div id='modules-list' class='wc-sidebar'>
+			<ul>
+				<li id='s1000'><div class='checkbox'></div>Welcome</li>
+				<li id='s2000'><div class='checkbox'></div>Quiz</li>
+			</ul>
+		</div>
+
+		<div id='header' class='wc-header'>
+			<div class='scene'></div>
+			<div class='module'></div>
+		</div>
+
+
+		<div id='stage' class='stage'> 
+
+			<div id='loader' class='stage-hide stage-overlay'>
+				<div class='stage-loader'>
+					LOADING
+					<i id='spinner' class='fa fa-spinner'></i>
+				</div>
+			</div>
+
+			<!--<div class='stage-overlay'>
+				<div class='debug-modal'>
+				</div>
+			</div>-->
+
+			<div id='content' class='stage-overlay'>
+			</div>
+
+			<div id='instructions' class='stage-overlay'>
+				<div class='stage-modal'>
+					<h1>Course Controls</h1>
+					<div class='stage-block'>
+							<p><i class='fa fa-arrow-right'></i> Next Scene</p>
+							<p><i class='fa fa-arrow-left'></i> Previous Scene</p>
+							<p><i class='fa fa-check'></i> Module Complete (Click to proceed)</p>
+							<p><i class='fa fa-fast-backward'></i> Restart Scene</p>
+							<p><i class='fa fa-volume-up'></i> Sound On and Off</p>
+							<button id='start-btn' class='wc-btn-cta'>Begin</button>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+
+		<div id='controls' class='wc-dock'>
+
+				<!-- MODULE:BACK -->
+				<div id='back-btn' class='inactive btn'>
+					<div class='fa fa-arrow-left'></div>
+				</div>
+
+				<!-- SCENE:Play/Pause/Restart -->
+				<div id='play-btn' class='wc-dock-toggle'>
+					<i class="active play fa fa-play"></i>
+					<i class="inactive pause fa fa-pause"></i>
+					<i class="inactive restart fa fa-fast-backward"></i>
+				</div>
+
+				<!-- SCENE:Scrub -->
+				<div class='wc-dock-scrubber'>
+					<div class='bar'></div>
+					<div class='fill'></div>
+					<div class='bug'></div>
+				</div>
+
+				<!-- MODULE:NEXT -->
+				<div id='next-btn' class='inactive btn'>
+					<div class='fa fa-arrow-right'></div>
+				</div>
+
+				<!-- MODULE:COMPLETE -->
+				<div id='complete-btn' class='inactive btn'>
+					<div class='fa fa-check'></div>
+				</div>
+
+				<!-- MODULE:AUDIO -->
+				<div id='audio-btn' class='wc-dock-toggle'>
+					<div class='sound-on fa fa-volume-up'></div>
+					<div class='sound-off fa fa-volume-off'></div>
+				</div>
+		</div>
+
+	</div>
+</body>
+<script>
+
+var i,
+	_ready = true,
+	_root;
+	(_root={})["courseTitle"]= 'MediaGenesis';
+
+jQuery(document).ready(function(){
+
+	//local storagez
+
+	// ----------------------------------------
+	// Shell Set-up
+	// ----------------------------------------
+
+	_root.controller = new ModuleController('#modules-list',{
+		modules:['s1000','s2000'],
+		root:_root,
+		stage:'#content',
+		moduleTitle:'.wc-header .module',
+		sceneTitle:'.wc-header .scene',
+		autoPlay:true,
+		next:'#next-btn',
+		back:'#back-btn',
+		complete:'#complete-btn',
+		welcomeMessage:'#instructions',
+
+		loader:{
+			wrapper:'#loader',
+			spinner:'#spinner'
+		},
+
+		audioController:{
+			type:"soundManager",
+			fallbackURL:"../vendor/sm/swf",
+			fallbackVersion:9
+		},
+
+		soundEvents:{
+			select:'sfx/select.mp3'
+		}
+
+	});
+
+	var scrubbie = new ScrubBar('.wc-dock-scrubber');
+	var bar = new ProgressBar('.wc-dock-scrubber .bar');
+	var fill = new FillBar('.wc-dock-scrubber .fill');
+	var bug = new Scrubber('.wc-dock-scrubber .bug',{
+		parent:scrubbie,
+		bounds:bar
+	});
+
+	scrubbie.bind({
+		bar:bar, 
+		scrubber:bug, 
+		fill:fill, 
+		controller:_root.sceneController
+	});
+
+	_root.sceneController.bind({
+		scrub:scrubbie, 
+		toggle:'#play-btn', 
+		restart:'#play-btn',
+		audio:'#audio-btn'
+	});
+
+
+	
+	_root.startBtn = new Button('#start-btn').bindOn({
+		mousedown:function(){
+			console.log(_root.controller.list[0])
+			_root.controller.list[0].item.auto('onmousedown',{down:false});
+		}
+	});
+	
+	
+});
+</script>
+</html>

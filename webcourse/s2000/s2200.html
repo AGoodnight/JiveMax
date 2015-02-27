@@ -1,0 +1,73 @@
+<style>
+
+#question{
+	margin-top:20%;
+}
+
+#drags{
+	z-index:100;
+	padding-bottom:40px;
+	height:120px;
+	position:relative;
+}
+
+#drops{
+	z-index:50;
+	padding-top:30px;
+	height:130px;
+	position:relative;
+	clear:both;
+}
+
+.drag, .drop{
+	display:inline-block;
+	margin-left:40px;
+	border:none;
+}
+
+</style>
+
+<div class='routine col-9'>
+	<div id='question'>
+		<h3>Match the picture with the word</h3>
+		<div id='choices'>
+			<div id='drags'>
+				<div class='drag'><img src='img/redspot.png'></div>
+				<div class='drag'><img src='img/dog.png'></div>
+				<div class='drag'><img src='img/cookie.png'></div>
+			</div>
+			<div id='drops'>
+				<div class='drop'><img src='img/travel-word.png'></div>
+				<div class='drop'><img src='img/storm-word.png'></div>
+				<div class='drop'><img src='img/sweet-word.png'></div>
+			</div>
+		</div>
+	</div>
+	<div id='feedback' class = 'stage-hide'>
+			<div id='right-feedback'>
+				Bingo, Now Click Next!
+			</div>
+	</div>
+</div>
+
+<script>
+
+var _scene = Scene({paused:true});
+var right = Scene({paused:true}).show('#feedback').from('#right-feedback',1,{opacity:0},{sync:0});
+
+_scene.question = DragAndDrop(Matching,'#drags','#drops',{
+	answers:[1,0,2],
+	orientation:'horizontal',
+	onSolve:function(self){
+		return function(){
+			right.play();
+			_root.controller.completeScene();
+			_root.controller.userAction = false;
+		}
+	}
+})
+
+_root._scene = _scene;
+
+_ready = true;
+</script>

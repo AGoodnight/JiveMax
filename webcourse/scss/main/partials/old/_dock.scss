@@ -1,0 +1,126 @@
+@import "../modules/all";
+
+$height-dock:62px;
+$width-scrubber: 550px;
+$height-scrubber: 20px;
+$height-dock-btn:30px;
+
+.dock{
+	z-index:200;
+	width:85%;
+	height:$height-dock;
+	background-color:#000000;
+	position:absolute;
+	bottom:0;
+	right:0;
+
+	.btn{
+		width:30px;
+		height:$height-dock-btn;
+		float:left;
+		display:block;
+		padding:($height-dock - $height-dock-btn)/2 10px 0 10px;
+
+		.fa {
+			color:$orange;
+			font-size:30px;
+			margin:0px;
+			position:absolute;
+			@include transition(color .5s);
+			&:hover{
+				color:$hover;
+			}
+		}
+
+		&:first-child{
+			margin-left:15px;
+		}
+
+		&.active{
+			visibility:visible;
+			pointer-events:auto;
+		}
+
+		&.inactive{
+			visibility:hidden;
+			pointer-events:none;
+		}
+
+		&.disabled{
+			color:$disabled-color;
+		}
+
+	}
+
+
+	.toggle-btn{
+		@extend .btn;
+
+		.fa{
+			display:block;
+
+			&.disabled{
+				color:$disabled-color;
+			}
+
+		}
+
+		.active{
+			visibility:visible;
+			pointer-events:auto;
+		}
+
+		.inactive{
+			visibility:hidden;
+			pointer-events:none;
+		}
+
+	}
+
+	.scrub-bar{
+		height:$height-scrubber;
+		width:$width-scrubber;
+		background:$drkgrey;
+		float:left;
+		display:block;
+		margin:($height-dock - $height-scrubber)/2 6px 0 6px;
+
+		.scrubber{
+			height:20px;
+			width:50px;
+			background:$orange;
+			position:absolute;
+			cursor:pointer;
+
+			@include transition(background-color .5s);
+
+			&:hover{
+				background-color:white;
+			}
+
+		}
+
+		.progress-bar{
+			height:$height-scrubber;
+			width:$width-scrubber;
+			background:$umber;
+			position:absolute;
+		}
+
+		.fill-bar{
+			height:$height-scrubber;
+			background-color:$umber !important;
+			width:0%;
+			position:absolute;
+		}
+
+	}
+
+}
+
+.next-trigger, .previous-trigger{
+		padding:5px;
+		background-color:$orange;
+		color:white;
+		display:inline-block;
+}

@@ -1,0 +1,19 @@
+@import "../modules/all";
+
+#module-title{
+	color:$module-title-color;
+	font:$module-title-font;
+}
+
+#scene-title{
+	color:$scene;
+	font:$scene-title-font;
+}
+
+.wc-header{
+	position:absolute;
+	padding-left:0.7em;
+	padding-top:0.5em;
+	z-index:100;
+	left:15%;
+}

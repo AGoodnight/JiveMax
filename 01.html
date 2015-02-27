@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<body>
+	<div class='top'>
+		<div id='title'></div>
+		<div id='brendon' class='square blue'></div>
+		<div id='mellissa' class='square purple'></div>
+		<div id='jason' class='square orange'></div>
+	</div>
+</body>
+<script>
+	// ----------------------------
+	// SCENE 1 ( 01.html)
+	// ----------------------------
+
+	// items
+	var mellissa = new Button('#mellissa')
+		.jig('wiggle',{speed:0.5},{loop:100})
+		.bindOn({
+			mousedown:function(){
+				_root.controls.load('#stage','02.html','swatKats',false);
+			}
+		});
+
+	var sceneTitle = new Text('#title',{
+		value:'Home Movies'
+	}).fromTo(0.5,{x:-100},{x:0});
+
+	// animations
+	var homeMovies = _root.homeMovies = new Scene('homeMovies',{paused:true});
+
+	homeMovies.staggerFromTo(['#brendon','#mellissa','#jason'],1,
+		{scale:2,opacity:0,rotationX:130},
+		{scale:1,opacity:1,rotationX:0},
+		{offset:0.2});
+
+
+	// The script is loaded.
+	_ready = true;
+
+</script>
+</html>

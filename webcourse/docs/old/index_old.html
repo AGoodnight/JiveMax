@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> JiveMax Documentation</title> 
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500,900,300,100' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Fugaz+One' rel='stylesheet' type='text/css'>
+</head>
+<style>
+
+
+h1,h2,h3,h4{
+	font-family:'Roboto',sans-serif;
+}
+
+h1{
+	font-weight:300;
+}
+
+h1:after{
+	height:1px;
+	background-color:#9c9c9c;
+	display:block;
+	content:'';
+}
+
+h3{
+	font-weight:500;
+	font-size:19px;
+	background-color:#ffffff;
+}
+
+h4{
+	font-weight:500;
+	font-size:20px;
+}
+
+.navbar-brand{
+	font-family:'Fugaz One',cursive;
+	font-size:52px;
+	margin-top:10px;
+}
+
+ul > li{
+	list-style:none;
+	padding:6px 0 7px 0;
+}
+
+
+.block{
+	padding:20px 0 30px 0;
+}
+
+.block .variable{
+	font-weight:700;
+	font-style:normal;
+	font-size:14px;
+}
+
+.block .variable > small{
+	font-size:11px;
+	font-weight:500;
+}
+
+.block .variable:after{
+	height:1px;
+	content:'';
+	display:block;
+	background-color:#9c9c9c;
+	padding:0;
+	margin:0;
+	margin-bottom:6px;
+}
+
+.block .key{
+	font-style:normal;
+	font-weight:700;
+}
+
+.block .key > small{
+	font-size:11px;
+	font-weight:500;
+}
+
+.classes{
+	margin-left:1em;
+}
+
+
+.block .key:after{
+	height:1px;
+	content:'';
+	display:block;
+	background-color:#9c9c9c;
+	padding:0;
+	margin:0;
+	margin-bottom:6px;
+}
+
+.block > ul {
+	margin-top:30px;
+	margin-left:0px;
+	padding-left:30px;
+	border-left:1px solid #9f9f9f;
+}
+
+.block > ul > li{
+	margin-left:0px;
+}
+
+.block > ul > li > ul{
+	margin-top:20px;
+	margin-bottom:30px;
+	padding:0px 20px 20px 30px;
+}
+
+
+</style>
+<body>
+<nav class='navbar navbar-default navbar-fixed-top'> 
+	<div class='container'>
+		<div class='navbar-header'>
+			<a class='navbar-brand'>JiveMax</a>
+		</div>
+		<div id='navbar' class='navbar-collapse collapse'>
+			<ul class='nav navbar-nav'>
+				<li><a>Jig</a></li>
+				<li><a>Factory</a></li>
+				<li><a>Controllers</a></li>
+				<li><a>Test</a></li>
+				<li><a>Present</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class='container' style='margin-top:100px;'>
+
+	<!-- INTRODUCTION -->
+	<div class='row'>
+		<p class='alert alert-info'>BEFORE using JiveMax it is assumed that the reader will be familiar with both jQuery and the Greensock Animation Platform (GSAP). Review the documentation for each before reading this documentation.</p>
+		<p>
+		Jivemax borrows syntax cues from Jquery. For instance, the selectors in JiveMax are hijacked jQuery selectors. So in jQuery we can select every list item within and unordered list like so $('ul li'), the same is true for JiveMax's GSAP methods. For instance
+		<pre>GSAPObject.jig('ul li','wiggle');</pre>
+		</p>
+		<p>
+		The above line uses a jQuery like selector syntax to tell all the items in the unordered list to 'wiggle' using the jig method (which is explained later).
+		</p><p>
+		Jivemax also borrows the concept of a controller from the MVC concept. The controllers control the playback of TimelineMax instances ( the core of our jivemax's animation engine ) as well as more other properties of javascript objects.
+		</p>
+		<p>
+		Jivemax also has various other features that assist with testing the user's responses and manipulating the DOM.  
+		</p>
+		<p>Think of JiveMax as an extension of the Green Sock Animation Platform</p>
+	</div>
+
+	<!-- GETTING STARTED -->
+	<div class ='row'>
+		<div class='col-md-12'>
+			<h1>Getting Started</h1>
+			<p>Download</p>
+		</div>
+	</div>
+
+	<!-- GSAP OBJECT -->
+	<div class='row'>
+		<div class='col-md-12'>
+			<div class='block col-md-8'>
+				<h1>GSAPObject</h1>
+				<p>The GSAP Object is an abstract class come in various genralizations, every instance of a GSAPObject is given a timeline ( TimelineMax instance ) and the methods neccessary to interact and control the playback of the timeline. A javascript object consisting of a single instance of TimelineMax. The GSAP object is the base class for anything on screen that can be animated in the DOM using GSAP methods.
+				</p>
+				<p>
+				You will rarley use the GSAP Object directly, instead your primary interaction with it's methods and properties will be through generalizations like Item, which will preceed this classes explanation.
+			</div>
+			<div class='classes col-md-8'>
+				<!-- jig -->
+				<div class='block col-md-12'>
+					<h4>jig()</h4>
+					<p>A jig is a preset animation. A developer can create thier own preset or use those that are included.</p>
+					<pre>jig( id:String, preset:String, vars:Object, timeVars:Object );</pre>
+					<ul>
+						<li><i class='variable'>id <small>STRING</small></i> The id or class name of the item or items to be animated. *Remember to think jQuery.</li>
+						<li><i class='variable'>preset <small>STRING</small></i> The name of the preset, presets are stored in the jigLibrary object. Which can be found in the jig.js source file. If you enter jig('ID','wiggle'), 'wiggle' is referencing the equivilant of jigLibrary.wiggle.
+						<li><i class='variable'>vars <small>OBJECT</small></i> The vars { key : value } object allows developers to pass values that overide the presets default values, such as 'speed'. The most common option keys are listed below. If you pass an option key that does not do anything, it fails silently.
+							<ul>
+								<li><i class='key'>speed <small>NUMBER</small></i>
+									The speed (duration) in seconds of the animation</li>
+								<li><i class='key'>strength <small>STRING</small></i>
+									A relative value, for intance if you used the preset 'hop', it would make the element hop higher.</li>
+								<li><i class='key'>ease <small>STRING</small></i>
+									The name of the desired ease applied to the animation (see eases included with GSAP for reference)</li>
+							</ul>
+						</li>
+						<li><i class='variable'>timeVars <small>OBJECT</small></i>The timeVars { key : value } object allows develoeprs to control when the animation fires within the timeline as well as loops and offests when animating multiple items.
+							<ul>
+								<li><i class='key'>sync <small>NUMBER</small></i> When in seconds the animation should fire on the GSAPObject's timeline</li>
+								<li><i class='key'>loop <small>NUMBER</small></i> How many times should the animation/preset repeat before finishing.</li>
+								<li><i class='key'>offset <small>NUMBER</small></i> Used in certain presets that affect more than one element, the offset is the delay of the following element in the list</li>
+							</ul>
+						</li>
+					</ul>
+					<br/>
+					Examples
+					
+				</div>
+				<div class='block col-md-12'>
+					<h4>at()</h4>
+					<pre>at( sync:Number, callback:Function, name:String);</pre>
+					<p> the 'at' method is a way to assign callbacks to a point on the GSAPObject's timeline, it is a shortcut for the addCallback method native to GSAP. </p>
+					<ul>
+						<li><i class='variable'>sync <small>NUMBER</small></i> When on the timeline in seconds the callback should occur</li>
+						<li><i class='variable'>callback <small>FUNCTION</small></i> The callback method to be perormed.</li>
+						<li><i class='variable'>name <small>STRING</small></i> You can give your callbakc a label that will allow you to reference it by that label using native GSAP methods</li>
+					</ul>
+				</div>
+
+				<!-- endAt -->
+				<div class='block col-md-12'>
+					<h4>endAt()</h4>
+					<pre>endAt(miliseconds:Number);</pre>
+					<p> Sometimes you want the animations timeline to extend beyond the actual instances of animation, this method allows you to do this, it is in milliseconds for increased accuracy.</p>
+				</div>
+
+				<!-- addLabel -->
+				<div class='block col-md-12'>
+					<h4>addLabel()</h4>
+					<pre>addLabel(label:String, sync:Number)</pre>
+					<p> This is a shorcut to the native addLabel method within the TimelineMax instance.</p>
+				</div>
+
+				<!-- hideAll -->
+				<div class='block col-md-12'>
+					<h4>hideAll()</h4>
+					<pre></pre>
+					<p>All elements animated on the timeline of the GSAPObject will be hidden using the 'visibility' attribute. So this will not affect your layout. The elements, if GSAPObjects will also be frozen, meaning they are no longer accepting any user interaction.</p>
+				</div>
+
+				<!-- showAll -->
+				<div class='block col-md-12'>
+					<h4>showAll()</h4>
+					<pre></pre>
+					<p>All elements animated on the timeline of the GSAPObject will be shown using the 'visibility' attribute. So this will not affect your layout. The elements, if GSAPObjects will also be un-frozen, meaning they are able to accept user interaction.</p>
+				</div>
+
+				<!-- addAffectee -->
+				<div class='block col-md-12'>
+					<h4>affect()</h4>
+					<pre>affect(name:String ,item:GSAPObject);</pre>
+					<p>Affectee's are other instances of GSAPObjects that the developer can pass into the GSAPObject in question. This grants the GSAPObject control over certain aspects of the other GSAPObjects, the most common being the playback. So if you had two animating elements on screen, controled by indpendent timelines ( within thier GSAPObjects ), you could pause or play one, and it will pause or play the other one if you use this method to 'bind' them together in this manner.</p>
+					<ul>
+						<li><i class='variable'>name <small>STRING</small></i> this string will be used to set the key of the object within the Affectees array inside the GSAPObject</li>
+						<li><i class='variable'>item <small>OBJECT</small></i> passing the reference to the GSAPObject you wish to affect binds the GSAPObject to this GSAPObject</li>
+					</ul>
+				</div>
+
+				<!-- removeAffectee -->
+				<div class='block col-md-12'>
+					<h4>removeAffectee()</h4>
+					<p>We can remove affectee's at anytime via it's name/key.</p>
+					<ul>
+						<li><i class='variable'>name <small>STRING</small></i> this string will be used to remove the object associated with this key within the Affectees array inside the GSAPObject</li>
+					</ul>
+				</div>
+
+
+				<div class='block col-md-12'>
+					<h4>gotoAndStop()</h4>
+					<p>For those of us who have used Flash in the past, this method does exactly what you think it would. It goes to the point indicated on the timeline and stops or pauses the playback.</p>
+					<ul>
+						<li><i class='variable'>label/seconds <small>STRING / NUMBER</small></i> You can either jump to a GSAP lable or a time in seconds.</li>
+					</ul>
+				</div>
+
+				<div class='block col-md-12'>
+					<h4>gotoAndPlay()</h4>
+					<p>Same as gotoAndStop, however this one resumes playback immediatley.</p>
+				</div>
+
+
+				<!-- NATIVE GSAP -->
+
+				<div class='block col-md-12'>
+					<h4>Common GSAP animation methods</h4>
+					<pre>GSAPObject.to( id:String, duration:Number, vars:Object, timeVars:Object ); // same for from()
+
+	.staggerFromTo( id:String, duration:Number, fromVars:Object, toVars:Object, timeVars:Object ); 
+	// same for fromTo and yoyo()
+					</pre>
+					<p>since JiveMax is just an extension of GSAP, you can access GSAP native methods directly through the GSAPObject. Listed below are the native animation methods supported.</p>
+					<p>Jivemax extends the native functions to support timeVars, as seen in the jig method. So you can loop, offset and sync.</p>
+					<ul>
+						<li>to</li>
+						<li>from</li>
+						<li>fromTo</li>
+						<li>*staggerTo</li>
+						<li>*staggerFrom</li>
+						<li>*staggerFromTo</li>
+						<li>**yoyo</li>
+					</ul>
+					<p>* - to use the native offset ability of stagger, include it in the timeVars paired with the key 'offset'.</p>
+					<p>** - this method has been modified to create actual instances of animation keyframes on the timeline to simulate the looping effects of the original yoyo method, view yoyo for more information about how it used to work.</p>
+					
+				</div>
+
+				<div class='block col-md-12'>
+					<h4>Common GSAP playback methods</h4>
+					<pre></pre>
+					<p>Since JiveMax is just an extension of GSAP, you can access GSAP native methods directly through the GSAPObject. Listed below are the native playback methods supported.</p>
+					<ul>
+						<li>play(from, ignoreAffectees, suppressEvents, callback)</li>
+						<li>pause(atTime, ignoreAffectees, suppressEvents)</li>
+						<li>kill(vars, ignoreAffecttees, suppressEvents)</li>
+						<li>restart(includeDelay, ignoreAffectees, suppressEvents, callback)</li>
+						<li>reverse()</li>
+						<li>set(id, vars, ignoreAffectees)</li>
+						<li>clear()</li>
+					</ul>
+					<p> The only syntax change you may have noticed is that these methods have an additional variable, ignoreAffectees, this parameter does what it sounds like, it ignores any affectees associated with the GSAPObject, when executing a method, so if you call play and include 'true' for this varaible, than it will not play the affectees.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ITEM -->
+	<div class='row'>
+		<div class='col-md-12'>
+			<div class='block col-md-8'>
+				<h1>Item</h1>
+				<p>The item class is a generalization of the GSAPObject, it extends the GSAPObject to include a reference to a particular DOM element or list of DOM elements.</p>
+			</div>
+			<div class='classes col-md-8'>
+				<div class='block col-md-12'>
+					<h4>Item()</h4>
+					<p>This method constructs an instance of an item. An item will contain a timeline of it's own and that timeline will belong to a DOM element or list of DOM elements.</p>
+					<pre>var cat = new Item( id:string, vars:object);</pre>
+					<ul>
+						<li><i class='variable'>id <small>STRING</small></i>The id or class of the DOM element/elements to be bound to this item.</li>
+						<li><i class='variable'>vars <small>OBJECT</small></i></li>
+					</ul>
+				</div>
+				<div class='block col-md-12'>
+					<h4>setActions()</h4>
+					<p>This method constructs an instance of an item. An item will contain a timeline of it's own and that timeline will belong to a DOM element or list of DOM elements.</p>
+					<pre>var cat = new Item( id:string, vars:object);</pre>
+					<ul>
+						<li><i class='variable'>id <small>STRING</small></i>The id or class of the DOM element/elements to be bound to this item.</li>
+						<li><i class='variable'>vars <small>OBJECT</small></i></li>
+					</ul>
+				</div>
+				<div class='block col-md-12'>
+					<h4>hide()</h4>
+					<p>This method constructs an instance of an item. An item will contain a timeline of it's own and that timeline will belong to a DOM element or list of DOM elements.</p>
+					<pre>var cat = new Item( id:string, vars:object);</pre>
+					<ul>
+						<li><i class='variable'>id <small>STRING</small></i>The id or class of the DOM element/elements to be bound to this item.</li>
+						<li><i class='variable'>vars <small>OBJECT</small></i></li>
+					</ul>
+				</div>
+				<div class='block col-md-12'>
+					<h4>show()</h4>
+					<p>This method constructs an instance of an item. An item will contain a timeline of it's own and that timeline will belong to a DOM element or list of DOM elements.</p>
+					<pre>var cat = new Item( id:string, vars:object);</pre>
+					<ul>
+						<li><i class='variable'>id <small>STRING</small></i>The id or class of the DOM element/elements to be bound to this item.</li>
+						<li><i class='variable'>vars <small>OBJECT</small></i></li>
+					</ul>
+				</div>
+				<div class='block col-md-12'>
+					<h4>Animating an Item</h4>
+					<p>You will animate an item using the methods from the GSAPObject class. THe only difference is you will not need to include an 'id' varaible. because we have bound a DOM element to our item already.</p>
+					<pre>var cat = new Item('#cat');
+cat.jig('wiggle');</pre>
+				</div>
+				<div class='block col-md-12'>
+					<h4>Playback of an Item</h4>
+					<p>The playback controls on the item will only affect this item's internal timeline.</p>
+					<pre>cat.play(); // will only affect the #cat element's timeline</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+</body>
+<script></script>
+</html>

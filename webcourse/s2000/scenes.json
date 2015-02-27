@@ -1,0 +1,20 @@
+{
+	"module":{
+		"id":"s2000",
+		"title":"Welcome to an HTML5 Webcourse!",
+		"url":"s2000/s2000.html",
+		"audio":"s2000/audio/"
+	},
+	"s2000":{
+		"url":"s2000/s2000.html",
+		"title":"Choice with Checkbox"
+	},
+	"s2100":{
+		"url":"s2000/s2100.html",
+		"title":"Multiple Choice with custom animation"
+	},
+	"s2200":{
+		"url":"s2000/s2200.html",
+		"title":"Drag and Drop"
+	}
+}

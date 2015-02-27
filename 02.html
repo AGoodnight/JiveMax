@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<body>
+	<div class='bottom'>
+		<div id='razor' class='square orange'></div>
+		<div id='tBone' class='square red'></div>
+		<div id='callie' class='square yellow'></div>
+	</div>
+</body>
+<script>
+	// ----------------------------
+	// SCENE 2 ( 02.html)
+	// ----------------------------
+
+	// items
+	var razor = new Button('#razor').jig('wiggle',{speed:0.5},{loop:100})
+		.bindOn({
+			mousedown:function(){
+				_root.controls.load('#stage','01.html','homeMovies',false);
+			}
+		});
+
+	// animations
+	var swatKats = _root.swatKats = new Scene('swatKats',{paused:true});
+
+	swatKats.fromTo('#tBone',1,
+		{opacity:0,rotationX:130},
+		{opacity:1,rotationX:0});
+
+	swatKats.fromTo('#callie',1,
+		{opacity:0,rotationZ:130},
+		{opacity:1,rotationZ:0},
+		{sync:0.5});
+
+	swatKats.fromTo('#razor',1,
+		{opacity:0,rotationY:130},
+		{opacity:1,rotationY:0},
+		{sync:1});
+
+	// The script is loaded.
+	_ready = true;
+
+</script>
+</html>

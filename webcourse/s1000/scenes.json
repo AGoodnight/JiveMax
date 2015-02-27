@@ -1,0 +1,28 @@
+{
+	"module":{
+		"id":"s1000",
+		"title":"Welcome to an HTML5 Webcourse!",
+		"url":"s1000/s1000.html",
+		"audio":"s1000/audio/"
+	},
+	"s1000":{
+		"url":"s1000/s1000.html",
+		"title":"Welcome to JiveMax!"
+	},
+	"s1100":{
+		"url":"s1000/s1100.html",
+		"title":"Throw Flash in the Trash!"
+	},
+	"s1200":{
+		"url":"s1000/s1200.html",
+		"title":"Technologies used in this Webcourse"
+	},
+	"s1300":{
+		"url":"s1000/s1300.html",
+		"title":"Where you can use this Webcourse"
+	},
+	"s1400":{
+		"url":"s1000/s1400.html",
+		"title":"The Collage"
+	}
+}

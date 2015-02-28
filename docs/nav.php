@@ -6,9 +6,9 @@
 		</div>
 		<div id='navbar' class='navbar-collapse collapse'>
 			<ul class='nav navbar-nav'>
+				<li><a href='scene.php'>Scene</a></li>
 				<li><a href='item.php'>Item</a></li>
 				<li><a href='button.php'>Button</a></li>
-				<li><a href='scene.php'>Scene</a></li>
 				<li><a href='controllers.php'>Controllers</a></li>
 				<li class='dropdown'>
 					<a href='#' class='dropdown-toggle' data-toggle='dropdown'>

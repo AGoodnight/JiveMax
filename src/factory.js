@@ -270,15 +270,18 @@ function GSAPObject(options){
 	// -----------------------------------------------------------------------------------
 	// Jig Integration, Jig allows you to store custom animations to use later as presets.
 
-	q.jig = function(id,preset,options,timeOptions){
+	q.jig = function(e,preset,options,timeOptions){
 
 		var loop,
-			sync;
+			sync,
+			id;
 
 		if(q.wrapper !== undefined){
 			if(q.wrapper.id !== undefined){
-				id = q.wrapper.id+' '+id;
+				id = q.wrapper.id+' '+e;
 			}
+		}else{
+			id = e
 		}
 
 		if(timeOptions){
@@ -315,18 +318,13 @@ function GSAPObject(options){
 		return this;
 	};
 
-	q.staggerJig = function(idGroup,preset,options,timeOptions){
+	q.staggerJig = function(e,preset,options,timeOptions){
 
 		var i,
 			loop,
 			sync,
-			offset;
-
-		if(q.wrapper !== undefined){
-			if(q.wrapper.id !== undefined){
-				id = q.wrapper.id+' '+id;
-			}
-		}
+			offset,
+			idGroup;
 
 		if(timeOptions){
 			sync = or(undefined, timeOptions.sync);
@@ -343,17 +341,26 @@ function GSAPObject(options){
 			sync = 0;
 		}
 
-		if(typeof idGroup === 'string'){
-			idGroup = getNodes(idGroup);
+		if(typeof e === 'string'){
+			idGroup = getNodes(e);
 			if(typeof idGroup !== 'object'){
 				idGroup = [idGroup];
 			}
+		}else{
+			idGroup = e;
 		}
 
 		// If jig library is included
 		if(this.timeline.jig){
 
 			for( i = 0 ; i<idGroup.length ; i++){
+
+				if(q.wrapper !== undefined){
+					if(q.wrapper.id !== undefined){
+						idGroup[i] = q.wrapper.id+' '+idGroup[i];
+					}
+				}
+
 				this.timeline.jig.apply(this.timeline,[idGroup[i],preset,options,sync,loop]);
 				sync += offset
 			}
@@ -921,7 +928,7 @@ function Item(bind, options){
 		paused = or(false,options.paused);
 	}
 
-	q = new GSAPObject({affectees:true,defaultOverwrite:overwrite,paused:paused});
+	q = new Scene({affectees:true,defaultOverwrite:overwrite,paused:paused});
 	q.type = 'item';
 
 	// a way to identify the items DOM element via string

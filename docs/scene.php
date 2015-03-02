@@ -66,9 +66,9 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 			</div>
 			<div class='col-md-12 term'>
 				<div id='jig' class='col-md-4'>
-					<div id='block' class='block mini'> 1 </div>
-					<div id='block' class='block mini'> 2 </div>
-					<div id='block' class='block mini'> 3 </div>
+					<div class='block mini'> 1 </div>
+					<div class='block mini'> 2 </div>
+					<div class='block mini'> 3 </div>
 				</div>
 				<div class='col-md-8'>
 					<h3>scene.jig()</h3>
@@ -79,16 +79,16 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 				</div>
 
 				<div id='stagger-jig' class='col-md-4'>
-					<div id='block' class='block mini'> 1 </div>
-					<div id='block' class='block mini'> 2 </div>
-					<div id='block' class='block mini'> 3 </div>
+					<div class='block mini'> 1 </div>
+					<div class='block mini'> 2 </div>
+					<div class='block mini'> 3 </div>
 				</div>
 				<div class='col-md-8'>
 					<h3>scene.staggerJig()</h3>
 					<p>Jig's are presets, they save time by </p>
 					<pre>Item.staggerJig('.block','wiggle',{offset:0.5});</pre>
 					<p>The obvious advantage here is that it is short and easy in comparison to anaimting it manually.</p>
-					<button class='trigger' onclick='block.play();'>RESTART</button>
+					<button class='trigger' onclick='block2.play();'>RESTART</button>
 				</div>
 			</div>
 		</div>
@@ -132,15 +132,15 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 // ----------------------------------
 // 1
 // create a new Button instance.
-var block = new Scene( {wrapper:'#jig'} );
+//var block = new Scene( {wrapper:'#jig'} );
 
 // animate the Button instance with a jig (preset)
-block.jig('.mini', 'wiggle',{
+/*block.jig('.mini', 'wiggle',{
 		strength:2, 
 		speed:0.8
 	},{
-		loop:10
-	});
+		loop:2
+	});*/
 
 
 // ----------------------------------
@@ -153,7 +153,7 @@ block2.staggerJig('.mini', 'wiggle',{
 		strength:2, 
 		speed:0.8
 	},{
-		loop:10,
+		loop:2,
 		offset:0.5
 	});
 

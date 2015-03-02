@@ -198,6 +198,9 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 		for(i = 0 ; i<repeat ; i++){
 			
 			offset = (sync!==undefined && sync>0)? sync+newOptions.speed*i : newOptions.speed*i ;
+
+			console.log(sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i+'     '+offset)
+
 			isLastLoop = (i === repeat-1) ? true : false ;
 			created = jigLibrary[preset]( element, newOptions, objectCSS, isLastLoop );
 

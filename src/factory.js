@@ -320,7 +320,7 @@ function GSAPObject(options){
 
 	q.staggerJig = function(e,preset,options,timeOptions){
 
-		var i,
+		var i,k,
 			loop,
 			sync,
 			offset,
@@ -342,25 +342,39 @@ function GSAPObject(options){
 		}
 
 		if(typeof e === 'string'){
-			idGroup = getNodes(e);
+
+			// if it has a wrapper and is a class or tag.
+			if(q.wrapper !== undefined){
+				if(q.wrapper.id !== undefined){
+					idGroup = getNodes(q.wrapper.id+' '+e);
+				}
+			}else{
+				idGroup = getNodes(e);
+			}
+			// if it returns a signel object
 			if(typeof idGroup !== 'object'){
 				idGroup = [idGroup];
 			}
+
 		}else{
-			idGroup = e;
+
+			// if it is an array/object with a wrapper
+			if(q.wrapper !== undefined){
+				if(q.wrapper.id !== undefined){
+					for( i = 0 ; i<e.length ; i++){
+						idGroup[i] = getNodes(q.wrapper.id+' '+e[i]);
+					}
+				}
+			}else{
+				idGroup = e;
+			}
+
 		}
 
 		// If jig library is included
 		if(this.timeline.jig){
 
 			for( i = 0 ; i<idGroup.length ; i++){
-
-				if(q.wrapper !== undefined){
-					if(q.wrapper.id !== undefined){
-						idGroup[i] = q.wrapper.id+' '+idGroup[i];
-					}
-				}
-
 				this.timeline.jig.apply(this.timeline,[idGroup[i],preset,options,sync,loop]);
 				sync += offset
 			}
@@ -621,7 +635,7 @@ function GSAP_Router(affectees){
 
 	var q ={};
 
-	q.kill = function(vars,ignoreAffectees,suppressEvents){
+	q.kill = function(vars,suppressEvents,ignoreAffectees){
 		
 		this.timeline.kill();
 
@@ -636,7 +650,7 @@ function GSAP_Router(affectees){
 		return q;
 	};
 
-	q.play = function(from,ignoreAffectees,suppressEvents,callback){
+	q.play = function(from,suppressEvents,callback,ignoreAffectees){
 
 		//console.log('playing ' + this)
 
@@ -669,7 +683,7 @@ function GSAP_Router(affectees){
 		return q;
 	};
 
-	q.pause = function(atTime,ignoreAffectees,suppressEvents){
+	q.pause = function(atTime,suppressEvents,ignoreAffectees){
 		
 		this.timeline.pause();
 
@@ -684,7 +698,7 @@ function GSAP_Router(affectees){
 		return q;
 	};
 
-	q.restart = function(includeDelay,ignoreAffectees,suppressEvents,callback){
+	q.restart = function(includeDelay,suppressEvents,callback,ignoreAffectees){
 
 		console.log('restarting ' + this)
 

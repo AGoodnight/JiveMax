@@ -206,7 +206,7 @@ jQuery.extend = jQuery.fn.extend = function() {
 				src = target[ name ];
 				copy = options[ name ];
 
-				// Prevent never-ending loop
+				// Prevent never-ending repeat
 				if ( target === copy ) {
 					continue;
 				}
@@ -655,7 +655,7 @@ var i,
 		return -1;
 	},
 
-	booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",
+	booleans = "checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|repeat|multiple|open|readonly|required|scoped",
 
 	// Regular expressions
 
@@ -1746,7 +1746,7 @@ Expr = Sizzle.selectors = {
 
 						// xml :nth-child(...) or :nth-last-child(...) or :nth(-last)?-of-type(...)
 						} else {
-							// Use the same loop as above to seek `elem` from the start
+							// Use the same repeat as above to seek `elem` from the start
 							while ( (node = ++nodeIndex && node && node[ dir ] ||
 								(diff = nodeIndex = 0) || start.pop()) ) {
 
@@ -3097,7 +3097,7 @@ jQuery.Callbacks = function( options ) {
 		memory,
 		// Flag to know if list was already fired
 		fired,
-		// End of the loop when firing
+		// End of the repeat when firing
 		firingLength,
 		// Index of currently firing callback (modified by remove if needed)
 		firingIndex,
@@ -6488,7 +6488,7 @@ function showHide( elements, show ) {
 		}
 	}
 
-	// Set the display of most of the elements in a second loop
+	// Set the display of most of the elements in a second repeat
 	// to avoid the constant reflow
 	for ( index = 0; index < length; index++ ) {
 		elem = elements[ index ];
@@ -7039,7 +7039,7 @@ var
 					jQuery.style( tween.elem, prop, start + unit );
 
 				// Update scale, tolerating zero or NaN from tween.cur()
-				// And breaking the loop if scale is unchanged or perfect, or if we've just had enough
+				// And breaking the repeat if scale is unchanged or perfect, or if we've just had enough
 				} while ( scale !== (scale = tween.cur() / target) && scale !== 1 && --maxIterations );
 			}
 
@@ -7797,7 +7797,7 @@ jQuery.extend({
 						max :
 						one ? index : 0;
 
-				// Loop through all the selected options
+				// repeat through all the selected options
 				for ( ; i < max; i++ ) {
 					option = options[ i ];
 
@@ -8028,7 +8028,7 @@ jQuery.each( jQuery.expr.match.bool.source.match( /\w+/g ), function( i, name ) 
 		function( elem, name, isXML ) {
 			var ret, handle;
 			if ( !isXML ) {
-				// Avoid an infinite loop by temporarily removing this function from the getter
+				// Avoid an infinite repeat by temporarily removing this function from the getter
 				handle = attrHandle[ name ];
 				attrHandle[ name ] = ret;
 				ret = getter( elem, name, isXML ) != null ?
@@ -8924,7 +8924,7 @@ jQuery.extend({
 
 		var // Cross-domain detection vars
 			parts,
-			// Loop variable
+			// repeat variable
 			i,
 			// URL without anti-cache param
 			cacheURL,

@@ -30,11 +30,11 @@ function getRect(e){
 // Translators
 // ----------------------
 
-function readFreeze(freeze){
+function readlock(lock){
 
-	if(freeze){
-		var frozen;
-		var f = freeze.split('_');
+	if(lock){
+		var locked;
+		var f = lock.split('_');
 		f = f.splice(1);
 		f = f[0];
 				
@@ -42,12 +42,12 @@ function readFreeze(freeze){
 		var key = f.substr(1,1);
 
 		if( key === 'f'){
-			frozen = true;
+			locked = true;
 		}else if( key === 'u'){
-			frozen = false;
+			locked = false;
 		}
 
-		return [index,frozen];
+		return [index,locked];
 	}
 }
 
@@ -55,16 +55,14 @@ function readFreeze(freeze){
 // Analyzers
 // ----------------------
 
-// Freeze States
-function isFreezeLabel(e){
+// lock States
+function islockLabel(e){
 
+	var lead = e ? e.substr(0,e.indexOf('_')) : undefined ;
 	
-	var lead = e ? e.substr(0,6) : undefined ;
-	
-
 	// i just made this private to get in the habit
 	return (function(e){
-		if(e === 'freeze'){
+		if(e === 'lock'){
 			return true;
 		}else{
 			return false;
@@ -72,7 +70,7 @@ function isFreezeLabel(e){
 	})(lead);
 }
 
-function getFreezeIndex(e){
+function getlockIndex(e){
 	
 	var j = e.split('_');
 	j = j.splice(1);
@@ -82,7 +80,7 @@ function getFreezeIndex(e){
 	return j;
 }
 
-function checkFreezes(scene){
+function checklocks(scene){
 
 	var i;
 	var j;
@@ -99,49 +97,48 @@ function checkFreezes(scene){
 	// --------------------------------------------
 	for(i = 0 ; i<g.length ; i++ ){
 		
-		if( isFreezeLabel(g[i].name) ){
-			
-			arr = readFreeze( g[i].name );
+		if( islockLabel(g[i].name) ){
+			arr = readlock( g[i].name );
 			index = arr[0];
 			isFrom = arr[1];
-			frozen_status = scene.freezes[index].item.frozen;
+			locked_status = scene.locks[index].item.locked;
 			
-			// before it reaches the frozen state
+			// before it reaches the locked state
 			// -----------------------------------
 			if(isFrom){
 
 				if(c_time < g[i].time ){
-					scene.freezes[index].from.reached = false;
+					scene.locks[index].from.reached = false;
 				}else if(c_time >= g[i].time){		
-					scene.freezes[index].from.reached = true;
+					scene.locks[index].from.reached = true;
 				}
 
-				if(scene.freezes[index].from.reached === true){ 
-					scene.freezes[index].item.freeze();
+				if(scene.locks[index].from.reached === true){ 
+					scene.locks[index].item.lock();
 				}else{
-					scene.freezes[index].item.unFreeze();
+					scene.locks[index].item.unlock();
 				}
 
 
 			}else{
 
 				// check that the 'reached' state for the relative 'from' label has occured.
-				for( j = 0 ; j<scene.freezes.length ; j++){
-					if(getFreezeIndex(scene.freezes[j].from.label) === index){
-						thisFrom = scene.freezes[j].from;
+				for( j = 0 ; j<scene.locks.length ; j++){
+					if(getlockIndex(scene.locks[j].from.label) === index){
+						thisFrom = scene.locks[j].from;
 					}
 				}
 
 				if(c_time < g[i].time ){
-					scene.freezes[index].until.reached = false;
+					scene.locks[index].until.reached = false;
 				}else if(c_time >= g[i].time){		
-					scene.freezes[index].until.reached = true;
+					scene.locks[index].until.reached = true;
 				}
 
-				if(scene.freezes[index].until.reached === true){ 
-					scene.freezes[index].item.unFreeze();
-				}else if(scene.freezes[index].until.reached === false && thisFrom.reached){
-					scene.freezes[index].item.freeze();
+				if(scene.locks[index].until.reached === true){ 
+					scene.locks[index].item.unlock();
+				}else if(scene.locks[index].until.reached === false && thisFrom.reached){
+					scene.locks[index].item.lock();
 				}
 
 			}
@@ -682,7 +679,7 @@ function GSAP_method(timeline,id,duration,injection,method){
 
 	var i,
 		sync,
-		loop,
+		repeat,
 		stagger;
 
 	var inject = [];
@@ -704,7 +701,7 @@ function GSAP_method(timeline,id,duration,injection,method){
 
 
 
-	loop = ( injection.loop !== undefined) ? injection.loop : undefined ;
+	repeat = ( injection.repeat !== undefined) ? injection.repeat : undefined ;
 	stagger = injection.offset;
 
 
@@ -764,10 +761,10 @@ function GSAP_method(timeline,id,duration,injection,method){
 	}
 	
 	// ---------------------------------------------------------------------
-	// Loop Tween ----------------------------------------------------------
-	if(loop !== undefined){
+	// repeat Tween ----------------------------------------------------------
+	if(repeat !== undefined){
 
-		for( i = 0 ; i<loop-1 ; i++){
+		for( i = 0 ; i<repeat-1 ; i++){
 
 			timeline.add( TweenMax[animator].apply(timeline,inject) );
 

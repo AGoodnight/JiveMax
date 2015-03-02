@@ -56,7 +56,7 @@ var right = Scene({paused:true, ease:'Elastic.easeOut'})
 var wrong = Scene({paused:true})
 				.show('#feedback')
 				.show('#right')
-				.jig('#wrong','wiggle',{speed:0.2},{loop:4,sync:0})
+				.jig('#wrong','wiggle',{speed:0.2},{repeat:4,sync:0})
 				.from('#wrong',1,{opacity:0},{sync:0})
 
 var choice = new ButtonList(

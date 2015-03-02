@@ -33,8 +33,8 @@
 			--------------------------------------------------------------------------------
 			key values that determine playback or temporal effects of the animation
 
-				1. loop:number
-					- will simulate looping of an animation by creating duplicate instances of animation on the objects timeline.
+				1. repeat:number
+					- will simulate repeating of an animation by creating duplicate instances of animation on the objects timeline.
 				2. sync:number
 					- determines when the animation will start on the objects timeline.			
 				3. offset:number
@@ -177,7 +177,7 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 	var i,
 		offset, 
 		created,
-		isLastLoop = false,
+		isLastrepeat = false,
 		newOptions = {},
 		objectCSS = jQuery(element).getStyles();
 
@@ -191,7 +191,7 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 		}
 	}
 
-	created = jigLibrary[preset]( element, newOptions, objectCSS, isLastLoop);
+	created = jigLibrary[preset]( element, newOptions, objectCSS, isLastrepeat);
 	this.stick(created,newOptions,sync);
 
 	if(repeat !== undefined){
@@ -199,10 +199,10 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 			
 			offset = (sync!==undefined && sync>0)? sync+newOptions.speed*i : newOptions.speed*i ;
 
-			console.log(sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i+'     '+offset)
+			//console.log(sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i+'     '+offset)
 
-			isLastLoop = (i === repeat-1) ? true : false ;
-			created = jigLibrary[preset]( element, newOptions, objectCSS, isLastLoop );
+			isLastrepeat = (i === repeat-1) ? true : false ;
+			created = jigLibrary[preset]( element, newOptions, objectCSS, isLastrepeat );
 
 			this.stick(created,newOptions,offset);
 

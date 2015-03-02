@@ -122,19 +122,25 @@ function ClickToPresent(wrapper,scenes,options){
 
 	q.triggers = function(trigger){
 
-		one_trigger = (typeof trigger === 'object') ? false : true ;
-
-		if(!one_trigger){
-			q.trigger_next = (trigger.next) ? new Button(trigger.next) : undefined;
-			q.trigger_back = (trigger.previous) ? new Button(trigger.previous) : undefined;
-		}else{
-			q.trigger_next = new Button(trigger);
+		if(typeof trigger === 'object'){
+			if(trigger.next !== undefined){
+				q.trigger_next = (trigger.next) ? new Button(trigger.next) : undefined;
+			}
+			if(trigger.previous !== undefined){
+				q.trigger_back = (trigger.previous) ? new Button(trigger.previous) : undefined;
+			}
 		}
 
+		if(typeof trigger === 'string'){
+			q.trigger_next = new Button(trigger)
+		}
+		
 		if(q.trigger_next !== undefined){
 			q.trigger_next.bindOn({
 				mousedown:function(){
-					q.next();
+					if(!q.trigger_next.locked){
+						q.next();
+					}
 				}
 			});
 		}
@@ -142,7 +148,9 @@ function ClickToPresent(wrapper,scenes,options){
 		if(q.trigger_back !== undefined){
 			q.trigger_back.bindOn({
 				mousedown:function(){
-					q.previous();
+					if(!q.trigger_back.locked){
+						q.previous();
+					}
 				}
 			});
 		}
@@ -152,13 +160,13 @@ function ClickToPresent(wrapper,scenes,options){
 
 	q.goTo = function(sceneIndex,callback){
 
-		setStates(q.hotspots,'frozen',true);
+		setStates(q.hotspots,'locked',true);
 
 		if(q.trigger_next !== undefined )
-			q.trigger_next.frozen = true;
+			q.trigger_next.locked = true;
 
 		if(q.trigger_back !== undefined )
-			q.trigger_back.frozen = true;
+			q.trigger_back.locked = true;
 
 		function func(){
 			q.current_scene = sceneIndex;
@@ -183,9 +191,9 @@ function ClickToPresent(wrapper,scenes,options){
 
 	q.next = function(){
 
-		setStates(q.hotspots,'frozen',true);
-		q.trigger_next.frozen = true;
-		q.trigger_back.frozen = true;
+		setStates(q.hotspots,'locked',true);
+		q.trigger_next.locked = true;
+		q.trigger_back.locked = true;
 
 		TweenMax.fadeOut(q.wrapper,0.5,function(){
 			q.current_scene +=1;
@@ -201,9 +209,9 @@ function ClickToPresent(wrapper,scenes,options){
 
 	q.previous = function(){
 
-		setStates(q.hotspots,'frozen',true);
-		q.trigger_next.frozen = true;
-		q.trigger_back.frozen = true;
+		setStates(q.hotspots,'locked',true);
+		q.trigger_next.locked = true;
+		q.trigger_back.locked = true;
 		
 		TweenMax.fadeOut(q.wrapper,0.5,function(){
 			q.current_scene -=1;
@@ -226,7 +234,7 @@ function ClickToPresent(wrapper,scenes,options){
 		
 		if(trigger_back){
 			if(previous){
-				if( q.scenes[q.current_scene-1].id !== 'scene'){
+				if( q.scenes[q.current_scene-1].id !== 'scene' && q.scenes[q.current_scene+1].id !== undefined){
 					jQuery(q.trigger_back.id).html(''+q.scenes[q.current_scene-1].id);
 				}else{
 					jQuery(q.trigger_back.id).html('Previous');
@@ -238,7 +246,7 @@ function ClickToPresent(wrapper,scenes,options){
 
 		if(trigger_next){
 			if(next){
-				if( q.scenes[q.current_scene+1].id !== 'scene'){
+				if( q.scenes[q.current_scene+1].id !== 'scene' && q.scenes[q.current_scene+1].id !== undefined){
 					jQuery(q.trigger_next.id).html(''+q.scenes[q.current_scene+1].id)
 				}else{
 					jQuery(q.trigger_next.id).html('Next')
@@ -249,6 +257,7 @@ function ClickToPresent(wrapper,scenes,options){
 		}
 
 		// if at the last scene
+		console.log(q.current_scene+' === '+(parseInt(q.scenes.length,10)-1) );
 		if(q.current_scene === q.scenes.length-1){
 
 			if(trigger_next)
@@ -285,13 +294,7 @@ function ClickToPresent(wrapper,scenes,options){
 		q.controller.play(); 
 		TweenMax.set(q.wrapper,{css:{'visibility':'visible', 'pointer-events':'auto'}});
 		TweenMax.fadeIn(q.wrapper,0.5,function(){
-			setStates(q.hotspots,'frozen',false);
-			
-			if(trigger_next)
-				q.trigger_next.frozen = false;
-
-			if(trigger_back)
-				q.trigger_back.frozen = false;
+			setStates(q.hotspots,'locked',false);
 		});
 
 		return this;

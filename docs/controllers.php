@@ -45,7 +45,7 @@ block.staggerJig('.mini', 'wiggle',{
 		strength:2, 
 		speed:0.8
 	},{
-		loop:2,
+		repeat:2,
 		offset:0.2
 	});
 

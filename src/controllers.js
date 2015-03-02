@@ -493,8 +493,8 @@ function SceneController(options){
 
 					}
 
-					/* check for frozen states */
-					if(q.progress<1){ checkFreezes(q.scene); q.completed = false; }
+					/* check for locked states */
+					if(q.progress<1){ checklocks(q.scene); q.completed = false; }
 
 
 					/* if a progress bar and the playhead is not at the end*/

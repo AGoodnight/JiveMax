@@ -17,7 +17,7 @@
 	</div>
 </div>
 <script>
-var block = new Item('#block').jig('slideIn',{strength:10},{sync:0.4}).jig('wiggle',{speed:0.5},{loop:400});
+var block = new Item('#block').jig('slideIn',{strength:10},{sync:0.4}).jig('wiggle',{speed:0.5},{repeat:400});
 </script>
 </body>
 </html>

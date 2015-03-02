@@ -15,7 +15,7 @@
 
 	This object is the base of all objects with a timeline/animations.
 	It contains 'clone' functions which are meant to extend thier native GSAP 
-	counterparts so as to support looping and work with controllers.
+	counterparts so as to support repeating and work with controllers.
 
 	==========================================================
 	CONSTRUCTOR
@@ -69,8 +69,8 @@
 			--------------------------------------------------------------------------------
 			key values that determine playback or temporal effects of the animation
 
-				1. loop:number
-					- will simulate looping of an animation by creating duplicate instances of animation on the objects timeline.
+				1. repeat:number
+					- will simulate repeating of an animation by creating duplicate instances of animation on the objects timeline.
 				2. sync:number
 					- determines when the animation will start on the objects timeline.			
 				3. offset:number
@@ -140,7 +140,7 @@
 		showAll() and hideAll()
 		---------------------------------------------------------------------------------------------------------------
 		If a DOM element has been affected by this GSAPObject instance, this method hides or shows them. 
-		Sets visibility to 'hidden' ( will not affect layout ) and freezes any and all user interactions on the element.
+		Sets visibility to 'hidden' ( will not affect layout ) and locks any and all user interactions on the element.
 
 
 		affect( name, item )
@@ -165,7 +165,7 @@ function GSAPObject(options){
 	q.defaults = {};
 	q.affectees = {length:0};
 	q.atEnd = false;
-	q.freezes =[];
+	q.locks =[];
 	q.type = 'GSAPObject';
 
 	if(options){
@@ -211,19 +211,19 @@ function GSAPObject(options){
 	function do_GSAP(id,dur,op,timeOptions,method,offset){
 		// execute a GSAP Method that accepts one var set.
 
-		var loop,
+		var repeat,
 			sync;
 			offset = (offset) ? offset : undefined ;
 
 		if(q.wrapper !== undefined){
 			if(q.wrapper.id !== undefined){
-				id = q.wrapper.id+' '+id;
+				id = (typeof id !=='string') ? id : q.wrapper.id+' '+id;
 			}
 		}
 
 		if(timeOptions){
 			sync = (timeOptions.sync !== undefined) ? timeOptions.sync : undefined ;
-			loop = (timeOptions.loop !== undefined) ? timeOptions.loop : undefined ;
+			repeat = (timeOptions.repeat !== undefined) ? timeOptions.repeat : undefined ;
 			offset = (timeOptions.offset !== undefined) ? timeOptions.offset : undefined ;
 		}
 
@@ -237,7 +237,7 @@ function GSAPObject(options){
 				options:op[0],
 				offset:offset,
 				sync:sync,
-				loop:loop
+				repeat:repeat
 			},method);
 		}else{
 
@@ -250,7 +250,7 @@ function GSAPObject(options){
 				options2:op[1],
 				offset:offset,
 				sync:sync,
-				loop:loop
+				repeat:repeat
 			},method);
 		}
 
@@ -272,7 +272,7 @@ function GSAPObject(options){
 
 	q.jig = function(e,preset,options,timeOptions){
 
-		var loop,
+		var repeat,
 			sync,
 			id;
 
@@ -286,7 +286,7 @@ function GSAPObject(options){
 
 		if(timeOptions){
 			sync = or(undefined, timeOptions.sync);
-			loop = or(undefined, timeOptions.loop);
+			repeat = or(undefined, timeOptions.repeat);
 		}
 
 		var newOptions = [];
@@ -310,7 +310,7 @@ function GSAPObject(options){
 
 		// If jig library is included
 		if(this.timeline.jig){
-			this.timeline.jig.apply(this.timeline,[id,preset,newOptions,sync,loop]);
+			this.timeline.jig.apply(this.timeline,[id,preset,newOptions,sync,repeat]);
 		}else{
 			console.log('You need to include a version of jig.js');
 		}
@@ -321,14 +321,14 @@ function GSAPObject(options){
 	q.staggerJig = function(e,preset,options,timeOptions){
 
 		var i,k,
-			loop,
+			repeat,
 			sync,
 			offset,
 			idGroup;
 
 		if(timeOptions){
 			sync = or(undefined, timeOptions.sync);
-			loop = or(undefined, timeOptions.loop);
+			repeat = or(undefined, timeOptions.repeat);
 			offset = or(undefined, timeOptions.offset);
 		}
 
@@ -375,7 +375,7 @@ function GSAPObject(options){
 		if(this.timeline.jig){
 
 			for( i = 0 ; i<idGroup.length ; i++){
-				this.timeline.jig.apply(this.timeline,[idGroup[i],preset,options,sync,loop]);
+				this.timeline.jig.apply(this.timeline,[idGroup[i],preset,options,sync,repeat]);
 				sync += offset
 			}
 
@@ -430,35 +430,44 @@ function GSAPObject(options){
 	q.yoyo = function(id,dur,op,op2,timeOptions){
 
 		var i,c = 0,c1,c2,c3;
-		var ops2 = op2;
-		var timeOps = timeOptions;
+		var ops = {};
+		var ops2 = {};
+		var timeOps;
 		var styles = jQuery(id).parseStyles();
 
-		if(ops2 !== undefined){
-			c1 = (ops2.sync !== undefined) ? c+=1 : undefined ;
-			c2 = (ops2.loop !== undefined) ? c+=1 : undefined ;
-			c3 = (ops2.offset !== undefined) ? c+=1 : undefined ;
-			timeOps = ops2;	
+		// see if op2 has been ommited and replaced with timeOptions
+		if(op2 !== undefined){
+			c1 = (op2.sync !== undefined) ? c+=1 : undefined ;
+			c2 = (op2.repeat !== undefined) ? c+=1 : undefined ;
+			c3 = (op2.offset !== undefined) ? c+=1 : undefined ;
+		}else{
+			for( i in op ){
+				if(i !== 'scale'){
+					ops[i] = 0;
+				}else{
+					ops[i] = 1;
+				}
+			}
+			ops2 = op;
 		}
 
 		if(c>0){
-			ops2 = {};
+			timeOps = op2
+			for( i in op ){
+				if(i !== 'scale'){
+					ops[i] = 0;
+				}else{
+					ops[i] = 1;
+				}
+			}
+			ops2 = op;
+		}else{
+			timeOps = timeOptions;
 		}
 
-		if(ops2 === undefined){
-			ops2 = {};
-		}
+		console.log(id, ops, ops2, timeOps)
 
-		for( i in op ){
-			ops2[i] = op[i];
-			op[i] = 0;
-		}
-
-		console.log(op)
-		console.log(ops2)
-		console.log(timeOps)
-
-		do_GSAP(id,dur,[op,ops2],timeOps,'yoyo');
+		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
 		// return -------------------------
 		return this;
 	};
@@ -554,7 +563,15 @@ function GSAPObject(options){
 		//console.log(this.timeline);
 
 		return this;
-	}
+	};
+
+	q.loop = function(times){
+		if(times === 'forever' || times ===undefined){
+			q.set({repeat:-1});
+		}else{
+			q.set({repeat:times});
+		}
+	};
 
 	return q;
 }
@@ -652,7 +669,7 @@ function GSAP_Router(affectees){
 
 	q.play = function(from,suppressEvents,callback,ignoreAffectees){
 
-		//console.log('playing ' + this)
+		console.log(this)
 
 		function affectees(_this){
 			var i;
@@ -778,7 +795,7 @@ function GSAP_Router(affectees){
 	The rational for having this special class is to keep the GSAPObject class
 	as pure and simple as possible.
 
-	This class has playback feedback and stores freezes, which are labels that indicate 
+	This class has playback feedback and stores locks, which are labels that indicate 
 	when and where certain classes of the GSAPObject should be inaccesible to user control,
 	such as buttons that need to be disabled until a certain point. 
 
@@ -838,7 +855,7 @@ function Scene(options){
 	q.stopped = false; // 'paused' is reserved by GSAP
 	q.progress = function(){ return q.timeline.totalProgress(); };
 	q.duration = function(){ return q.timeline.totalDuration(); };
-	q.freezes = [];
+	q.locks = [];
 	q.type = 'scene';
 
 	// at the point you have this in yor method chain the timeline is erased
@@ -853,10 +870,11 @@ function Scene(options){
 	if(options){
 		if(options.paused){ q.timeline.pause(); }else{ q.timeline.play(); }
 		q.wrapper = (options.wrapper) ? new Item(options.wrapper) : undefined ;
-		q.id = (options.id)? options.id : 'scene' ;
-		q.timeline.name = q.id;
+		q.name = (options.name)? options.name : 'scene' ; 
+		q.timeline.name = q.name;
 		q.scoID = (options.scoID) ? options.scoID : 'null' ;
 		q.soundtrack = (options.soundtrack) ? options.soundtrack : undefined ;
+		overwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
 	}
 
 	return q;
@@ -955,21 +973,6 @@ function Item(bind, options){
 	/* 	An array of actions or functions that this item will execute while it's timeline 
 		is running */
 	q.actions = [];
-
-	q.hide = function(){
-		jQuery(q.element).css({
-			'visibility':'hidden',
-			'opacity':'0'
-		});
-	};
-
-	q.show = function(){
-		jQuery(q.element).css({
-			'visibility':'visible',
-			'opacity':'1'
-		});
-	};
-
 	/*
 		The below allows us to exclude redundant referencing to the 'id' node of the item.
 		It also keeps these functions defined in GSAPObject.
@@ -1087,12 +1090,12 @@ function Text(bind, options){
 	affecting any of the methods added via bind or bindOn.
 
 
-	freeze( options )
+	lock( options )
 	----------------------------------------------------------------------------------------
 	This method allows the developer to disable or enable the button instance
 	at a certain point in the timeline.
 
-	freeze's counter method is unFreeze(), which accepts no options and happens immediatley on call.
+	lock's counter method is unlock(), which accepts no options and happens immediatley on call.
 
 	It does this by creating an encrypted label ( native ability in TimelineMax ) and placing it on the timeline.
 	It then checks to see if that lable has passed or not. The label will trigger the button's change in state.
@@ -1102,26 +1105,25 @@ function Text(bind, options){
 		an object containg key value pairs.
 
 			-- on:Scene
-				--- the Scene or any other GSAPObject you want this freeze to be dependent on
+				--- the Scene or any other GSAPObject you want this lock to be dependent on
 			-- from:number*
-				--- when the freeze whould occur ( when the button is disabled )
+				--- when the lock whould occur ( when the button is disabled )
 			-- until:number**
-				--- when the freeze should end ( when the button is enabled )
+				--- when the lock should end ( when the button is enabled )
 
 			* ommiting 'from' will result in the button being disabled from 0 to indicated 'until' value.
-			** ommiting 'until' will simply freeze the button from the 'from' value indefinatley.
+			** ommiting 'until' will simply lock the button from the 'from' value indefinatley.
 
 
 
 	enable() and disable()
 	-----------------------------------------------------------------------------------------
-	This method is much like freeze, however both are invoked at the time they are called.
+	This method is much like lock, however both are invoked at the time they are called.
 	The disable method assigns a class of 'disabled' to the buttons DOM element.
 	enable removes the disabled class.
 */
 function Button(bind, options){
 
-	
 	var q = new Item(bind,options);
 	q.type = 'button';
 
@@ -1141,7 +1143,7 @@ function Button(bind, options){
 	q.active = false;
 	q.down = false;
 	q.over = false;
-	q.frozen = false;
+	q.locked = false;
 
 	// Mouse Up Outside Event
 	getNodes('body').onmouseup = (function(e){
@@ -1219,7 +1221,7 @@ function Button(bind, options){
 			var i;
 			var _this = q; 
 
-			if(!this.frozen){
+			if(!this.locked){
 
 				// affectee code
 				// --------------------------
@@ -1291,7 +1293,7 @@ function Button(bind, options){
 
 		q.element[mouseEvent] = (function(e,q){
 			return function(){
-				if(!q.frozen){
+				if(!q.locked){
 					callback();
 					e.call(this,arguments);
 				}
@@ -1303,8 +1305,8 @@ function Button(bind, options){
 	};
 
 	// Used to disable mouse events at specified points in a timeline. This is independent of using css 'pointer-events', which trumps this method.
-	q.freeze = function(options){
-	// OPTIONS: { on:scene, from:number, until:number }, if you pass no options it will just set the item to frozen
+	q.lock = function(options){
+	// OPTIONS: { on:scene, from:number, until:number }, if you pass no options it will just set the item to locked
 		
 		var scene, 
 			from,
@@ -1319,8 +1321,8 @@ function Button(bind, options){
 			from = (options.from) ? options.from : 'z';
 			until = (options.until) ? options.until : 'z';
 
-			fromLabel = 'freeze_'+scene.freezes.length+'f';
-			untilLabel = 'freeze_'+scene.freezes.length+'u';
+			fromLabel = 'lock_'+scene.locks.length+'f';
+			untilLabel = 'lock_'+scene.locks.length+'u';
 
 			if(from === 'z'){ from = 0; }
 			scene.timeline.addLabel(fromLabel,from);
@@ -1329,7 +1331,7 @@ function Button(bind, options){
 				scene.timeline.addLabel(untilLabel,until);
 			}
 
-			scene.freezes.push({
+			scene.locks.push({
 				from:{
 					label:fromLabel,
 					reached:false
@@ -1343,32 +1345,32 @@ function Button(bind, options){
 
 			console.log(scene.type)
 
-			// if the scene needs to watch for the freeze, but has no controller.
+			// if the scene needs to watch for the lock, but has no controller.
 			if(scene.controller === undefined){
 				scene.interval = setInterval(function(){
 					if(scene.timeline.progress() > 0 && scene.timeline.progress() < 1){
 						console.log('checking')
-						checkFreezes(scene);
+						checklocks(scene);
 					}
 				},100)
 			}
 
 		}else{
-			q.frozen = true;
+			q.locked = true;
 		} 
 
 		return q;	
 	}; 
 
-	q.unFreeze = function(){
+	q.unlock = function(){
 
 		jQuery(q.element).css('cursor','pointer');
-		q.frozen = false;
+		q.locked = false;
 
 		return q;
 	};
 
-	q.clearFreezes = function(){
+	q.clearlocks = function(){
 		
 		if(q.interval !== undefined){
 			try{
@@ -1379,20 +1381,20 @@ function Button(bind, options){
 		}
 
 		q.interval = undefined;
-		q.freezes = [];
+		q.locks = [];
 			
 		return q;
 	};
 
 
-	// Same as freeze and unFreeze except it also affects the elements class, allowing styling.
+	// Same as lock and unlock except it also affects the elements class, allowing styling.
 	q.enable = function(){
-		q.unFreeze();
+		q.unlock();
 		jQuery(q.id).removeClass('disabled').children().removeClass('disabled');
 	};
 
 	q.disable = function(){
-		q.freeze();
+		q.lock();
 		jQuery(q.id).addClass('disabled').children().addClass('disabled');
 	};
 
@@ -1405,7 +1407,7 @@ function Button(bind, options){
 		if(e.mouseover){
 			q.element.onmouseover = ( function(e,self,v){
 				return function(){
-					if(!self.frozen){
+					if(!self.locked){
 						v.mouseover.call(self,q.id);
 						e.call(self,e);
 					}
@@ -1416,7 +1418,7 @@ function Button(bind, options){
 		if(e.mouseout){
 			q.element.onmouseout = ( function(e,self,v){
 				return function(){
-					if(!self.frozen){
+					if(!self.locked){
 						v.mouseout.call(self,q.id);
 						e.call(self,e);
 					}
@@ -1428,7 +1430,7 @@ function Button(bind, options){
 			q.element.onmousedown = ( function(e,self,v){
 				//console.log('added mousedown to '+q.id)
 				return function(){
-					if(!self.frozen){
+					if(!self.locked){
 						v.mousedown.call(self,q.id);
 						e.call(self,e);
 					}
@@ -1585,22 +1587,22 @@ function Drag(bind, options){
 
 		// perform function on drag end
 		if(options.onDragEnd){
-			q.onDragEnd = (function(e,v){
+			q.onDragEnd = (function(self,e,v){
 				return function(){
-					v(q)
-					e.apply(q,e);
+					v.call(self,q.id);
+					e.call(q,e);
 				}
-			})(q.onDragEnd,options.onDragEnd);
+			})(q,q.onDragEnd,options.onDragEnd);
 		};
 		
 		// perform function on drag start
 		if(options.onDrag){
-			q.onDrag = (function(e,v){
+			q.onDrag = (function(self,e,v){
 				return function(){
-					v(q);
-					e.apply(q,e);
+					v.call(self,q.id);
+					e.call(q,e);
 				}
-			})(q.onDrag,options.onDrag);
+			})(q,q.onDrag,options.onDrag);
 		};
 
 		// index for hittest purposes
@@ -1614,21 +1616,21 @@ function Drag(bind, options){
 		if(options.parent){
 
 			if(options.parent.onDrag){
-				q.onDrag = (function(e){
+				q.onDrag = (function(self,e){
 					return function(){
 						options.parent.onDrag();
-						e.apply(q,e);
+						e.call(self,q.id);
 					};
-				})(q.onDrag);
+				})(q,q.onDrag);
 			}
 
 			if(options.parent.onDragEnd){
-				q.onDragEnd = (function(e){
+				q.onDragEnd = (function(self,e){
 					return function(){
 						options.parent.onDragEnd();
-						e.apply(q.e);
+						e.call(self,q.id);
 					};
-				})(q.onDragEnd);
+				})(q,q.onDragEnd);
 			}
 		}
 	};

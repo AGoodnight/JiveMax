@@ -278,16 +278,16 @@ function DragAndDrop(type,a,b,options){
 				nodes[i].id = q.id+'_drag_'+i;
 				nodes[i] = new Drag('#'+nodes[i].id,{
 					index:i,
-					onDrag:function(self){
+					onDrag:function(){
 						var hit = false;
-						q.currentButton = self.index;
-						self.active = false;
+						q.currentButton = this.index;
+						this.active = false;
 
 						// check if its over any of our slots, before we release.
 						for( j = 0, l=q.slots.length ; j<l ; j++){
-							if(!self.active){
-								if(self.dragEngine.hitTest(q.slots[j].element)){
-									self.active = true;
+							if(!this.active){
+								if(this.dragEngine.hitTest(q.slots[j].element)){
+									this.active = true;
 									q.slots[j].active = true;
 									q.currentSlot = q.slots[j];
 
@@ -299,7 +299,7 @@ function DragAndDrop(type,a,b,options){
 
 									jQuery(q.slots[j].id).addClass('active');
 								}else{
-									self.active = false;
+									this.active = false;
 									q.slots[j].active = false;
 									q.currentSlot = undefined;
 
@@ -308,13 +308,16 @@ function DragAndDrop(type,a,b,options){
 							}
 						}
 					},
-					onDragEnd:function(self){
-						if(self.active && q.currentSlot !== undefined){
+					onDragEnd:function(){
+						var self = this;
+						if(this.active && q.currentSlot !== undefined){
+							console.log('drag instance');
+							console.log(this);
 							var callback = function(){ handleSnap(self.index,self,q.currentSlot); }
-							z.checkAnswers(q,self.index,callback);
-							self.hit = false;
+							z.checkAnswers(q,this.index,callback);
+							this.hit = false;
 						}else{
-							self.rebound();
+							this.rebound();
 						}
 					}
 				});

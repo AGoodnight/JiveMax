@@ -135,3 +135,9 @@ ul.method-list > li{
 	list-style:none;
 	margin-top:30px;
 }
+
+img{
+	border:#888888 solid 1px;
+	box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.24), 0 3px 12px rgba(0, 0, 0, 0.16);
+	margin:10px 0 27px 0;
+}

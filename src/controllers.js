@@ -155,7 +155,7 @@ function SceneController(options){
 		totalProgress:0,
 		time:0,
 		change:true,
-		userAction:false,
+		userAction:false, // conditional that determines if user action is required before the scene can be marked complete.
 
 		// timeline status - booleans
 		completed:false, // helps keep interval from firing functions redundantly.
@@ -165,9 +165,9 @@ function SceneController(options){
 		// interval slot
 		interval:undefined,
 
-		//transitions
-		onStart:function(){},
-		onFinish:function(){},
+		//events
+		onLoad:function(){},
+		onReady:function(){},
 
 		//media
 		audioController:audio,
@@ -682,28 +682,32 @@ function SceneController(options){
 		var images;
 
 
-		function onReady(){
+		function _onReady(){
+			console.log('> _onReady')
 			enableController();
 			q._loading = false;
 		}
 		
-		function ifReady(){
+		function _ifReady(){
+			console.log('> _ifReady')
 			if(_ready){
-				TweenMax.fromTo(container,0.3,{opacity:0},{opacity:1, onComplete:onReady});
-				if(parent(options,'onFinish')){ options.onFinish(); }
+				TweenMax.fromTo(container,0.3,{opacity:0},{opacity:1, onComplete:_onReady});
+				if(parent(options,'onReady')){ options.onReady.call(q,'onReady'); }
 				clearInterval(q.waitForReady);
 			}
 		}
 
-		function onSuccess(){
+		function _onSuccess(){
+			console.log('> _onSuccess')
 			
-			q.waitForReady = setInterval(ifReady,500);
-			q.scene = _root[initialScene];
-			if(options){ if(options.callback){ options.callback(); }}
+			q.waitForReady = setInterval(_ifReady,500);
+			q.scene = q.controller.root[initialScene];
+			if(options){ if(options.onLoaded){ options.onLoaded.call(q,'onLoaded'); }}
 			
 		}
 
-		function onImagesLoaded(){
+		function _onImagesLoaded(){
+			console.log('> _onImagesLoaded')
 			if(q.controller){
 
 				// -------------------------------
@@ -739,16 +743,17 @@ function SceneController(options){
 						this.play();
 					},
 					onplay:function(){
-						onSuccess();
+						_onSuccess();
 						this.pause();
 					}
 				});
 			}
 		}
 
-		function onStart(){
+		function _onLoad(){
 			jQuery(container).empty();
 			jQuery(container).load(src,function(){ 
+				console.log('> _onLoad')
 
 				// ----------------------------
 				// Load all the images
@@ -757,10 +762,10 @@ function SceneController(options){
 
 				if(images.length > 0){
 					jQuery(images).on('load',function(){
-						onImagesLoaded();
+						_onImagesLoaded();
 					})
 				}else{
-					onImagesLoaded();
+					_onImagesLoaded();
 				}
 
 
@@ -781,10 +786,10 @@ function SceneController(options){
 			_ready = false;
 
 			if(thisScene !== undefined ){ q.kill(); }
-			if(parent(options,'onStart')){ options.onStart(); }
+			if(parent(options,'onLoad')){ options.onLoad.call(q,'onLoad'); }
 			
 			// Fade out the container of our presentation, then call function
-			TweenMax.to(container,0.4,{opacity:0, onComplete:onStart});
+			TweenMax.to(container,0.4,{opacity:0, onComplete:_onLoad});
 
 		}
 
@@ -872,7 +877,7 @@ function ModuleController(bind,options,callback){
 	// Module Events
 	// ------------------------------
 
-	q.onStart = function(){
+	q.onLoad = function(){
 
 		var i;
 
@@ -896,7 +901,7 @@ function ModuleController(bind,options,callback){
 		q.sceneController.refresh();
 	};
 
-	q.onFinish = function(){
+	q.onReady = function(){
 
 		if(q.storage.scenes.completed){
 			/* 
@@ -967,13 +972,13 @@ function ModuleController(bind,options,callback){
 
 		q.sceneController.load(q.stage,module.url,'_scene',{
 											
-			onStart:function(){
-				q.onStart();
+			onLoad:function(){
+				q.onLoad();
 				TweenMax.fadeOut(q.moduleTitle.item.id,0.5);
 				TweenMax.fadeOut(q.sceneTitle.item.id,0.5);
 			},
 
-			onFinish:function(){
+			onLoaded:function(){
 
 				q.scenes =[];
 				TweenMax.fadeIn(q.moduleTitle.item.id,0.5);
@@ -991,7 +996,7 @@ function ModuleController(bind,options,callback){
 				// Set our soundtrack path
 				q.audioPath = module.audioPath;
 			
-				q.onFinish();	
+				q.onReady();	
 
 			}
 
@@ -1029,8 +1034,8 @@ function ModuleController(bind,options,callback){
 
 			q.current_scene+=1;
 			q.sceneController.load(q.stage,q.scenes[q.current_scene].url,'_scene',{
-				onStart:q.onStart,
-				onFinish:q.onFinish
+				onLoad:q.onLoad,
+				onReady:q.onReady
 			})
 		}
 	};
@@ -1047,8 +1052,8 @@ function ModuleController(bind,options,callback){
 
 			q.current_scene-=1;
 			q.sceneController.load(q.stage,q.scenes[q.current_scene].url,'_scene',{
-				onStart:q.onStart,
-				onFinish:q.onFinish
+				onLoad:q.onLoad,
+				onReady:q.onReady
 			})
 		}
 	};
@@ -1197,8 +1202,8 @@ function ModuleController(bind,options,callback){
 			q.autoPlay = (options.autoPlay !== undefined) ? options.autoPlay : false ;
 
 			// options functions
-			q.onStart = or(q.onStart,options.onStart);
-			q.onFinish = or(q.onFinish,options.onFinish);
+			q.onLoad = or(q.onLoad,options.onLoad);
+			q.onReady = or(q.onReady,options.onReady);
 
 			// options bindings
 			q.stage = or('#stage',options.stage);
@@ -1283,9 +1288,9 @@ function ModuleController(bind,options,callback){
 			q.modules = [];
 
 			// create a SceneController for this ModuleController
-			_root.sceneController = new SceneController({restrict:true,audioController:q.audioController});
-			_root.sceneController.controller = q;
-			q.sceneController = _root.sceneController;
+			q.root.sceneController = new SceneController({restrict:true,audioController:q.audioController});
+			q.root.sceneController.controller = q;
+			q.sceneController = q.root.sceneController;
 			q.sceneController.controller = q;
 
 			// Load Ajax and assign

@@ -124,11 +124,11 @@
 	// Now we can assign some rollover animations 
 	// (ideally these would be css animations, however to allow for IE9 and IE8 we choose to use javascript)
 
-	GSAPImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_1,from:0,until:1}); 
-	// Calling 'freeze()' on the buttons until '1' means no mouse events will register until the controller sees the timeline instance 'on' is past '1'
-	jQueryImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_2,from:0,until:1});
-	sassImg.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_3,from:0,until:1});
-	html5Img.to(1,{rotationY:'+=360'}).bind('onmouseover').freeze({on:slide_4,from:0,until:1});
+	GSAPImg.to(1,{rotationY:'+=360'}).bind('onmouseover').lock({on:slide_1,from:0,until:1}); 
+	// Calling 'lock()' on the buttons until '1' means no mouse events will register until the controller sees the timeline instance 'on' is past '1'
+	jQueryImg.to(1,{rotationY:'+=360'}).bind('onmouseover').lock({on:slide_2,from:0,until:1});
+	sassImg.to(1,{rotationY:'+=360'}).bind('onmouseover').lock({on:slide_3,from:0,until:1});
+	html5Img.to(1,{rotationY:'+=360'}).bind('onmouseover').lock({on:slide_4,from:0,until:1});
 
 
 	// -----------------------------------------------------

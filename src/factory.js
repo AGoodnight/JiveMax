@@ -216,8 +216,13 @@ function GSAPObject(options){
 			offset = (offset) ? offset : undefined ;
 
 		if(q.wrapper !== undefined){
-			if(q.wrapper.id !== undefined){
+			if(q.wrapper.id !== undefined && q.wrapper.id !== id){
 				id = (typeof id !=='string') ? id : q.wrapper.id+' '+id;
+				//console.log('adding wrapper: '+q.wrapper.id+'  '+id);
+			}
+			if(q.wrapper.id === id){
+				id = id;
+				//console.log('same as wrapper: '+id);
 			}
 		}
 
@@ -277,8 +282,13 @@ function GSAPObject(options){
 			id;
 
 		if(q.wrapper !== undefined){
-			if(q.wrapper.id !== undefined){
+			if(q.wrapper.id !== undefined && q.wrapper.id !== e){
 				id = q.wrapper.id+' '+e;
+				////console.log('adding wrapper: '+q.wrapper.id+'  '+id);
+			}
+			if(q.wrapper.id === e){
+				id = e;
+				//console.log('same as wrapper: '+id);
 			}
 		}else{
 			id = e
@@ -292,7 +302,7 @@ function GSAPObject(options){
 		var newOptions = [];
 
 		for( i in options ){
-			//console.log(newOptions[i]+' --- '+q.defaults[i]);
+			////console.log(newOptions[i]+' --- '+q.defaults[i]);
 			newOptions[i] = ( options[i] === undefined ) ? q.defaults[i] : options[i] ;
 			//console.log(newOptions[i]+' --- '+q.defaults[i]);
 		}
@@ -465,7 +475,7 @@ function GSAPObject(options){
 			timeOps = timeOptions;
 		}
 
-		console.log(id, ops, ops2, timeOps)
+		//console.log(id, ops, ops2, timeOps)
 
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
 		// return -------------------------
@@ -517,14 +527,14 @@ function GSAPObject(options){
 				TweenMax.set(this._elements[i],{css:{
 					'visibility':'visible',
 					'opacity':'1',
-					'pointer-events':'auto'
+					'pointer-events':'inherit'
 				}})
 			}
 		}else{
 			TweenMax.set(selector,{css:{
 				'visibility':'visible',
 				'opacity':'1',
-				'pointer-events':'auto'
+				'pointer-events':'inherit'
 			}})
 		}
 
@@ -669,7 +679,7 @@ function GSAP_Router(affectees){
 
 	q.play = function(from,suppressEvents,callback,ignoreAffectees){
 
-		console.log(this)
+		//console.log(this)
 
 		function affectees(_this){
 			var i;
@@ -717,7 +727,7 @@ function GSAP_Router(affectees){
 
 	q.restart = function(includeDelay,suppressEvents,callback,ignoreAffectees){
 
-		console.log('restarting ' + this)
+		//console.log('restarting ' + this)
 
 		function affectees(_this){
 			var i;
@@ -1242,7 +1252,7 @@ function Button(bind, options){
 				_this.timeline.call(
 					function(){
 						_this.active = false;
-						console.log(_this.id+' is not active')
+						//console.log(_this.id+' is not active')
 					}
 				);
 
@@ -1343,13 +1353,13 @@ function Button(bind, options){
 				item:q
 			});
 
-			console.log(scene.type)
+			//console.log(scene.type)
 
 			// if the scene needs to watch for the lock, but has no controller.
 			if(scene.controller === undefined){
 				scene.interval = setInterval(function(){
 					if(scene.timeline.progress() > 0 && scene.timeline.progress() < 1){
-						console.log('checking')
+						//console.log('checking')
 						checklocks(scene);
 					}
 				},100)

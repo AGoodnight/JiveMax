@@ -114,23 +114,23 @@ var _scene = Scene({paused:true});
 
 var modal_1 = new Scene({id:'firefox',wrapper:'#slide_1',paused:true,ease:'Elastic.easeOut'})
 	.from('#slide_1',0.5,{y:100,scale:0.9})
-	.from('#slide_1 h1',0.8,{opacity:0,scale:0.8})
-	.from('#slide_1 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
-	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+	.from('h1',0.8,{opacity:0,scale:0.8})
+	.from('dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
 
 
 var modal_2 = new Scene({ id:'chrome', wrapper:'#slide_2', paused:true,ease:'Elastic.easeOut'})
 	.from('#slide_2',0.5,{y:100,scale:0.9})
-	.from('#slide_2 h1',0.8,{opacity:0,scale:0.8})
-	.from('#slide_2 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
-	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+	.from('h1',0.8,{opacity:0,scale:0.8})
+	.from('dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
 
 
 var modal_3 = new Scene({id:'ie',wrapper:'#slide_3',paused:true,ease:'Elastic.easeOut'})
 	.from('#slide_3',0.5,{y:100,scale:0.9})
-	.from('#slide_3 h1',0.8,{opacity:0,scale:0.8})
-	.from('#slide_3 dt', 0.8,{opacity:0,x:-30},{sync:0.5})
-	.from('#slide_1 dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
+	.from('h1',0.8,{opacity:0,scale:0.8})
+	.from('dt', 0.8,{opacity:0,x:-30},{sync:0.5})
+	.from('dd', 0.8,{opacity:0,x:-30,ease:'Circ.easeOut'},{sync:1});
 
 
 _scene.slides = [ modal_1, modal_2, modal_3 ];

@@ -62,14 +62,13 @@ function ClickToPresent(wrapper,scenes,options){
 
 		.bindOn({
 			mousedown:function(){
-				if(!q._loading){
+				if(q._loading === false || q._loading === undefined){
 					q._loading = true;
-
 					q.modalTriggers.active = true;
 					TweenMax.fadeOut(q.wrapper,0.5,function(){
 						q.current_scene = index;
 						q.hide();
-						TweenMax.set(q.wrapper,{css:{'visibility':'hidden', 'pointer-events':'none'}});
+						TweenMax.set(q.wrapper,{'visibility':'hidden', 'pointer-events':'none'});
 						q.controller.kill();
 						q._loading = false;
 					});
@@ -91,7 +90,7 @@ function ClickToPresent(wrapper,scenes,options){
 		}
 
 		btn.element.onmousedown = (function(e,self,index){
-
+			//console.log('button down: '+q._loading)
 			return function(){
 				if(!q._loading){
 					q._loading = true;
@@ -234,7 +233,7 @@ function ClickToPresent(wrapper,scenes,options){
 		
 		if(trigger_back){
 			if(previous){
-				if( q.scenes[q.current_scene-1].id !== 'scene' && q.scenes[q.current_scene+1].id !== undefined){
+				if( q.scenes[q.current_scene-1].id !== 'scene' && q.scenes[q.current_scene-1].id !== undefined){
 					jQuery(q.trigger_back.id).html(''+q.scenes[q.current_scene-1].id);
 				}else{
 					jQuery(q.trigger_back.id).html('Previous');

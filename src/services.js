@@ -1008,6 +1008,8 @@ function GSAPEvent(name,obj,events,item,index,args){
  	//console.log(name+' '+index+' '+item[index].id)
  	//console.log(obj)
 
+ 	var all_items = obj.buttons;
+
  	if(args !== undefined){
  		if(args.length > 0){
  		
@@ -1019,13 +1021,13 @@ function GSAPEvent(name,obj,events,item,index,args){
 
 	 		newArgs.push(scene);
 
-	 		f = events[name].apply(obj, newArgs);
+	 		f = events[name].apply(obj, item[index], scene, all_items);
 	 	}else{
-	 		f = events[name].call(obj, item[index], scene);
+	 		f = events[name].call(obj, item[index], scene, all_items);
 	 	}
 
  	}else{
- 		f = events[name].call(obj, item[index], scene);
+ 		f = events[name].call(obj, item[index], scene, all_items);
  	}
 
  	item[index][name] = scene;

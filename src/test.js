@@ -2,13 +2,15 @@
 // =================
 // Test class
 
-function Test(options){
+function Test(type,options){
 
-	var i;
+	var i,k;
 
 	var q = {
 		
 		id:or('untitled',options.id),
+		type:type,
+		locked:(options.lock) ? true : false,
 
 		maxAttempts: or(undefined,options.maxAttempts),
 		guide:or(false,options.guide),
@@ -17,7 +19,102 @@ function Test(options){
 		onSolve:or(function(){/*console.log('--> on solve')*/},options.onSolve),
 		onWrong:or(function(){/*console.log('--> on wrong')*/},options.onWrong),
 		onUnChoose:or(function(){/*console.log('--> on un choose')*/},options.onUnChoose),
-		onChoose:or(function(){/*console.log('--> on choose')*/},options.onChoose)
+		onChoose:or(function(){/*console.log('--> on choose')*/},options.onChoose),
+
+		choice:function(){
+
+			var qq = {};
+			
+			qq.checkAnswers = function(e){
+				
+				var i;
+				var correct = 0;
+				var responses = 0;
+
+				// Check if the active flags are correct
+				for( i in e.buttons ){
+					if(e.buttons[i].active){
+						responses+=1
+						if(qq.isCorrect(e,i)){
+							correct+=1
+						}
+					}
+				}
+				
+
+				// Check if there are extra incorrect flags active
+				if(correct === e.answers.length){
+					if(responses === e.answers.length){
+						e.onSolve();
+					}else{
+						e.onWrong();
+					}
+				}else{
+					e.onWrong();
+				}
+			}
+
+			qq.isCorrect = function(e, index){
+
+				var i,
+					hit=false,
+					index = parseInt(index,10);
+
+				// simply iterates over the answers array
+				for( i = 0 ; i<e.answers.length ; i++ ){
+					if(index === parseInt(e.answers[i],10) )
+						hit = true
+				}
+
+				return hit;
+			}
+
+
+			qq.type = 'choice';
+			return qq;
+		},
+		matching:function(){
+
+			var qq = {};
+
+			qq.checkAnswers = function(e,index,onMatch){
+				
+				var i;
+				var correct = 0;
+
+				for( i=0 ; i<e.buttons.length ; i++){
+
+					if(e.slots[i].active){
+						if(e.answers[index] === i){
+							e.slots[i].matched = true;
+							onMatch(index,e.buttons[i],e.slots[i]);
+						}else{
+							e.buttons[index].rebound();
+						}
+					}
+				}
+
+				for( i = 0 ; i<e.slots.length ; i++){
+					if(e.slots[i].matched){
+						correct++
+					}
+				}
+
+				if(correct === e.answers.length){
+					
+					if(q.locked){
+						for( i = 0, k=q.buttons.length ; i<k ; i++ ){
+							q.buttons[i].disable();
+							console.log(q.buttons[i])
+						}
+					}
+					e.onSolve();
+				}
+			}
+
+			qq.type = 'matching';
+			return qq;
+		}
 
 	};
 
@@ -30,102 +127,14 @@ function Test(options){
 		'onUnChoose':q.onUnChoose
 	}
 
+	q.testInstance = q[type]();
+
 	return q;
 
 }
 
 // =======================
 // Analysis Classes
-
-function Choice(test){
-
-	q = {};
-	
-	q.checkAnswers = function(e){
-		
-		var i;
-		var correct = 0;
-		var responses = 0;
-
-		// Check if the active flags are correct
-		for( i in e.buttons ){
-			if(e.buttons[i].active){
-				responses+=1
-				if(q.isCorrect(e,i)){
-					correct+=1
-				}
-			}
-		}
-		
-
-		// Check if there are extra incorrect flags active
-		if(correct === e.answers.length){
-			if(responses === e.answers.length){
-				e.onSolve();
-			}else{
-				e.onWrong();
-			}
-		}else{
-			e.onWrong();
-		}
-	}
-
-	q.isCorrect = function(e, index){
-
-		var i,
-			hit=false,
-			index = parseInt(index,10);
-
-		// simply iterates over the answers array
-		for( i = 0 ; i<e.answers.length ; i++ ){
-			if(index === parseInt(e.answers[i],10) )
-				hit = true
-		}
-
-		return hit;
-	}
-
-
-	q.type = 'choice';
-	return q;
-}
-
-function Matching(test){
-
-	var q = {};
-
-	q.checkAnswers = function(e,index,onMatch){
-		
-		var i;
-		var correct = 0;
-
-		for( i=0 ; i<e.buttons.length ; i++){
-
-			if(e.slots[i].active){
-				if(e.answers[index] === i){
-					e.slots[i].matched = true;
-					onMatch(index,e.buttons[i],e.slots[i]);
-				}else{
-					e.buttons[index].rebound();
-				}
-			}
-		}
-
-		for( i = 0 ; i<e.slots.length ; i++){
-			if(e.slots[i].matched){
-				correct++
-			}
-		}
-
-		if(correct === e.answers.length){
-			e.onSolve();
-		}
-	}
-
-	q.type = 'matching';
-	return q;
-}
-
 
 // ==========================
 // Test class generalizations
@@ -135,8 +144,8 @@ function ButtonList(type,options){
 	var i,j,k,l,element,
 
 		// Classes
-		q = new Test(options),
-		z = new type(q),
+		q = new Test(type,options),
+		z = q.testInstance,
 
 		// arrays
 		nodes = [],
@@ -211,6 +220,9 @@ function ButtonList(type,options){
 			// create a custom scene, from the constructors options and return an event function to this classes event function
 			q[name] = new GSAPEvent(name,q,q.testEvents,q.buttons,i)
 		}
+
+
+
 		
 	}
 
@@ -221,7 +233,7 @@ function ButtonList(type,options){
 function DragAndDrop(type,a,b,options){
 
 	var i,j,k,l,m,
-		q = new Test(options),
+		q = new Test(type,options),
 		nodes;
 
 	q.buttons = [];
@@ -231,7 +243,7 @@ function DragAndDrop(type,a,b,options){
 	q.b = b;		
 	q.orientation = or(undefined, options.orientation);
 
-	var z = new type(q);
+	var z = q.testInstance;
 
 	function handleSnap(btn_index, btn, drop){
 
@@ -321,6 +333,23 @@ function DragAndDrop(type,a,b,options){
 						}
 					}
 				});
+
+				nodes[i].element.onmousedown = (function(_mousedown,_btn,_q,_z){
+					return function(){
+						_mousedown();
+						_q.currentButton = _btn.index;
+						_q.onChoose();	
+					}
+				})(nodes[i].element.onmousedown,nodes[i],q,z);
+
+				nodes[i].element.onmouseup = (function(_mouseup,_btn,_q,_z){
+					return function(){
+						_mouseup();
+						_q.currentButton = _btn.index;
+						_q.onUnChoose();	
+					}
+				})(nodes[i].element.onmouseup,nodes[i],q,z);
+
 				nodes[i].css = jQuery(nodes[i].id).parseStyles();
 				nodes[i].parent_css = jQuery(nodes[i].id).parent().parseStyles();
 			}
@@ -346,7 +375,7 @@ function DragAndDrop(type,a,b,options){
 
 				for(name in q.testEvents){
 					// create a custom scene, from the constructors options and return an event function to this classes event function
-					q[name] = new GSAPEvent(name,q,q.testEvents,q.buttons,i,[nodes])
+					q[name] = new GSAPEvent(name,q,q.testEvents,q.buttons,i)
 				}
 
 			}

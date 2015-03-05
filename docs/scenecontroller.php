@@ -82,7 +82,9 @@ myController.swap( anotherScene );</pre>
 	callback:function(){}
 });</pre>
 <p>Above our first argument is the wraper we will load the external markup into, while the second argument is the relative path to the html document containing the markup. The third argument is the name of the scene that is instatiaed in the external html document, we need to pass this as it will point the controller to the specific scene we want to control. In theory one could have many scenes in a single html document which was loaded in via ajax, so this assignment allows that possibility to be present. The last argument is an object with key value pairs, methods that execute on events.</p>
-</br>
+<br/>
+<h4>init()</h4>
+<br/>
 <h4>onLoad()</h4>
 <p>This method will execute the moment the SceneController begins to load an external document. The methods keyword 'this' refers to the SceneController instance, and the first default argument/variable is a string that is the name of the method. Useful if you need to know what is firing or you want to reference the method itself as follows:</p>
 <pre>...

@@ -187,10 +187,10 @@ jQuery(document).ready(function(){
 		bar:bar, 
 		scrubber:bug, 
 		fill:fill, 
-		controller:_root.sceneController
+		controller:_root.controller.sceneController
 	});
 
-	_root.sceneController.bind({
+	_root.controller.sceneController.bind({
 		scrub:scrubbie, 
 		toggle:'#play-btn', 
 		restart:'#play-btn',

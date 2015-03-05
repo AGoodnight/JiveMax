@@ -141,3 +141,63 @@ img{
 	box-shadow: 0 1.5px 4px rgba(0, 0, 0, 0.24), 0 3px 12px rgba(0, 0, 0, 0.16);
 	margin:10px 0 27px 0;
 }
+
+.wc-dock-scrubber {
+      height: 20px;
+      width: 300px;
+      background: #999999;
+      float: left;
+      display: block;
+      margin: 21px 6px 0 6px; 
+}
+
+.wc-dock-scrubber .bug {
+    height: 20px;
+    width: 50px;
+    background:#339900;
+    position: absolute;
+    cursor: pointer;
+    -webkit-transition: background-color .5s;
+    transition: background-color .5s; 
+    }
+
+.wc-dock-scrubber .bug:hover {
+      background-color: orange; 
+}
+
+.wc-dock-scrubber .bar {
+    height: 20px;
+    width: 300px;
+    background: #444444;
+    position: absolute; 
+}
+
+.wc-dock-scrubber .fill {
+    height: 20px;
+    background-color: #339900 !important;
+    width: 0%;
+    position: absolute; 
+}
+
+.drags,.drops{
+	height:70px;
+	display:block;
+}
+
+.drag, .drop{
+	width:40px;
+	height:40px;
+	border-radius:100%;
+	float:left;	
+	margin:0 10px 0 10px;
+	text-align:center;
+}
+.drag{
+	background-color:orange;
+}
+.drag:hover{
+	background-color:#ff7700;
+}
+.drop{
+	border: dashed 1px #777;
+}

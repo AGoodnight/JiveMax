@@ -310,15 +310,25 @@ function ClickToPresent(wrapper,scenes,options){
 }
 
 // creates a collage of images in a variety of states. such as 'wild' or 'offset' or 'horizontal'
-function Collage(wrapper,collection,arg1,arg2,callback){
+function Collage(wrapper,arg1,arg2,callback){
+
+	var i,
+		k,
+		collection = [],
+		col = jQuery(wrapper).children().toArray();
+	
+	for( i=0 , k=col.length ; i<k ; i++){
+		jQuery(col[i]).attr('id', wrapper+'-image-'+(i+1));
+		collection[i] = col[i].id;
+	}
 
 	var variation = ( (typeof arg1 === 'string') ? arg1 : arg2 ),
 		vars = ( (typeof arg2 === 'string') ? arg1 : arg2 );
 
-	var q;
-	var f ={}
-	var parameter;
-	var trigs = ['sine','cos','tan'];
+	var q,
+		parameter,
+		f = {},
+		trigs = ['sine','cos','tan'];
 
 	function checkParameters(obj,alt){
 

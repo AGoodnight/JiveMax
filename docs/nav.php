@@ -27,14 +27,11 @@
 					</a>
 					<ul class='dropdown-menu'>
 						<li><a href='clicktopresent.php'>Click to Preset</a></li>
-						<li><a href='collage.php'>Collage</a></li>
 						<li><a href='draganddrop.php'>Drag and Drop</a></li>
 						<li><a href='buttonlist.php'>Button List</a></li>
 						<li><a href='scrubbar.php'>ScrubBar</a></li>
 					</ul>
 				</li>
-
-				<li><a href='services.php'>Services</a></li>
 			</ul>
 		</div>
 	</div>

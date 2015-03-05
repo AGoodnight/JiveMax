@@ -55,10 +55,14 @@
 var _scene = Scene({paused:true});
 var right = Scene({paused:true}).show('#feedback').from('#right-feedback',1,{opacity:0},{sync:0});
 
-_scene.question = DragAndDrop(Matching,'#drags','#drops',{
+_scene.question = DragAndDrop('matching','#drags','#drops',{
 	answers:[1,0,2],
 	orientation:'horizontal',
 	onSolve:function(self){
+
+		console.log(this);
+		console.log(self);
+
 		return function(){
 			right.play();
 			_root.controller.completeScene();

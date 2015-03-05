@@ -81,7 +81,7 @@
 var _scene = Scene({paused:true});
 var right = Scene({paused:true}).show('#feedback').from('#right-feedback',1,{opacity:0},{sync:0});
 
-_scene.question = ButtonList(Choice,{
+_scene.question = ButtonList('choice',{
 	wrapper:'#choices',
 	id:'cards',
 	nodes:'.card',
@@ -92,6 +92,9 @@ _scene.question = ButtonList(Choice,{
 		// the second argument is the buttons scene associated with this choice event.
 
 		// this function is realtive to each instance of your choices, so each '.card' get this function on the event 'onChoose'
+
+		console.log(self)
+		console.log(scene)
 
 		var front = getNodes(self.id+' .front');
 		var back = getNodes(self.id+' .back');

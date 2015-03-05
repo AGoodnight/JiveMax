@@ -148,6 +148,7 @@ function SceneController(options){
 		controller:undefined,
 		progressBar:undefined,
 		toggleTrigger:undefined,
+		playTrigger:undefined,
 		audioTrigger:undefined,
 
 		// timeline status - numerical
@@ -198,6 +199,10 @@ function SceneController(options){
 			}
 		}
 
+		if(q.playTrigger !== undefined){
+			q.playTrigger.disable();
+		}
+
 		if(q.toggleTrigger !== undefined){
 			q.toggleTrigger.disable();
 		}
@@ -229,6 +234,10 @@ function SceneController(options){
 					q.controller.list[i].item.enable();
 				}
 			}
+		}
+
+		if(q.playTrigger !== undefined){
+			q.playTrigger.enable();
 		}
 
 		if(q.toggleTrigger !== undefined){
@@ -350,6 +359,14 @@ function SceneController(options){
 						this.restartTrigger = group[i];
 					}
 				break;
+
+				case 'play':
+					if( typeof group[i] !== 'object' ){
+						this.playTrigger = new Button(group[i]);
+					}else{
+						this.playTrigger = group[i];
+					}
+				break;
 			}
 		}
 
@@ -370,6 +387,23 @@ function SceneController(options){
 				}
 			)(this.toggleTrigger.element.onmousedown,this.toggleTrigger,this);
 		}
+
+		// Play
+		if( this.playTrigger !== undefined ){
+			this.playTrigger.element.onmousedown = (
+				function(func,self,scene){
+					return function(){
+						
+						scene.play();
+						self.active = true;
+						
+						return func.apply(this,arguments);
+					};
+				}
+			)(this.playTrigger.element.onmousedown,this.playTrigger,this);
+		}
+
+		console.log(q.playTrigger)
 
 		// Restart
 		if( this.restartTrigger !== undefined ){
@@ -456,14 +490,17 @@ function SceneController(options){
 					if(q._loading === false){
 						q.progressBar.scrubber.show();
 						q.progressBar.fill.show();
-						q.toggleTrigger.enable();
+						if(q.toggleTrigger !== undefined) q.toggleTrigger.enable();
+						if(q.playTrigger !== undefined) q.playTrigger.enable();
 					}else{
 						q.progressBar.scrubber.hide();
 						q.progressBar.fill.hide();
-						q.toggleTrigger.disable();
+						if(q.toggleTrigger !== undefined) q.toggleTrigger.disable();
+						if(q.playTrigger !== undefined) q.playTrigger.disable();
 					}
 				}
 				if(_ready && !q._loading){
+
 
 					/* Progress of Timeline */
 					q.progress = q.scene.timeline.progress();
@@ -569,26 +606,30 @@ function SceneController(options){
 						}
 					}
 
-					if(q.toggleTrigger !== undefined && q.change){
+					if(q.change){
 
 						q.change = false;
 									
 						if(q.progress === 1){			
 
-							jQuery(q.toggleTrigger.element).find('.restart').active();
-							jQuery(q.toggleTrigger.element).find('.play').inactive();
-							jQuery(q.toggleTrigger.element).find('.pause').inactive();
+							if(q.toggleTrigger !== undefined){
+								jQuery(q.toggleTrigger.element).find('.restart').active();
+								jQuery(q.toggleTrigger.element).find('.play').inactive();
+								jQuery(q.toggleTrigger.element).find('.pause').inactive();
+							}
 						
 						}else{
 
-							if(q.toggleTrigger.active){
-								jQuery(q.toggleTrigger.element).find('.restart').inactive();
-								jQuery(q.toggleTrigger.element).find('.play').inactive();
-								jQuery(q.toggleTrigger.element).find('.pause').active();
-							}else{
-								jQuery(q.toggleTrigger.element).find('.restart').inactive();
-								jQuery(q.toggleTrigger.element).find('.play').active();
-								jQuery(q.toggleTrigger.element).find('.pause').inactive();
+							if(q.toggleTrigger !== undefined){
+								if(q.toggleTrigger.active){
+									jQuery(q.toggleTrigger.element).find('.restart').inactive();
+									jQuery(q.toggleTrigger.element).find('.play').inactive();
+									jQuery(q.toggleTrigger.element).find('.pause').active();
+								}else{
+									jQuery(q.toggleTrigger.element).find('.restart').inactive();
+									jQuery(q.toggleTrigger.element).find('.play').active();
+									jQuery(q.toggleTrigger.element).find('.pause').inactive();
+								}
 							}
 
 						}
@@ -599,7 +640,7 @@ function SceneController(options){
 					// --------------------
 					if(q.progress === 1 && !q.completed){
 
-						//console.log('-----SCENE COMPLETE-----');
+						console.log('-----SCENE COMPLETE-----');
 						q.completed = true;
 						q.never_completed = false;
 
@@ -628,7 +669,8 @@ function SceneController(options){
 				if(q.progressBar !== undefined){	
 					q.progressBar.scrubber.hide();
 					q.progressBar.fill.hide();
-					q.toggleTrigger.disable();
+					if(q.toggleTrigger !== undefined) q.toggleTrigger.disable();
+					if(q.playTrigger !== undefined) q.playTrigger.disable();
 				}
 
 			}
@@ -650,10 +692,12 @@ function SceneController(options){
 		if(paused){
 			if(this.progressBar !== undefined){ this.progressBar.stopped = this.stopped = true; }
 			if(this.toggleTrigger !== undefined){ this.toggleTrigger.active = true; }
+			if(this.playTrigger !== undefined){ this.playTrigger.active = true; }
 			this.pause();
 		}else{
 			if(this.progressBar !== undefined){ this.progressBar.stopped = this.stopped = false; }
 			if(this.toggleTrigger !== undefined){ this.toggleTrigger.active = false; }
+			if(this.playTrigger !== undefined){ this.playrigger.active = true; }
 			this.play();
 		}
 
@@ -1288,9 +1332,9 @@ function ModuleController(bind,options,callback){
 			q.modules = [];
 
 			// create a SceneController for this ModuleController
-			q.root.sceneController = new SceneController({restrict:true,audioController:q.audioController});
-			q.root.sceneController.controller = q;
-			q.sceneController = q.root.sceneController;
+			//q.root.sceneController = new SceneController({restrict:true,audioController:q.audioController});
+			//q.root.sceneController.controller = q;
+			q.sceneController = new SceneController({restrict:true,audioController:q.audioController});
 			q.sceneController.controller = q;
 
 			// Load Ajax and assign

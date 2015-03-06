@@ -172,7 +172,7 @@ function GSAPObject(options){
 		
 		affectees = (options.affectees === undefined) ? true : options.affectees;
 
-		q.paused = (options.paused !== undefined) ? options.paused : false ;
+		q.paused = (options.paused !== undefined) ? options.paused : true ;
 		if(q.paused) q.timeline.pause();
 
 		q.defaults.ease = (options.ease) ? options.ease : 'Sine.easeOut';
@@ -462,6 +462,7 @@ function GSAPObject(options){
 		}
 
 		if(c>0){
+
 			timeOps = op2
 			for( i in op ){
 				if(i !== 'scale'){
@@ -471,11 +472,37 @@ function GSAPObject(options){
 				}
 			}
 			ops2 = op;
+
 		}else{
-			timeOps = timeOptions;
+
+			console.log(op,op2);
+
+			if(op2 === undefined){
+				
+				ops2 = op;
+
+				for( i in op ){
+					if(i !== 'scale'){
+						ops[i] = 0;
+					}else{
+						ops[i] = 1;
+					}
+				}
+			}
+
+			console.log(op,op2);
+
+			ops = op;
+			ops2 = op2;
+
+			if(timeOptions !== undefined){
+				timeOps = timeOptions;
+			}else{
+				timeOps = {};
+			}
 		}
 
-		//console.log(id, ops, ops2, timeOps)
+		console.log(id, ops, ops2, timeOps)
 
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
 		// return -------------------------
@@ -878,7 +905,16 @@ function Scene(options){
 	};
 
 	if(options){
-		if(options.paused){ q.timeline.pause(); }else{ q.timeline.play(); }
+		if(options.paused !== undefined){ 
+			if(options.paused === true){
+				q.timeline.pause(); 
+			}else{
+				q.timeline.play(); 
+			}
+		}else{
+			q.timeline.pause(); 
+		}
+
 		q.wrapper = (options.wrapper) ? new Item(options.wrapper) : undefined ;
 		q.name = (options.name)? options.name : 'scene' ; 
 		q.timeline.name = q.name;

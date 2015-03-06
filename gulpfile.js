@@ -26,7 +26,7 @@ gulp.task('watch',function(){
 	//gulp.watch(['scss/***/**/*.scss','docs/index.html'],['sass']);
 	gulp.watch([
 		'webcourse/scss/**/*.scss',
-		'docs/*.html',
+		'docs/*.php',
 		'docs/*.css',
 		'src/*.js'
 	],['sass','js']); // <-- then it runs the task 'sass' which will compile my scss to css

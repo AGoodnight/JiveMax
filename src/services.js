@@ -1021,7 +1021,7 @@ function GSAPEvent(name,obj,events,item,index,args){
 
 	 		newArgs.push(scene);
 
-	 		f = events[name].apply(obj, item[index], scene, all_items);
+	 		f = events[name].call(obj, item[index], scene, all_items);
 	 	}else{
 	 		f = events[name].call(obj, item[index], scene, all_items);
 	 	}

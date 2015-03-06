@@ -69,6 +69,9 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 	immediateRender:true
 } );</pre>
 <p>But wait, see all those other settings we can pass? Let's talk about them.</p>
+<p><strong>paused</strong> all scenes are paused by default, to avoid runtime/compiling errors. You will need to call the 'play()' method to start your scenes.</p>.
+<pre>myPausedScene.play();</pre>
+<br/>
 <p><strong>name</strong> If you want to give your scene a name, simply so you can go thisScene.name and have a more complex description of the instance, you can set a name for the scene in the constuctor like above. The string length is unlimited. </p>.
 <p><strong>defaultOverwrite</strong> refers to how the timeline instance will 
 	treat animations assigned to a shared DOM element that overlap one another. 
@@ -98,7 +101,7 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 					<p>Jig's are presets, they save time by </p>
 					<pre>Item.jig('.block','wiggle');</pre>
 					<p>The obvious advantage here is that it is short and easy in comparison to anaimting it manually.</p>
-					<button class='trigger' onclick='block.play();'>RESTART</button>
+					<button class='trigger' onclick='block.play();'>PLAY</button>
 				</div>
 
 				<div id='stagger-jig' class='col-md-4'>
@@ -111,7 +114,7 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 					<p>Jig's are presets, they save time by </p>
 					<pre>Item.staggerJig('.block','wiggle',{offset:0.5});</pre>
 					<p>The obvious advantage here is that it is short and easy in comparison to anaimting it manually.</p>
-					<button class='trigger' onclick='block2.play();'>RESTART</button>
+					<button class='trigger' onclick='block2.play();'>PLAY</button>
 				</div>
 
 				<div id='yoyo' class='col-md-4'>
@@ -124,7 +127,7 @@ myScene.to('h4',1,{ x:100 }); // the selector is actually '#myDiv h4'.
 myScene.yoyo( '#myDiv', 1, { y:50 } ); // like to()
 myScene.yoyo( '#myDiv', 1, { y:100 },{ y:50 } ); // like fromTo()</pre>
 
-					<button class='trigger' onclick='block3.play();'>RESTART</button>
+					<button class='trigger' onclick='block3.play();'>PLAY</button>
 				</div>
 
 				<div id='affect' class='col-md-4'>
@@ -135,7 +138,7 @@ myScene.yoyo( '#myDiv', 1, { y:100 },{ y:50 } ); // like fromTo()</pre>
 					<p>This methods allows you to control the playback of another Scene instance through this Scene instance. So if you paused this scene, it would pause any scene's you assign it to through the affect() method.</p>
 					<pre>mySecondScene.affect(myScene)</pre>
 					<p>If you play this scene again, by clicking 'restart' you will notice it also plays the Scene.yoyo() sample.
-					<button class='trigger' onclick='block4.play();'>RESTART</button>
+					<button class='trigger' onclick='block4.play();'>PLAY</button>
 				</div>
 
 			</div>
@@ -198,7 +201,7 @@ block.jig('.mini', 'wiggle',{
 // ----------------------------------
 // 1
 // create a new Button instance.
-var block2 = new Scene( {wrapper:'#stagger-jig'} );
+var block2 = new Scene( { wrapper:'#stagger-jig'} );
 
 // animate the Button instance with a jig (preset)
 block2.staggerJig('.mini', 'wiggle',{
@@ -213,7 +216,7 @@ block2.staggerJig('.mini', 'wiggle',{
 // ---------------------------------
 // 3
 var block3 = new Scene( {wrapper:'#yoyo'} );
-block3.yoyo('#block-big',0.5,{ y:50 });
+block3.yoyo('#block-big',0.5,{ y:0 },{ y:50 });
 
 
 // ---------------------------------

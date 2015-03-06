@@ -72,10 +72,12 @@ button.trigger{
 	font-family:'Roboto',sans-serif;
 	border:none;
 	margin:10px 0 30px 0;
+	color:white;
+	background-color:#339900;
 }
 
 button.trigger:hover{
-	background-color:#339900;
+	background-color:orange;
 	color:white;
 }
 

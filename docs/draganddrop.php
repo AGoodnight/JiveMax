@@ -70,7 +70,7 @@
 		<div class='col-md-12 seperate'>
 			<div class='col-md-7 term'>
 				<h3>Event Methods</h3>
-				<p>To assign animations to a Drags timeline which will execute when this event occurs script that animation within the function corresponding to that event. 
+				<p>Each Drag instance has a collection of scenes that are tied to thier own event, so for example, a Drag instance has a scene that plays on the event onSolve. To assign animations to a Drags timeline which will execute when this event occurs script that animation within the function corresponding to that event. 
 					When setting up your animations, you will use the two default parameters of the event function. The first is the instance of the Drag, and the second is the scene object assocaite with the event the Drag will 'listen' for. This scene plays when the event occurs and is exclusive tot he Drag instance.
 					If you want to create a function that will execute on the event, that is unrealted to the timelines of the individual Drags, return a new 
 					function with the desired functionality within this function.</p>

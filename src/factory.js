@@ -226,6 +226,8 @@ function GSAPObject(options){
 			}
 		}
 
+		console.log('id is '+id)
+
 		if(timeOptions){
 			sync = (timeOptions.sync !== undefined) ? timeOptions.sync : undefined ;
 			repeat = (timeOptions.repeat !== undefined) ? timeOptions.repeat : undefined ;
@@ -237,6 +239,8 @@ function GSAPObject(options){
 			for( i in q.defaults ){
 				op[0][i] = ( op[0][i] ) ? op[0][i] : q.defaults[i] ;
 			}
+
+			//console.log(repeat,sync,offset,op[0])
 
 			GSAP_method(q.timeline,id,dur,{
 				options:op[0],
@@ -426,6 +430,7 @@ function GSAPObject(options){
 	};
 
 	q.staggerFrom = function(id,dur,op,timeOptions){	
+		//console.log(id)
 		do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3);
 		// return -------------------------
 		return this;
@@ -439,31 +444,31 @@ function GSAPObject(options){
 
 	q.yoyo = function(id,dur,op,op2,timeOptions){
 
+		// this function allows you to explicity state the starting and ending point of the animtion, 
+		// like fromTo, or only state the ending state and by default animate from the resting state of your DOM node.
+		// it does this by checking the attributes of your passed objects (associative arrays) and comparing them to expected values.
+
 		var i,c = 0,c1,c2,c3;
 		var ops = {};
 		var ops2 = {};
 		var timeOps;
 		var styles = jQuery(id).parseStyles();
 
-		// see if op2 has been ommited and replaced with timeOptions
+		// see if op2 has been ommited by being replaced with timeOptions
 		if(op2 !== undefined){
 			c1 = (op2.sync !== undefined) ? c+=1 : undefined ;
 			c2 = (op2.repeat !== undefined) ? c+=1 : undefined ;
 			c3 = (op2.offset !== undefined) ? c+=1 : undefined ;
-		}else{
-			for( i in op ){
-				if(i !== 'scale'){
-					ops[i] = 0;
-				}else{
-					ops[i] = 1;
-				}
-			}
-			ops2 = op;
 		}
 
+		// if the above is true
 		if(c>0){
 
+			//console.log( 'op2 is timeOps' )
+			//--------------------------------------
+			
 			timeOps = op2
+
 			for( i in op ){
 				if(i !== 'scale'){
 					ops[i] = 0;
@@ -471,14 +476,15 @@ function GSAPObject(options){
 					ops[i] = 1;
 				}
 			}
+
 			ops2 = op;
+			//console.log(ops, ops2, timeOps)
 
 		}else{
 
-			console.log(op,op2);
-
 			if(op2 === undefined){
-				
+				//console.log('op2 is undefined');
+				//-------------------------------------
 				ops2 = op;
 
 				for( i in op ){
@@ -488,21 +494,27 @@ function GSAPObject(options){
 						ops[i] = 1;
 					}
 				}
-			}
 
-			console.log(op,op2);
-
-			ops = op;
-			ops2 = op2;
-
-			if(timeOptions !== undefined){
-				timeOps = timeOptions;
-			}else{
 				timeOps = {};
-			}
-		}
 
-		console.log(id, ops, ops2, timeOps)
+			}else{
+				//console.log('op2 is defined');
+				//-------------------------------------
+				ops = op;
+				ops2 = op2;
+
+				if(timeOptions !== undefined){
+					timeOps = timeOptions;
+				}else{
+					timeOps = {};
+				}
+			}
+
+			
+
+			//console.log(ops, ops2, timeOps)
+
+		}
 
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
 		// return -------------------------
@@ -714,10 +726,12 @@ function GSAP_Router(affectees){
 			if(ignoreAffectees === undefined || ignoreAffectees === true && _this.affectees.length > 0){
 				for( i in _this.affectees ){
 					if(i !== 'length'){
-						if(_this.timeline.progress() === 0){
+						if(_this.timeline.progress() == 0){
+							console.log('>> play affectee '+_this.timeline.progress());
 							_this.affectees[i].play.apply(_this.affectees[i],[ from,suppressEvents ]);
 						}
 						if(_this.timeline.progress() > 0){
+							console.log('>> restart affectee '+_this.timeline.progress());
 							_this.affectees[i].restart();
 						}
 					}
@@ -758,7 +772,7 @@ function GSAP_Router(affectees){
 
 		function affectees(_this){
 			var i;
-			console.log(_this, _this.timeline.progress())
+			//console.log(_this, _this.timeline.progress())
 			if(ignoreAffectees === undefined || ignoreAffectees === true && _this.affectees.length > 0){
 				for( i in _this.affectees ){
 					if(i !== 'length'){
@@ -1182,8 +1196,12 @@ function Button(bind, options){
 	
 	if(options){
 		q.group = or(undefined,options.group);
-		q.checkbox = or(undefined, options.checkbox);
-		q.checkbox = (options.checkbox) ? bind+' '+options.checkbox : undefined ;	
+		if(options.checkbox === '>self'){
+			q.checkbox = q.id;
+		}else{
+			q.checkbox = or(undefined, options.checkbox);
+			q.checkbox = (options.checkbox) ? bind+' '+options.checkbox : undefined ;
+		}	
 	}
 
 	q.active = false;

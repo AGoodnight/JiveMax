@@ -25,13 +25,15 @@
 
 	var _scene = Scene({paused:true});
 
-	var album = ['#frontyard','#mmo','#waterfall','#painting','#dog'];
 
-	_scene.collage = new Collage('#collage',album,'pile',{gutter:'100px'});
+	_scene.collage = new Collage('#collage','pile',{gutter:'100px'});
+
+	console.log(_scene.collage)
+
 	_scene.jig('#content h1','slideIn');
 	_scene.jig('#content hr','slideIn',{},{sync:0.2});
 	_scene.from('#content p',0.6,{opacity:0},{sync:0.8});
-	_scene.staggerFrom(album,0.3,{opacity:0,scale:2,y:-100,x:100},{sync:1,offset:0.1})
+	//_scene.staggerFrom(_scene.collage,0.3,{opacity:0,scale:2,y:-100,x:100},{sync:1,offset:0.1});
 
 	_root._scene = _scene;
 	_ready = true; 

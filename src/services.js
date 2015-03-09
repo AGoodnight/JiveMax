@@ -699,11 +699,8 @@ function GSAP_method(timeline,id,duration,injection,method){
 		sync = undefined;
 	}
 
-
-
 	repeat = ( injection.repeat !== undefined) ? injection.repeat : undefined ;
 	stagger = injection.offset;
-
 
 	// inject [0]
 	if( Object.prototype.toString.call(id) === '[object Array]'){
@@ -715,8 +712,10 @@ function GSAP_method(timeline,id,duration,injection,method){
 		for( i = 0 ; i <id.length ; i++){
 			if(!!id[i].id){
 				inject[0][i] = id[i].id; // allows us to pass GSAP objects
+				//console.log('GSAP '+id[i]);
 			}else{
 				inject[0][i] = id[i];
+				//console.log('not GSAP '+id[i]);
 			}
 
 		}
@@ -739,10 +738,19 @@ function GSAP_method(timeline,id,duration,injection,method){
 	// inject[2...3] 
 	if(	injection.options2 ){
 		inject[2] = injection.options;
+		if(inject[2] !== undefined && injection.options2){
+			inject[2].immediateRender = (method ==='yoyo' && injection.options2.immediateRender === undefined) ? false : injection.options2.immediateRender ;
+		}
 		inject[3] = injection.options2;
+		if(inject[3] !== undefined){
+			inject[3].ease = (injection.options2.ease) ? injection.options2.ease : injection.options.ease ;
+		}
 		if(stagger){ inject[4] = stagger; }
 	}else{
 		inject[2] = injection.options;
+		if(inject[2] !== undefined){
+			inject[2].immediateRender = (method === 'yoyo' && injection.options.immediateRender === undefined) ? false : injection.options.immediateRender ;
+		}
 		if(stagger){ inject[3] = stagger; }
 	}
 
@@ -750,7 +758,7 @@ function GSAP_method(timeline,id,duration,injection,method){
 	// Forward Tween -------------------------------------------------------
 
 	//console.log(sync)
-	
+	//console.log(timeline,inject,sync)
 	timeline.add( TweenMax[animator].apply(timeline,inject),sync );	
 	
 	// ---------------------------------------------------------------------

@@ -51,23 +51,24 @@
 <p><strong>Event Methods</strong> - These are methods you will determine the functionalaity of. The four types are 'onSolve','onWrong','onChoose' and 'onUnChoose'. We will go into more detail about how to setup these method events aas they differ from those we used in the SceneController and other Item derived classes. But first a decomstration of all four of these events in action, match the circles below with their respectivle numebred drops (dotted circles).</p>
 		</div>
 	</div>
-
+	<h3>Example</h3>
 	<!-- Here is the basic Markup for a matching Drag and Drop component -->
-	<div id='drags' class='drags'>
-		<div class='drag'>0</div>
-		<div class='drag'>1</div>
-		<div class='drag'>2</div>
-	</div>
+	<div class='col-md-7'>
+		<div id='drags' class='drags'>
+			<div class='drag'>0</div>
+			<div class='drag'>1</div>
+			<div class='drag'>2</div>
+		</div>
 
-	<div id='drops' class='drops'>
-		<div class='drop'>1</div>
-		<div class='drop'>0</div>
-		<div class='drop'>2</div>
+		<div id='drops' class='drops'>
+			<div class='drop'>1</div>
+			<div class='drop'>0</div>
+			<div class='drop'>2</div>
+		</div>	
 	</div>
 	<!-- END markup -->
 
 	<div class='row'>
-		<div class='col-md-12 seperate'>
 			<div class='col-md-7 term'>
 				<h3>Event Methods</h3>
 				<p>Each Drag instance has a collection of scenes that are tied to thier own event, so for example, a Drag instance has a scene that plays on the event onSolve. To assign animations to a Drags timeline which will execute when this event occurs script that animation within the function corresponding to that event. 
@@ -98,7 +99,7 @@
 	<h4>onSolve()</h4>
 	<p>Will occur when the user has either matched or chosen the correct drag</p>
 			</div>
-		</div>
+		
 	</div>
 </div>
 

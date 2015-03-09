@@ -215,13 +215,13 @@ block2.staggerJig('.mini', 'wiggle',{
 
 // ---------------------------------
 // 3
-var block3 = new Scene( {wrapper:'#yoyo'} );
+var block3 = new Scene( { wrapper:'#yoyo'} );
 block3.yoyo('#block-big',0.5,{ y:0 },{ y:50 });
 
 
 // ---------------------------------
 // 3
-var block4 = new Scene( {wrapper:'#affect'} );
+var block4 = new Scene( {ease:'Back.easeInOut', wrapper:'#affect'} );
 block4.yoyo('.block',1,{ scale:0.8 }).affect(block3);
 
 

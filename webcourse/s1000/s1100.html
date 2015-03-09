@@ -64,25 +64,26 @@ var _scene = new Scene({paused:true});
 
 // You can treat your animations in an object oriented manner if you wish too.
 
-var feedback = new Item('#feedback',{paused:true}).from(1,{opacity:0});
-var right = new Item('#drop').jig('squish',{speed:0.4});
-var flash = new Item('.drag').jig('wiggle',{speed:0.4},{repeat:100});
+var feedback = new Item('#feedback',{paused:true}).from(1,{opacity:0}).play();
+var right = new Item('#drop').jig('squish',{speed:0.4}).play();
+var flash = new Item('.drag').jig('wiggle',{speed:0.4},{repeat:100}).play();
 
 
 // An instance bound to no timeline
 TweenMax.from('#instructions h2',0.5,{opacity:0,y:-100});
 
 
-_scene.dragAndDrop = new DragAndDrop(Choice,'.drags','#drop',{
+_scene.dragAndDrop = new DragAndDrop('choice','.drags','#drop',{
 	answers:[0],
 	onDrag:function(){
 		flash.play();
 	},
-	onSolve:function(drag,drops,scene){
+	onSolve:function(drag,scene,all){
+		var _this = this;
 		return function(){
-			console.log(drag,scene,drops)
+			console.log(_this.slots[0],drag.index)
 			_root.controller.completeScene();
-			jQuery(drops[drag.index].id).addClass('full');
+			jQuery(_this.slots[drag.index].id).addClass('full');
 			drag.hide();
 			feedback.show();
 			feedback.play();

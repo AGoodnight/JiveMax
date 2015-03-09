@@ -177,7 +177,15 @@ function ButtonList(type,options){
 
 	}
 
-	nodes = (options.nodes !== undefined) ? jQuery(options.wrapper).parent().find(options.nodes) : jQuery(options.wrapper).parent().find('li');
+	if(options.nodes !== undefined){
+		if(options.nodes === 'li'){
+			nodes = jQuery(options.wrapper).parent().find(options.nodes);
+		}else{
+			nodes = jQuery(options.wrapper).find(options.nodes);
+		}
+	}else{
+		nodes =jQuery(options.wrapper).parent().find('li');
+	}
 	
 	for( i = 0, k = nodes.length ; i<k ; i++){
 
@@ -187,8 +195,11 @@ function ButtonList(type,options){
 
 		// make our buttons
 		q.buttons[i] = new Button('#'+element.id,{
-			checkbox: or(undefined,flag)
+			checkbox: or('>self', flag)
 		})
+
+		console.log(options.id+' - checkbox: '+q.buttons[i].checkbox);
+
 		q.buttons[i].index = i;
 		q.buttons[i].element.onmousedown = (function(_mousedown,_btn,_q,_z){
 
@@ -202,11 +213,6 @@ function ButtonList(type,options){
 					_q.onChoose();
 				}else{
 					_q.onUnChoose();
-				}
-
-				// in instances where the button has no checkbox we need to set the active state
-				if(_btn.checkbox === undefined){
-					_btn.active = (_btn.active === true)? false : true ;
 				}
 
 				refresh();

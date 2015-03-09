@@ -27,16 +27,42 @@
 	flag:'.checkbox'
 });</pre>
 <p><strong>wrapper</strong> - The wrapper element here refers to the DOM node that contains our button list.</p>
-<p><strong>id</strong> - A name for your test, optional</p>
+<p><strong>id</strong> - A name for your test, becomes part of the id attribute of each list itme, required.</p>
 <p><strong>answers</strong> - an array of answers, the first itme in your button list will have an index of 0.</p>
 <p><strong>nodes</strong> - This refers to the kind of node our buttons are, it can be a class or tag. </p>
 <p><strong>flag</strong> - If your button has an element that you want to be set to active and inactive instead of the button itself changing, set it here.</p>
-
+		
 	</div>
+	<div class='col-md-7'>
+			<h3>Examples</h3>
+			<strong>With flags</strong>
+			<p>This instance is set like the one we have above, it has a flag, which is the div next to the text</p>
+			<div class='button-list'>
+				<ul id='buttonlist-a'>
+					<li><div class='checkbox'></div>Aliens</li>
+					<li><div class='checkbox'></div>Yeti</li>
+					<li><div class='checkbox'></div>Dinosaurs</li>
+				</ul>
+			</div>
+			<strong>Without flags</strong>
+			<p>This instance has no flags, so by default the class assigns an active class the entire list item or DOM element, also this instance was given more than one answer, which has made it a multiple choice instance. SO the user can select as many of the items as they want, but only a certain combination is correct</p>
+			<div class='button-list' id='buttonlist-b'>
+				<div class='list-btn'>Aliens</div>
+				<div class='list-btn'>Yeti</div>
+				<div class='list-btn'>Dinosaurs</div>
+			</div>
+			<strong>Kind of cool huh?</strong>
+			<p>This instance has an onWrong and onSolve method defined. Giving us an alert box.</p>
+			<div class='button-list'>
+				<ul id='buttonlist-c'>
+					<li><div class='checkbox'></div>Yes</li>
+					<li><div class='checkbox'></div>No</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 
 	<div class='row'>
-		<div class='col-md-12 seperate'>
 			<div class='col-md-7 term'>
 				<h3>Event Methods</h3>
 				<p>To assign animations to a Drags timeline which will execute when this event occurs script that animation within the function corresponding to that event. 
@@ -67,40 +93,44 @@
 	<h4>onSolve()</h4>
 	<p>Will occur when the user has either matched or chosen the correct drag</p>
 			</div>
-		</div>
 	</div>
 </div>
 
 </body>
 <script>
 	
-var d = new DragAndDrop('matching','#drags','#drops',{
+var a = new ButtonList('choice',{
+	wrapper:'#buttonlist-a',
+	answers:[1],
+	nodes:'li',
+	id:'question-1',
+	flag:'.checkbox'
+});
 
-	answers:[1,0,2],
-	orientation:'horizontal',
-	lock:true,
+var b = new ButtonList('choice',{
+	wrapper:'#buttonlist-b',
+	answers:[1,2],
+	id:'question-2',
+	nodes:'div',
+});
 
-	onChoose:function(instance,scene,all){
-		scene.to(instance,0.5,{scale:0.8});
+var c = new ButtonList('choice',{
+	wrapper:'#buttonlist-c',
+	answers:[0],
+	id:'question-3',
+	nodes:'li',
+	flag:'.checkbox',
+	onWrong:function(){
 		return function(){
-			console.log('choose');
+			alert('Your Mean');
 		}
 	},
-	onUnChoose:function(instance,scene,all){
-		console.log(instance)
-		scene.to(instance,0.5,{scale:1});
+	onSolve:function(){
 		return function(){
-			console.log('un choose');
-		}
-	},
-	onSolve:function(instance,scene,all){
-		scene.to(all,1,{backgroundColor:'#009944'});
-		return function(){
-			console.log('on solve');
+			alert('Damn Straight');
 		}
 	}
-
-})
+});
 
 </script>
 </html>

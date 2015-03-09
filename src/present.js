@@ -538,7 +538,6 @@ function Collage(wrapper,arg1,arg2,callback){
 		v.gutter -= 100;
 
 		return createCollage(collection,{
-
 			// order of magnitudes
 			yrandom:10*v.yrandom, // '' [top]
 			xrandom:10*v.xrandom, // '' [left]
@@ -576,10 +575,11 @@ function Collage(wrapper,arg1,arg2,callback){
 
 		// check if a string
 		if(collection[0].substring !== undefined){
-			spec = collection[0]
+			spec = collection[0];
 		}else if(collection[0].id !== undefined){
 			// if an GSAP object
-			spec = collection[0].id
+			spec = collection[0].id;
+			//console.log('id is defined');
 		}
 
 		// In order to let the developer use images instead of individual classes 
@@ -599,6 +599,6 @@ function Collage(wrapper,arg1,arg2,callback){
 
 	};
 
-	return q;
+	return collection;
 
 }

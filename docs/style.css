@@ -181,6 +181,10 @@ img{
     position: absolute; 
 }
 
+#drags{
+	margin:20px 0 0 0;
+}
+
 .drags,.drops{
 	height:70px;
 	display:block;
@@ -202,4 +206,43 @@ img{
 }
 .drop{
 	border: dashed 1px #777;
+}
+
+.button-list{
+	margin: 0 0 2em 0;
+}
+
+.button-list > ul{
+	padding: 0;
+}
+
+.button-list > ul > li{
+	list-style:none;
+}
+
+.checkbox{
+	border:1px solid black;
+	width:10px;
+	height:10px;
+	background:transparent;
+	display:inline-block;
+	padding:0;
+	margin:0 10px 0 0;
+}
+
+.checkbox.active{
+	background:black;
+}
+
+.button-list > div{
+	padding:10px;
+	margin:10px 0 10px 0;
+	background-color:green;
+	color:white;
+	display:inline-block;
+}
+
+.button-list >div.active{
+	background-color:red;
+	height:4em;
 }

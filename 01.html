@@ -15,7 +15,8 @@ var prev;
 var path1 = 'M 0 0 L 0 200 L 200 200 L 200 100 L 100 100 L 300 0 Z';
 var path2 = 'M 200 200 L 200 300 L 300 300 L 300 200 L 300 0 Z';
 
-var myImage = new Image('.jive-image',{map:'#mymap'})
+// Image Instances accept all the options a GSAP Object/Item accepts, plus the map option, which will set up a map we can add hotpots to.
+var myImage = new Image('.jive-image',{ease:'Back.easeOut', map:'#mymap'})
 				.add('img/mayo.jpg')
 				.add('img/sandwich.jpg')
 				.add('img/pie.jpeg')
@@ -24,6 +25,16 @@ var myImage = new Image('.jive-image',{map:'#mymap'})
 // Hotspots can now be determined with SVG coordinates that will translate to an image map.
 var h1 = myImage.hotspot(path1, function(){ myImage.set(1); });
 var h2 = myImage.hotspot(path2, function(){ myImage.set(0); });
+
+// We can place animation on our Image instance.
+myImage.to(1,{rotation:100}).to(1,{rotation:0});
+
+// the constructor for the hotspot returns the hotspots button instance, so you can affect things as if it was a button.
+h1.bindOn({
+	mouseover:function(){
+		myImage.play();
+	}
+})
 
 window.onresize = function(event){
 	var _w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);

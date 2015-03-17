@@ -1016,11 +1016,12 @@ function Item(bind, options){
 		temp;
 
 	if(options){
-		overwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
-		paused = or(false,options.paused);
+		options.affectees = (options.affectees) ? options.affectees : true;
+		options.defaultOverwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
+		options.paused = or(false,options.paused);
 	}
 
-	q = new Scene({affectees:true,defaultOverwrite:overwrite,paused:paused});
+	q = new Scene(options);
 	q.type = 'item';
 
 	// a way to identify the items DOM element via string
@@ -1633,7 +1634,7 @@ function Image(bind, options){
 
 		delete q.path;
 
-		return q;
+		return q.map.areas[i].button;
 	}
 
 	return q;

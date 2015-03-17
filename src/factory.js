@@ -1570,6 +1570,70 @@ function Image(bind, options){
 		return q;
 	}
 
+	q.hotspot = function(path, func, options){ 
+
+	/* 
+		Hotspot makes image maps based on SVG path data. And link it
+		to the Image instance.
+
+		Why SVG? because lots of things use SVG and SVG is easy to 
+		read and write when compared to imagemaps coord native values.
+
+		Further there is a growing popularity of SVG because of it's
+		breadth of use, certain libraries like Rapheal and D3 are dedicated
+		to drawing SVG, so in theroy making hotspots based on SVG is best
+
+		You must use M, L and Z currently, the coordinates must be in absolute space.
+		No Cubic Bezier support.
+
+		from: http://www.w3.org/wiki/HTML/Elements/area
+		The area elements must have a coords attribute with at least six integers, 
+		and the number of integers must be even. Each pair of integers must represent 
+		a coordinate given as the distances from the left and the top of the image in 
+		CSS pixels respectively, and all the coordinates together must represent 
+		the points of the polygon, in order.
+	*/
+
+
+		var i,s,e,f,path;
+
+		if(q.map === undefined){ q.map = {} }
+		if(q.map.areas === undefined){ q.map.areas = []; }
+		
+		var name = q.map.id.substring(1);
+
+		q.over = false;
+		q.path = path;
+
+		i = q.map.areas.length;
+		s = q.path.indexOf('M');
+		e = q.path.indexOf('Z');
+
+		q.map.areas[i] = {};
+		q.map.areas[i].path = q.path;
+
+		q.path = q.path.substring(1,e-1).trim().replace(/\s/g,',').replace(/L+,/g,'');
+		q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
+
+		s = q.map.nodeString.substring( 0,q.map.nodeString.indexOf('>')+1 ); // starting map tag
+		e = q.map.nodeString.slice( q.map.nodeString.indexOf('>')+1 ); // ending map tag
+
+		q.map.areas[i]
+
+		jQuery("map[name="+name+"]").append(q.map.areas[i].nodeString)
+
+		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
+		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
+			mouseover:function(){
+				func();
+			}
+		});
+
+		delete q.path;
+
+		return q;
+	}
+
 	return q;
 }
 
@@ -1591,64 +1655,6 @@ function DropSpot(bind,options){
 	return q;
 
 }
-
-/* 
-Hotspot makes image maps based on SVG path data. And link it
-to an Image instance.
-
-Why SVG? because lots of things use SVG and SVG is easy to 
-read and write when compared to imagemaps coord native values.
-
-Further there is a growing popularity of SVG because of it's
-breadth of use, certain libraries like Rapheal and D3 are dedicated
-to drawing SVG, so in theroy making hotspots based on SVG is best
-
-You must use M, L and Z currently, the coordinates must be in absolute space.
-*/
-
-function HotSpot(bind, path, func, options){ 
-
-	var i,s,e,f;
-	
-	var name = bind.map.id.substring(1);
-
-	q = bind;
-	q.over = false;
-	q.path = path;
-
-	if(q.map === undefined){ q.map = {} }
-	if(q.map.areas === undefined){ q.map.areas = []; }
-
-	i = q.map.areas.length;
-	s = q.path.indexOf('M');
-	e = q.path.indexOf('Z');
-
-	q.map.areas[i] = {};
-	q.map.areas[i].path = q.path;
-
-	q.path = q.path.substring(1,e-1).trim().replace(/\s/g,',').replace(/L+,/g,'');
-	q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
-
-	s = q.map.nodeString.substring( 0,q.map.nodeString.indexOf('>')+1 ); // starting map tag
-	e = q.map.nodeString.slice( q.map.nodeString.indexOf('>')+1 ); // ending map tag
-
-	q.map.areas[i]
-
-	jQuery("map[name="+name+"]").append(q.map.areas[i].nodeString)
-
-	// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
-	q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
-		mouseover:function(){
-			func();
-		}
-	});
-
-	delete q.path;
-
-	return q;
-
-}
-
 //-----------------------------------------
 // Drag
 //----------------------------------------

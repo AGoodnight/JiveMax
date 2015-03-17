@@ -11,8 +11,8 @@
 </body>
 <script>
 
-var path1 = 'M 0 0 L 0 100 L 100 50 L 100 0 Z';
-var path2 = 'M 200 200 L 200 300 L 300 300 L 300 200 Z';
+var path1 = 'M 0 0 L 0 200 L 200 200 L 200 100 L 100 100 L 300 0 Z';
+var path2 = 'M 200 200 L 200 300 L 300 300 L 300 200 L 300 0 Z';
 
 var myImage = new Image('.jive-image',{map:'#mymap'})
 				.add('img/mayo.jpg')
@@ -20,10 +20,15 @@ var myImage = new Image('.jive-image',{map:'#mymap'})
 				.set(0);
 
 // Hotspots can now be determined with SVG coordinates that will translate to an image map.
-var h1 = new HotSpot(myImage, path1, function(){ myImage.set(1); });
-var h2 = new HotSpot(myImage, path2, function(){ myImage.set(0); });
+var h1 = myImage.hotspot(path1, function(){ myImage.set(1); });
+var h2 = myImage.hotspot(path2, function(){ myImage.set(0); });
 
-console.log(h1)
+// Assists in making our areas, turn off to test functionality.
+jQuery('.jive-image').maphilight({
+	alwaysOn:true
+});
+
+console.log(h1); //<-- returns myImage, hotspots are added to the Image instance.
 
 
 </script>

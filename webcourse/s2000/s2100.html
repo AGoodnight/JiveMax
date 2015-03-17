@@ -100,8 +100,8 @@ _scene.question = ButtonList('choice',{
 		var back = getNodes(self.id+' .back');
 
 		scene.to(self,.5,{rotationY:90})
-			.set(front,{opacity:0})
-			.set(back,{opacity:1})
+			.set(front,{opacity:1})
+			.set(back,{opacity:0})
 			.to(self,.5,{rotationY:180})
 
 	},
@@ -111,8 +111,8 @@ _scene.question = ButtonList('choice',{
 		var back = getNodes(self.id+' .back');
 
 		scene.to(self,.5,{rotationY:90})
-			.set(front,{opacity:1})
-			.set(back,{opacity:0})
+			.set(front,{opacity:0})
+			.set(back,{opacity:1})
 			.to(self,.5,{rotationY:0})
 
 	},

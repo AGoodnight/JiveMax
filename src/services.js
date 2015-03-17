@@ -201,46 +201,6 @@ function removePrefix(o){
 	return arr;
 }
 
-function findNode(prefix,name){
-				
-	var arr = [];
-	var element;
-	var i;
-
-	switch(prefix){
-		// -------------------------------
-		// If the prefix indicates an ID
-		// -------------------------------
-		case '#':
-			arr = [document.getElementById(name)];
-		break;
-		// -------------------------------
-		// If the prefix indicates a Class
-		// -------------------------------
-		case '.':
-			element = Array.prototype.slice.call(document.getElementsByClassName(name));
-			for(i in element){
-				arr.push(element[i]);
-			}
-		break;
-		// -----------------------------------------
-		// If the lack of a prefix indicates an Tag
-		// -----------------------------------------
-		default:
-			try{
-				element = Array.prototype.slice.call(document.getElementsByTagName(name));
-				for(i in element){
-					arr.push(element[i]);
-				}
-			}catch(err){
-				console.log('Selector is not valid, see documentation');
-			}
-		break;
-	}
-
-	return arr;
-}
-
 function removeUndefined(q){
 
 	var g = {};
@@ -253,89 +213,7 @@ function removeUndefined(q){
 	return g;
 }
 
-function searchForNode(parent,matchWith,deep){
-
-	var r = 0;
-	var i,
-		p,
-		q;
-
-	var l = Object.keys(removeUndefined(parent)).length;
-	var matched = [];
-
-	for (i in parent){
-		
-		if(parent[i].nodeName !== undefined){
-
-			r++;
-			p = parent[i].nodeName.toLowerCase();
-			
-			if(p === matchWith){	
-
-				matched.push(parent[i]);
-
-				if(r === l-1){
-					if(matched.length>0){
-						return matched;
-					}else{
-						return false;
-					}
-				}
-				
-			}else{
-				if(parent[i].childNodes !== undefined){
-					q = searchForNode(parent[i].childNodes,matchWith);
-					if( q !== undefined){
-						return q;
-					}
-				}
-			}
-		}
-	}
-}
-
 function getNodes(nodeString, asStrings){
-
-	/*var n = nodeString;
-	var splitN = n.split(' ');
-	var thisNode, 
-		parent, 
-		child, 
-		parentsNodes, 
-		result;
-
-	if(splitN.length < 2){
-
-		//-------------------------------------------------------------
-		// If we are not trying to get children of another DOM element
-		//-------------------------------------------------------------
-		parent = removePrefix(splitN[0]);
-		thisNode = findNode(parent[0],parent[1]);
-		
-	}else{
-
-		parent = removePrefix(splitN[0]);
-		child = removePrefix(splitN[1]);
-		parentsNodes = findNode(parent[0],parent[1])[0].childNodes;
-		result = searchForNode(parentsNodes,child[1]);
-
-		if(result !== false && result !== undefined){
-			thisNode = result;
-		}else{
-			console.log('No Node Found, please use an id for your parent element');
-		}
-		
-	}
-
-
-	// -------------------------------
-	// RETURN
-	// -------------------------------
-	if(thisNode.length<2){
-		return thisNode[0];
-	}else{
-		return thisNode;
-	}*/
 
 	var temp =[];
 	for( i in jQuery(nodeString) ){
@@ -381,7 +259,11 @@ function isEmpty(obj) {
 (function(jQuery){
 
 	jQuery.fn.clonePosition = function(source){
-			return this.css( jQuery(source).getStyles() );
+		return this.css( jQuery(source).getStyles() );
+	};
+
+	jQuery.fn.exists = function () {
+    	return this.length !== 0;
 	};
 
 	jQuery.fn.getStyles = function(){
@@ -1007,7 +889,6 @@ function includeID(e,id,self){
 		e.apply(this,injection);
 		return self;
 	};
-
 }
 
 function GSAPEvent(name,obj,events,item,index,args){
@@ -1045,10 +926,7 @@ function GSAPEvent(name,obj,events,item,index,args){
 		obj.buttons[obj.currentButton][name].play();
 		obj.buttons[obj.currentButton][name].func();
  	}
-
 }
-
-
 
 // ======================
 // Experimental Functions

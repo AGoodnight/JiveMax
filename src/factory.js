@@ -1184,8 +1184,8 @@ function Text(bind, options){
 */
 function Button(bind, options){
 
-	var q = new Item(bind,options);
-	q.type = 'button';
+	var q = (typeof bind === 'object') ? bind : new Item(bind,options) ;
+	q.type = (typeof bind === 'object') ? 'button extended '+bind.type : 'button' ;
 
 	jQuery(q.id).css({
 		'cursor':'pointer',
@@ -1510,10 +1510,76 @@ function Button(bind, options){
 	return q;
 }
 
-function HotSpot(bind, options){ 
+/*
+	Image allows us to control the source of an img tag or add an img to a div.
+
+	It holds source paths to as many images as you want and will swap out
+	the current img's src attribute with another one you store in the class.
+
+	Useful for changing the 'state' of a button if it is an image or anything
+	else css cannot handle rationally.
+*/
+
+function Image(bind, options){
+
+	var q = new Item(bind,options);
+	q.sources = [];
+	q.type = 'image';
+	q.tag = q.element.nodeName.toLowerCase();
+
+	if(options !== undefined ){
+		
+		if(options.map !== undefined){
+
+			if( !jQuery(options.map).exists() ){
+				
+				if(q.map === undefined){ q.map = {} };
+
+				q.map.nodeString = '<map id="'+options.map.substring(1)+'" name="'+options.map.substring(1)+'"></map>';
+				jQuery(document.body).append(q.map.nodeString);
+				q.map.id = options.map;
+				jQuery(q.element).attr('usemap',options.map);
+
+			}
+
+		}else{
+			q.map = {};
+			q.map.id = options.map;
+		}
+	}
+
+	q.add = function(img,index){
+
+		if(index === undefined){
+			q.sources.push(img);
+		}else{
+			q.sources[index] = img;
+		}
+		return q;
+	}
+
+	q.set = function(index){
+		if( q.sources[index] !== undefined){
+			if( q.type.indexOf('image') === -1 ){
+				jQuery(q.id).empty();
+				jQuery(q.id).append('<img src="'+q.sources[index]+'" />"');
+			}else{
+				jQuery(q.id).attr('src',q.sources[index]);
+			}
+		}
+		return q;
+	}
+
+	return q;
+}
+
+/*
+DropSpot is Drag's partner in crime, it is mostly intended to be used with the Drag and Drop test class.
+*/
+
+function DropSpot(bind,options){
 
 	var q = new Button(bind,options);
-
 	q.over = false;
 
 	if(options){
@@ -1523,6 +1589,64 @@ function HotSpot(bind, options){
 	}
 
 	return q;
+
+}
+
+/* 
+Hotspot makes image maps based on SVG path data. And link it
+to an Image instance.
+
+Why SVG? because lots of things use SVG and SVG is easy to 
+read and write when compared to imagemaps coord native values.
+
+Further there is a growing popularity of SVG because of it's
+breadth of use, certain libraries like Rapheal and D3 are dedicated
+to drawing SVG, so in theroy making hotspots based on SVG is best
+
+You must use M, L and Z currently, the coordinates must be in absolute space.
+*/
+
+function HotSpot(bind, path, func, options){ 
+
+	var i,s,e,f;
+	
+	var name = bind.map.id.substring(1);
+
+	q = bind;
+	q.over = false;
+	q.path = path;
+
+	if(q.map === undefined){ q.map = {} }
+	if(q.map.areas === undefined){ q.map.areas = []; }
+
+	i = q.map.areas.length;
+	s = q.path.indexOf('M');
+	e = q.path.indexOf('Z');
+
+	q.map.areas[i] = {};
+	q.map.areas[i].path = q.path;
+
+	q.path = q.path.substring(1,e-1).trim().replace(/\s/g,',').replace(/L+,/g,'');
+	q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
+
+	s = q.map.nodeString.substring( 0,q.map.nodeString.indexOf('>')+1 ); // starting map tag
+	e = q.map.nodeString.slice( q.map.nodeString.indexOf('>')+1 ); // ending map tag
+
+	q.map.areas[i]
+
+	jQuery("map[name="+name+"]").append(q.map.areas[i].nodeString)
+
+	// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
+	q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
+		mouseover:function(){
+			func();
+		}
+	});
+
+	delete q.path;
+
+	return q;
+
 }
 
 //-----------------------------------------
@@ -1709,21 +1833,7 @@ function Drag(bind, options){
 	return q;
 }
 
-/*function Image(bind, options){
-
-	var q = new Item(bind,options);
-
-	if(options){
-		if(options.src) { q.source = options.source; }
-		if(options.caption) { q.caption = options.caption; }
-	}
-
-	q.load = function(){};
-
-	return q;
-}
-
-function Media(bind, options){ 
+/*function Media(bind, options){ 
 
 	var q = new Item(bind,options);
 

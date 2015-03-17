@@ -373,7 +373,7 @@ function DragAndDrop(type,a,b,options){
 
 			for( i = 0, k=nodes.length ; i<k ; i++){
 				nodes[i].id = q.id+'_drop_'+i;
-				nodes[i] = new HotSpot('#'+nodes[i].id,{
+				nodes[i] = new DropSpot('#'+nodes[i].id,{
 					index:i
 				});
 				nodes[i].css = jQuery(nodes[i].id).parseStyles();

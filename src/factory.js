@@ -1525,7 +1525,8 @@ function Image(bind, options){
 	var q = new Item(bind,options);
 	q.sources = [];
 	q.type = 'image';
-	q.tag = q.element.nodeName.toLowerCase();
+	q.nodeName = q.element.nodeName;
+	q.current = 0;
 
 	if(options !== undefined ){
 		
@@ -1567,6 +1568,7 @@ function Image(bind, options){
 				jQuery(q.id).attr('src',q.sources[index]);
 			}
 		}
+		q.current = index;
 		return q;
 	}
 

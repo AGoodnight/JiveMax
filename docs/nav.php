@@ -10,6 +10,7 @@
 				<li><a href='item.php'>Item</a></li>
 				<li><a href='button.php'>Button</a></li>
 				<li><a href='drag.php'>Drag</a></li>
+				<li><a href='image.php'>Img</a></li>
 
 				<li class='dropdown'>
 					<a href='#' class='dropdown-toggle' data-toggle='dropdown'>

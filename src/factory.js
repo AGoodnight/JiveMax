@@ -1520,13 +1520,28 @@ function Button(bind, options){
 	else css cannot handle rationally.
 */
 
-function Image(bind, options){
+function Img(bind, options){
 
-	var q = new Item(bind,options);
+	var i,k, 
+		q = new Item(bind,options);
 	q.sources = [];
+	q.urlPaths = [];
 	q.type = 'image';
 	q.nodeName = q.element.nodeName;
 	q.current = 0;
+
+	// preload our additional images
+	function preload(){
+		for( i = 0 , k=preload.arguments.length ; i<k ; i++ ){
+			q.urlPaths.push( preload.arguments[i] );
+			q.sources.push( new Image() );
+			q.sources[q.sources.length-1].src = preload.arguments[i];
+			/*q.sources[q.sources.length-1].onload = function(){
+				console.log(this.src+' has loaded');// confirm load (debug)
+			}*/
+			console.log(q.sources)
+		}
+	}
 
 	if(options !== undefined ){
 		
@@ -1549,25 +1564,30 @@ function Image(bind, options){
 		}
 	}
 
-	q.add = function(img,index){
-
-		if(index === undefined){
-			q.sources.push(img);
-		}else{
-			q.sources[index] = img;
-		}
+	q.include = function(){
+		preload.apply(this,arguments)
 		return q;
 	}
 
-	q.set = function(index){
+	q.place = function(index){
 		if(q.current !== index){
 			if( q.sources[index] !== undefined){
-				if( q.type.indexOf('image') === -1 ){
-					jQuery(q.id).empty();
-					jQuery(q.id).append('<img src="'+q.sources[index]+'" />"');
-				}else{
-					jQuery(q.id).attr('src',q.sources[index]);
+
+				// Keep it native
+				var atrs = {
+					'id':jQuery(q.id).attr('id'),
+					'class':jQuery(q.id).attr('class'),
+					'usemap':jQuery(q.id).attr('usemap')
+				};
+
+				for( i in atrs ){
+					if(atrs[i] !== undefined){
+						q.sources[index].setAttribute(i, atrs[i]);
+					}
 				}
+
+				// Use a shortcut
+				jQuery(q.id).replaceWith(q.sources[index]);
 			}
 			q.current = index;
 			return q;
@@ -1628,16 +1648,16 @@ function Image(bind, options){
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){
-				if(func.onmouseover !==  undefined) func.onmouseover();
+				if(func.mouseover !==  undefined) func.mouseover();
 			},
 			mouseup:function(){
-				if(func.onmouseout !==  undefined) func.onmouseout();
+				if(func.mouseout !==  undefined) func.mouseout();
 			},
 			mousedown:function(){
-				if(func.onmousedown !==  undefined) func.onmousedown();
+				if(func.mousedown !==  undefined) func.mousedown();
 			},
 			mouseup:function(){
-				if(func.onmouseup !==  undefined) func.onmouseup();
+				if(func.mouseup !==  undefined) func.mouseup();
 			}
 		});
 
@@ -1646,8 +1666,9 @@ function Image(bind, options){
 		return q;
 	}
 
+	// capture the intial image.
 	if(jQuery(bind).get(0).nodeName === 'IMG'){
-		q.add( jQuery(bind).attr('src') );
+		q.include( jQuery(bind).attr('src') );
 	}
 
 	return q;

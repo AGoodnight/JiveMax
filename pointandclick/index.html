@@ -72,7 +72,7 @@ ul > li{
 
 <body>
 	<div class='container'>
-		<div class='matte'>
+		<div id='matte' class='matte' data-readme='false'>
 			<div class = 'world'>
 				<img class='top' src='img/sky.jpg' />
 				<div class='reel'>
@@ -86,7 +86,7 @@ ul > li{
 			</div>
 		</div>
 		<div class='description'>
-		<h2> The Image class </h2>
+		<h2> The Img class </h2>
 		<p>The image class allows you to assign multiple image sources to an image element and create hotspots/image map areas. You can even recreate the classic game MYST in theory.</p>
 		<br/>
 		<ul>
@@ -98,6 +98,8 @@ ul > li{
 </body>
 
 <script>
+
+console.log( document.getElementById('matte').dataset );
 
 function slide(string){
 
@@ -142,50 +144,52 @@ function slide(string){
 
 var stack = {_sliding:false, _alt:false};
 
-stack.top = new Image('.top',{map:'#top_map'});
-stack.bottom = new Image('.bottom',{map:'#bottom_map'});
-stack.front = new Image('.front',{map:'#front_map'}).add('img/myst_1_alt.jpg');
-stack.left = new Image('.left',{map:'#left_map'});
-stack.right = new Image('.right',{map:'#right_map'});
-stack.back = new Image('.back',{map:'#back_map'});
-stack.faux = new Image('.faux',{map:'#faux_map'}).add('img/myst_1_alt.jpg');
+stack.top = new Img('.top',{map:'#top_map'});
+stack.bottom = new Img('.bottom',{map:'#bottom_map'});
+stack.front = new Img('.front',{map:'#front_map'}).include('img/myst_1_alt.jpg');
+stack.left = new Img('.left',{map:'#left_map'});
+stack.right = new Img('.right',{map:'#right_map'});
+stack.back = new Img('.back',{map:'#back_map'});
+stack.faux = new Img('.faux',{map:'#faux_map'}).include('img/myst_1_alt.jpg');
 
 stack.top
-		.hotspot('M 0 150 L 320 150 L 320 200 L 0 200 Z' , { onmousedown: function(){ slide('down'); } });
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 200 Z' , { mousedown: function(){ slide('down'); } });
 
 stack.bottom
-		.hotspot('M 0 0 L 0 50 L 320 50 L 320 0 Z', { onmousedown: function(){ slide('up'); } });
+		.hotspot('M 0 0 L 0 50 L 320 50 L 320 0 Z', { mousedown: function(){ slide('up'); } });
 
 stack.front
-		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
-		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
-		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('wrap-left'); } })
-		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } })
-		.hotspot('M 180 50 L 180 110 L 200 110 L 200 50 Z', {onmousedown:function(){ 
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { mousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { mousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ mousedown: function(){ slide('wrap-left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ mousedown: function(){ slide('right'); } })
+		
+		// change the image source.
+		.hotspot('M 180 50 L 180 110 L 200 110 L 200 50 Z', {mousedown:function(){ 
 			if(stack._alt === false ){ stack._alt = true;
-				stack.front.set(1); stack.faux.set(1); 
+				stack.front.place(1); stack.faux.place(1); 
 			}else{ stack._alt = false;
-				stack.front.set(0); stack.faux.set(0); 
+				stack.front.place(0); stack.faux.place(0); 
 			}
 		}})
 
 stack.right
-		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
-		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
-		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
-		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } });
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { mousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { mousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ mousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ mousedown: function(){ slide('right'); } });
 
 stack.left
-		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
-		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
-		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
-		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('wrap-right'); } });
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { mousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { mousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ mousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ mousedown: function(){ slide('wrap-right'); } });
 
 stack.back
-		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
-		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
-		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
-		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } });
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { mousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { mousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ mousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ mousedown: function(){ slide('right'); } });
 
 TweenMax.set('.world',{y:-200});
 

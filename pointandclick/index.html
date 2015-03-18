@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<script src='../webcourse/js/scripts.js' type='text/javascript'></script>
+</head>
+
+<style>
+
+*{
+	padding:0;
+	margin:0;
+}
+
+.matte{
+	width:320px;
+	height:200px;
+	overflow:hidden;
+}
+
+.world{
+	width:1600px;
+	height:600px;
+}
+
+.reel{
+	display:block;
+	position:absolute;
+	height:200px;
+	width:1800px;
+	top:200px;
+}
+
+.front, .right, .left, .back, .faux{
+	float:left;
+	padding:0;
+	margin:0;
+}
+
+.top{
+	display:block;
+	position:absolute;
+	top:0px;
+}
+
+.bottom{
+	display:block;
+	position:absolute;
+	top:400px;
+}
+
+.description{
+	width:320px;
+	margin-top:30px;
+}
+
+.container{
+	width:320px;
+	margin:40px auto;
+}
+
+ul{
+	margin:10px 10px 10px 20px;
+}
+
+ul > li{
+	margin:10px 0 10px 0;
+}
+
+
+</style>
+
+<body>
+	<div class='container'>
+		<div class='matte'>
+			<div class = 'world'>
+				<img class='top' src='img/sky.jpg' />
+				<div class='reel'>
+					<img class='front' src='img/myst_1.jpg' />
+					<img class='right' src='img/forest_of_trees-565.jpg' />
+					<img class='back' src='img/img_0014.jpg' />
+					<img class='left' src='img/trees_mem_planes.jpg' />
+					<img class='faux' src='img/myst_1.jpg' />
+				</div>
+				<img class='bottom' src='img/ground.jpg' />
+			</div>
+		</div>
+		<div class='description'>
+		<h2> The Image class </h2>
+		<p>The image class allows you to assign multiple image sources to an image element and create hotspots/image map areas. You can even recreate the classic game MYST in theory.</p>
+		<br/>
+		<ul>
+			<li>Turn in a direction by clicking the edges if the image</li>
+			<li>Click on the wooden box next to the well and see what happens, then click it again</li>
+		</ul>
+		</div>
+	</div>
+</body>
+
+<script>
+
+function slide(string){
+
+	if(stack._sliding === false){
+		stack._sliding = true;
+		switch(string){
+			case 'right':
+				TweenMax.to('.reel',0.5,{x:'-=320',onComplete:function(){
+					stack._sliding = false;
+				}});
+			break;
+			case 'left':
+				TweenMax.to('.reel',0.5,{x:'+=320',onComplete:function(){
+					stack._sliding = false;
+				}});
+			break;
+			case 'down':
+				TweenMax.to('.world',0.5,{y:'-=200',onComplete:function(){
+					stack._sliding = false;
+				}});
+			break;
+			case 'up':
+				TweenMax.to('.world',0.5,{y:'+=200',onComplete:function(){
+					stack._sliding = false;
+				}});
+			break;
+			case 'wrap-left':
+				TweenMax.set('.reel',{x:'-1280'})
+				TweenMax.to('.reel',0.5,{x:'+=320',onComplete:function(){
+					stack._sliding = false;
+				}});
+			break;
+			case 'wrap-right':
+				TweenMax.to('.reel',0.5,{x:'-=320',onComplete:function(){
+					TweenMax.set('.reel',{x:0})
+					stack._sliding = false;
+				}});
+			break;
+		}
+	}
+}
+
+var stack = {_sliding:false, _alt:false};
+
+stack.top = new Image('.top',{map:'#top_map'});
+stack.bottom = new Image('.bottom',{map:'#bottom_map'});
+stack.front = new Image('.front',{map:'#front_map'}).add('img/myst_1_alt.jpg');
+stack.left = new Image('.left',{map:'#left_map'});
+stack.right = new Image('.right',{map:'#right_map'});
+stack.back = new Image('.back',{map:'#back_map'});
+stack.faux = new Image('.faux',{map:'#faux_map'}).add('img/myst_1_alt.jpg');
+
+stack.top
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 200 Z' , { onmousedown: function(){ slide('down'); } });
+
+stack.bottom
+		.hotspot('M 0 0 L 0 50 L 320 50 L 320 0 Z', { onmousedown: function(){ slide('up'); } });
+
+stack.front
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('wrap-left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } })
+		.hotspot('M 180 50 L 180 110 L 200 110 L 200 50 Z', {onmousedown:function(){ 
+			if(stack._alt === false ){ stack._alt = true;
+				stack.front.set(1); stack.faux.set(1); 
+			}else{ stack._alt = false;
+				stack.front.set(0); stack.faux.set(0); 
+			}
+		}})
+
+stack.right
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } });
+
+stack.left
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('wrap-right'); } });
+
+stack.back
+		.hotspot('M 0 0 L 320 0 L 320 50 L 0 50 Z', { onmousedown: function(){ slide('up'); } })
+		.hotspot('M 0 150 L 320 150 L 320 200 L 0 320 Z', { onmousedown: function(){ slide('down'); } })
+		.hotspot('M 0 0 L 0 200 L 50 200 L 50 0 Z',{ onmousedown: function(){ slide('left'); } })
+		.hotspot('M 320 0 L 320 200 L 280 200 L 280 0 Z',{ onmousedown: function(){ slide('right'); } });
+
+TweenMax.set('.world',{y:-200});
+
+console.log(stack);
+
+</script>
+
+</html>

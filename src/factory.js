@@ -1018,7 +1018,6 @@ function Item(bind, options){
 	if(options){
 		options.affectees = (options.affectees) ? options.affectees : true;
 		options.defaultOverwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
-		options.paused = or(false,options.paused);
 	}
 
 	q = new Scene(options);
@@ -1561,16 +1560,18 @@ function Image(bind, options){
 	}
 
 	q.set = function(index){
-		if( q.sources[index] !== undefined){
-			if( q.type.indexOf('image') === -1 ){
-				jQuery(q.id).empty();
-				jQuery(q.id).append('<img src="'+q.sources[index]+'" />"');
-			}else{
-				jQuery(q.id).attr('src',q.sources[index]);
+		if(q.current !== index){
+			if( q.sources[index] !== undefined){
+				if( q.type.indexOf('image') === -1 ){
+					jQuery(q.id).empty();
+					jQuery(q.id).append('<img src="'+q.sources[index]+'" />"');
+				}else{
+					jQuery(q.id).attr('src',q.sources[index]);
+				}
 			}
+			q.current = index;
+			return q;
 		}
-		q.current = index;
-		return q;
 	}
 
 	q.hotspot = function(path, func, options){ 
@@ -1624,17 +1625,29 @@ function Image(bind, options){
 		q.map.areas[i]
 
 		jQuery("map[name="+name+"]").append(q.map.areas[i].nodeString)
-
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){
-				func();
+				if(func.onmouseover !==  undefined) func.onmouseover();
+			},
+			mouseup:function(){
+				if(func.onmouseout !==  undefined) func.onmouseout();
+			},
+			mousedown:function(){
+				if(func.onmousedown !==  undefined) func.onmousedown();
+			},
+			mouseup:function(){
+				if(func.onmouseup !==  undefined) func.onmouseup();
 			}
 		});
 
 		delete q.path;
 
-		return q.map.areas[i].button;
+		return q;
+	}
+
+	if(jQuery(bind).get(0).nodeName === 'IMG'){
+		q.add( jQuery(bind).attr('src') );
 	}
 
 	return q;

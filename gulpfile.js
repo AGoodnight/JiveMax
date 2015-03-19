@@ -12,7 +12,7 @@ var gulp = require('gulp'),
 	jsLint = require('gulp-jslint'),
 
 	// Helpers
-	sourcemaps = require('gulp-sourcemaps'),
+	//sourcemaps = require('gulp-sourcemaps'),
 	using = require('gulp-using');
 
 
@@ -72,10 +72,10 @@ gulp.task('js',function(){
 			'src/test.js'
 		]) // <-- by listing the source files in order the concat function below will combine them in this order
 
-		.pipe(sourcemaps.init())
+		//.pipe(sourcemaps.init())
 		.pipe(concat('scripts.js')) // <-- combine scripts
 		.pipe(uglify()) // <-- minify
-		.pipe(sourcemaps.write())
+		//.pipe(sourcemaps.write())
 		.pipe(gulp.dest('webcourse/js')) // <-- it saves in this directory, relative to this file's location
 
 })

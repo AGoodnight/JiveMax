@@ -1541,6 +1541,15 @@ function Img(bind, options){
 		}
 	}
 
+	function translate(path){
+
+		var s = path.indexOf('M'),
+			e = path.indexOf('Z');
+
+		return path.substring(1,e-1).trim().replace(/\s/g,',').replace(/L+,/g,'');
+
+	}
+
 	if(options !== undefined ){
 		
 		if(options.map !== undefined){
@@ -1592,7 +1601,13 @@ function Img(bind, options){
 		}
 	}
 
-	q.hotspot = function(path, func, options){ 
+	q.modSpot = function(index,newPath){
+		var spot = (typeof index !== 'number') ? getNode(index) : q.map.areas[index].node ;
+		spot.setAttribute('coords',translate(newPath))
+		return q;
+	}
+
+	q.hotspot = function(path, func, returnCoords){ 
 
 	/* 
 		Hotspot makes image maps based on SVG path data. And link it
@@ -1616,7 +1631,6 @@ function Img(bind, options){
 		the points of the polygon, in order.
 	*/
 
-
 		var i,s,e,f,path;
 
 		if(q.map === undefined){ q.map = {} }
@@ -1628,21 +1642,19 @@ function Img(bind, options){
 		q.path = path;
 
 		i = q.map.areas.length;
-		s = q.path.indexOf('M');
-		e = q.path.indexOf('Z');
 
 		q.map.areas[i] = {};
 		q.map.areas[i].path = q.path;
 
-		q.path = q.path.substring(1,e-1).trim().replace(/\s/g,',').replace(/L+,/g,'');
+
+		q.path = translate(q.path);
 		q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
 
 		s = q.map.nodeString.substring( 0,q.map.nodeString.indexOf('>')+1 ); // starting map tag
 		e = q.map.nodeString.slice( q.map.nodeString.indexOf('>')+1 ); // ending map tag
 
-		q.map.areas[i]
-
-		jQuery("map[name="+name+"]").append(q.map.areas[i].nodeString)
+		q.map.node = jQuery("map[name="+name+"]")[0];
+		q.map.areas[i].node = jQuery(q.map.areas[i].nodeString).appendTo("map[name="+name+"]")[0];
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){
@@ -1660,7 +1672,18 @@ function Img(bind, options){
 		});
 
 		delete q.path;
+		return (returnCoords) ? q.path : q ;
+	}
 
+	q.removeSpot = function(index){
+		var spot = (typeof index !== 'number') ? getNode(index) : q.map.areas[index].node ;
+		q.map.node.removeChild(spot);
+		return q;
+	}
+
+	q.drop = function(index){
+		delete q.sources[index];
+		delete q.urlPaths[index];
 		return q;
 	}
 

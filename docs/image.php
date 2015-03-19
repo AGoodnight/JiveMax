@@ -92,6 +92,25 @@
 <p>A more extensive demo of the hotspot class paired with the include and place methods can be seen <a href='../pointandclick/index.html'>here</a></p>
 				</div>
 			</div>
+			<div class='col-md-12 term seperate'>
+				<div class='col-md-7'>
+					<h3>More methods</h3>
+					<p>There are a few other methods that need less explanatin, but should be mentioned.</p>
+					<br/>
+					<h4>modSpot()</h4>
+					<p>You can modify a spot by stating a new SVG path string. You can specify the area/spot to change by id or number. The id is by default the index number followed by a underscore and the name of the map or you can just grab it by it's index number itself.</p>
+					<pre>myImage.modSpot(1,'M 60 50 L 120 50 L 120 200 L 60 200 Z');</pre>
+					<br/>
+					<h4>removeSpot()</h4>
+					<p>Remove an area on the Img's map by id or index number.</p>
+					<pre>myImage.removeSpot('#0_myMap');</pre>
+					<p>Note: This will not update your areas ids. It is always recommended to use index numbers, however id is still supported for desperate situations.</p>
+					<br/>
+					<h4>drop()</h4>
+					<p>If you want to remove an image you included you can remove it by it's index in Img.sources or Img.urlPaths. This deletes it from both the sources and urlPaths entirely.</p>
+					<pre>myImage.drop(1);</pre>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -106,5 +125,6 @@ var hotspotImage = new Img('#hotspot-image',{map:'#dog-map'}).hotspot('M 60 50 L
 	}
 })
 
+hotspotImage.modSpot(0, 'M 60 50 L 300 100 L 200 200 L 60 200 Z');
 </script>
 </html>

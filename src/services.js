@@ -581,7 +581,7 @@ function GSAP_method(timeline,id,duration,injection,method){
 		sync = undefined;
 	}
 
-	repeat = ( injection.repeat !== undefined) ? injection.repeat : undefined ;
+	repeat = injection.repeat || undefined ;
 	stagger = injection.offset;
 
 	// inject [0]
@@ -625,7 +625,7 @@ function GSAP_method(timeline,id,duration,injection,method){
 		}
 		inject[3] = injection.options2;
 		if(inject[3] !== undefined){
-			inject[3].ease = (injection.options2.ease) ? injection.options2.ease : injection.options.ease ;
+			inject[3].ease = injection.options2.ease || injection.options.ease ;
 		}
 		if(stagger){ inject[4] = stagger; }
 	}else{
@@ -682,7 +682,7 @@ function createBlock(prefix,what,where,state,alt){
 
 	// Save to localStorage
 	if(useLocalStorage){
-		course = (_root.courseTitle) ? _root.courseTitle : 'untitled_web_course' ;
+		course = _root.courseTitle || 'untitled_web_course' ;
 		localStorage[course+'-'+title] = value
 	}
 

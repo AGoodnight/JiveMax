@@ -8,20 +8,23 @@ function Test(type,options){
 
 	var q = {
 		
-		id:or('untitled',options.id),
+		id: options.id || 'untitled',
 		type:type,
-		locked:(options.lock) ? true : false,
+		locked: options.lock || false,
 
-		maxAttempts: or(undefined,options.maxAttempts),
-		guide:or(false,options.guide),
-		answers:or([],options.answers),
+		maxAttempts: options.maxAttempts || undefined,
+		guide: options.guide || false,
+		answers: options.answers || [],
 		
-		onSolve:or(function(){/*console.log('--> on solve')*/},options.onSolve),
-		onWrong:or(function(){/*console.log('--> on wrong')*/},options.onWrong),
-		onUnChoose:or(function(){/*console.log('--> on un choose')*/},options.onUnChoose),
-		onChoose:or(function(){/*console.log('--> on choose')*/},options.onChoose),
+		onSolve: options.onSolve || function(){/*console.log('--> on solve')*/},
+		onWrong: options.onWrong || function(){/*console.log('--> on wrong')*/},
+		onUnChoose: options.onUnChoose || function(){/*console.log('--> on un choose')*/},
+		onChoose: options.onChoose || function(){/*console.log('--> on choose')*/},
 
 		choice:function(){
+
+
+
 
 			var qq = {};
 			
@@ -195,7 +198,7 @@ function ButtonList(type,options){
 
 		// make our buttons
 		q.buttons[i] = new Button('#'+element.id,{
-			checkbox: or('>self', flag)
+			checkbox: flag || '>self'
 		})
 
 		console.log(options.id+' - checkbox: '+q.buttons[i].checkbox);
@@ -247,7 +250,7 @@ function DragAndDrop(type,a,b,options){
 
 	q.a = a;
 	q.b = b;		
-	q.orientation = or(undefined, options.orientation);
+	q.orientation = options.orientation || undefined;
 
 	var z = q.testInstance;
 

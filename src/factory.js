@@ -170,13 +170,14 @@ function GSAPObject(options){
 
 	if(options){
 		
-		affectees = (options.affectees === undefined) ? true : options.affectees;
+		affectees = options.affectees || true;
 
-		q.paused = (options.paused !== undefined) ? options.paused : true ;
+		q.paused = options.paused || true ;
+
 		if(q.paused) q.timeline.pause();
 
-		q.defaults.ease = (options.ease) ? options.ease : 'Sine.easeOut';
-		q.defaults.transformOrigin = (options.transformOrigin) ? options.transformOrigin : '50% 50%' ;
+		q.defaults.ease = options.ease || 'Sine.easeOut';
+		q.defaults.transformOrigin = options.transformOrigin || '50% 50%' ;
 
 	}
 	
@@ -229,15 +230,15 @@ function GSAPObject(options){
 		console.log('id is '+id)
 
 		if(timeOptions){
-			sync = (timeOptions.sync !== undefined) ? timeOptions.sync : undefined ;
-			repeat = (timeOptions.repeat !== undefined) ? timeOptions.repeat : undefined ;
-			offset = (timeOptions.offset !== undefined) ? timeOptions.offset : undefined ;
+			sync = timeOptions.sync || undefined ;
+			repeat = timeOptions.repeat || undefined ;
+			offset = timeOptions.offset || undefined ;
 		}
 
 		if(op.length < 2){
 
 			for( i in q.defaults ){
-				op[0][i] = ( op[0][i] ) ? op[0][i] : q.defaults[i] ;
+				op[0][i] = op[0][i] || q.defaults[i] ;
 			}
 
 			//console.log(repeat,sync,offset,op[0])
@@ -251,7 +252,7 @@ function GSAPObject(options){
 		}else{
 
 			for( i in q.defaults ){
-				op[0][i] = ( op[i] ) ? op[i] : q.defaults[i] ;
+				op[0][i] = op[i] || q.defaults[i] ;
 			}
 
 			GSAP_method(q.timeline,id,dur,{
@@ -299,15 +300,15 @@ function GSAPObject(options){
 		}
 
 		if(timeOptions){
-			sync = or(undefined, timeOptions.sync);
-			repeat = or(undefined, timeOptions.repeat);
+			sync = timeOptions.sync|| undefined;
+			repeat = timeOptions.repeat || undefined;
 		}
 
 		var newOptions = [];
 
 		for( i in options ){
 			////console.log(newOptions[i]+' --- '+q.defaults[i]);
-			newOptions[i] = ( options[i] === undefined ) ? q.defaults[i] : options[i] ;
+			newOptions[i] = options[i] || q.defaults[i] ;
 			//console.log(newOptions[i]+' --- '+q.defaults[i]);
 		}
 
@@ -341,9 +342,9 @@ function GSAPObject(options){
 			idGroup;
 
 		if(timeOptions){
-			sync = or(undefined, timeOptions.sync);
-			repeat = or(undefined, timeOptions.repeat);
-			offset = or(undefined, timeOptions.offset);
+			sync = timeOptions.sync || undefined;
+			repeat = timeOptions.repeat || undefined;
+			offset = timeOptions.offset || undefined;
 		}
 
 		// Need to check if sync is passed as a number, if not we need a number.
@@ -722,16 +723,13 @@ function GSAP_Router(affectees){
 
 		function affectees(_this){
 			var i;
+			var prog = _this.timeline.progress();
 			//console.log(_this, _this.timeline.progress())
 			if(ignoreAffectees === undefined || ignoreAffectees === true && _this.affectees.length > 0){
 				for( i in _this.affectees ){
 					if(i !== 'length'){
-						if(_this.timeline.progress() == 0){
+						if(prog === 0 || prog === 1){
 							console.log('>> play affectee '+_this.timeline.progress());
-							_this.affectees[i].play.apply(_this.affectees[i],[ from,suppressEvents ]);
-						}
-						if(_this.timeline.progress() > 0){
-							console.log('>> restart affectee '+_this.timeline.progress());
 							_this.affectees[i].restart();
 						}
 					}
@@ -930,11 +928,11 @@ function Scene(options){
 		}
 
 		q.wrapper = (options.wrapper) ? new Item(options.wrapper) : undefined ;
-		q.name = (options.name)? options.name : 'scene' ; 
+		q.name = options.name || 'scene' ; 
 		q.timeline.name = q.name;
-		q.scoID = (options.scoID) ? options.scoID : 'null' ;
-		q.soundtrack = (options.soundtrack) ? options.soundtrack : undefined ;
-		overwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
+		q.scoID = options.scoID || 'null' ;
+		q.soundtrack = options.soundtrack || undefined ;
+		overwrite = options.defaultOverwrite || 'auto' ;
 	}
 
 	return q;
@@ -1016,8 +1014,8 @@ function Item(bind, options){
 		temp;
 
 	if(options){
-		options.affectees = (options.affectees) ? options.affectees : true;
-		options.defaultOverwrite = (options.defaultOverwrite) ? options.defaultOverwrite : 'auto' ;
+		options.affectees = options.affectees || true;
+		options.defaultOverwrite = options.defaultOverwrite || 'auto' ;
 	}
 
 	q = new Scene(options);
@@ -1065,8 +1063,8 @@ function Text(bind, options){
 	q.type = 'text';
 
 	if(options){
-		q.value = or(undefined,options.value);
-		q.style = or(undefined,options.style);
+		q.value = options.value || undefined;
+		q.style = options.style || undefined;
 	}
 
 	if(q.value){ jQuery(bind).empty().append(''+q.value) };
@@ -1199,7 +1197,7 @@ function Button(bind, options){
 		if(options.checkbox === '>self'){
 			q.checkbox = q.id;
 		}else{
-			q.checkbox = or(undefined, options.checkbox);
+			q.checkbox = options.checkbox || undefined;
 			q.checkbox = (options.checkbox) ? bind+' '+options.checkbox : undefined ;
 		}	
 	}
@@ -1381,9 +1379,9 @@ function Button(bind, options){
 		jQuery(q.element).css('cursor','auto');
 
 		if(options){
-			scene = (options.on) ? options.on : q;
-			from = (options.from) ? options.from : 'z';
-			until = (options.until) ? options.until : 'z';
+			scene = options.on || q;
+			from = options.from || 'z';
+			until = options.until || 'z';
 
 			fromLabel = 'lock_'+scene.locks.length+'f';
 			untilLabel = 'lock_'+scene.locks.length+'u';
@@ -1813,7 +1811,7 @@ function Drag(bind, options){
 
 	if(options){
 		if(options.bounds){
-			region = (options.bounds.id) ? options.bounds.id : options.bounds;
+			region = options.bounds.id || options.bounds;
 		}
 
 		// perform function on drag end
@@ -1939,7 +1937,7 @@ function ScrubBar(bind, options){
 	var q = new Item(bind,options);
 
 	if(options){
-		q.stopped = (options.paused) ? options.paused : false;
+		q.stopped = options.paused || false;
 	}
 
 	q.dragging = false;
@@ -2006,7 +2004,7 @@ function ProgressBar(bind, options){
 	var q = new Item(bind,options);
 
 	if(options){
-		q.stopped = (options.paused) ? options.paused : false ;
+		q.stopped = options.paused || false ;
 		if(options.scrubber){ q.scrubber = options.scrubber; }
 	}
 

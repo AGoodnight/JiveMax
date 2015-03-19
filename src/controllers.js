@@ -133,9 +133,9 @@ function SceneController(options){
 		q;
 
 	if(options !== undefined){
-		restrict = (options.restrict !== undefined) ? true : false;
-		thisScene = (options.scene !== undefined) ? options.scene : undefined ;
-		audio = (options.audioController) ? options.audioController : undefined; 
+		restrict = options.restrict || false;
+		thisScene = options.scene || undefined ;
+		audio = options.audioController || undefined; 
 	}
 
 	q = {
@@ -330,7 +330,7 @@ function SceneController(options){
 		var i;
 		
 		// Scrubber
-		this.progressBar = (group.scrub !== undefined) ? group.scrub :  undefined;
+		this.progressBar = group.scrub || undefined;
 
 		// if an object is bound, we assume it is a jivemax object.
 		for( i in group ){
@@ -1243,7 +1243,7 @@ function ModuleController(bind,options,callback){
 			// --------------------------------------------
 
 			// options variables
-			q.autoPlay = (options.autoPlay !== undefined) ? options.autoPlay : false ;
+			q.autoPlay = options.autoPlay || false ;
 
 			// options functions
 			q.onLoad = or(q.onLoad,options.onLoad);

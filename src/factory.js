@@ -1699,6 +1699,8 @@ function Img(bind, options){
 DropSpot is Drag's partner in crime, it is mostly intended to be used with the Drag and Drop test class.
 */
 
+////
+
 function DropSpot(bind,options){
 
 	var q = new Button(bind,options);

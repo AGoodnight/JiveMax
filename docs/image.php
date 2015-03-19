@@ -121,7 +121,7 @@
 var setImage = new Img('#set-image').include('../img/sandwich_small.jpg','../img/salad_small.jpg');
 var hotspotImage = new Img('#hotspot-image',{map:'#dog-map'}).hotspot('M 60 50 L 200 50 L 200 200 L 60 200 Z',{
 	mouseover:function(){
-		alert('I am a dog with a big tounge');
+		alert('I am a dog with a big tounge!');
 	}
 })
 

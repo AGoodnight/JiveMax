@@ -1655,6 +1655,7 @@ function Img(bind, options){
 
 		q.map.node = jQuery("map[name="+name+"]")[0];
 		q.map.areas[i].node = jQuery(q.map.areas[i].nodeString).appendTo("map[name="+name+"]")[0];
+		
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){

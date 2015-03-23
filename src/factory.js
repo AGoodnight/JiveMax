@@ -214,7 +214,7 @@ function GSAPObject(options){
 
 		var repeat,
 			sync;
-			offset = (offset) ? offset : undefined ;
+			offset = offset || undefined ;
 
 		if(q.wrapper !== undefined){
 			if(q.wrapper.id !== undefined && q.wrapper.id !== id){
@@ -227,7 +227,7 @@ function GSAPObject(options){
 			}
 		}
 
-		console.log('id is '+id)
+		//console.log('id is '+id)
 
 		if(timeOptions){
 			sync = timeOptions.sync || undefined ;
@@ -287,20 +287,15 @@ function GSAPObject(options){
 			id;
 
 		if(q.wrapper !== undefined){
-			if(q.wrapper.id !== undefined && q.wrapper.id !== e){
-				id = q.wrapper.id+' '+e;
-				////console.log('adding wrapper: '+q.wrapper.id+'  '+id);
-			}
-			if(q.wrapper.id === e){
-				id = e;
-				//console.log('same as wrapper: '+id);
+			if(q.wrapper.id !== undefined){
+				id = (q.wrapper.id !== e) ? q.wrapper.id+' '+e : e;
 			}
 		}else{
 			id = e
 		}
 
 		if(timeOptions){
-			sync = timeOptions.sync|| undefined;
+			sync = (timeOptions.sync !== undefined)? timeOptions.sync : undefined;
 			repeat = timeOptions.repeat || undefined;
 		}
 
@@ -308,7 +303,9 @@ function GSAPObject(options){
 
 		for( i in options ){
 			////console.log(newOptions[i]+' --- '+q.defaults[i]);
+			console.log(options[i])
 			newOptions[i] = options[i] || q.defaults[i] ;
+			console.log(newOptions[i])
 			//console.log(newOptions[i]+' --- '+q.defaults[i]);
 		}
 
@@ -405,43 +402,17 @@ function GSAPObject(options){
 	// -----------------------------------
 	// GSAP Methods
 
-	q.to = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'to');
-		// return -------------------------
-		return this;
-	};
+	q.to = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'to'); return this; };
 
-	q.from = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'from');
-		// return -------------------------
-		return this;
-	};
+	q.from = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'from'); return this; };
 
-	q.fromTo = function(id,dur,op,op2,timeOptions){
-		do_GSAP(id,dur,[op,op2],timeOptions,'fromTo');
-		// return -------------------------
-		return this;
-	};
+	q.fromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[op,op2],timeOptions,'fromTo'); return this; };
 
-	q.staggerTo = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'staggerTo',0.3);
-		// return -------------------------
-		return this;
+	q.staggerTo = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'staggerTo',0.3); return this; };
 
-	};
+	q.staggerFrom = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3); return this; };
 
-	q.staggerFrom = function(id,dur,op,timeOptions){	
-		//console.log(id)
-		do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3);
-		// return -------------------------
-		return this;
-	};
-
-	q.staggerFromTo = function(id,dur,op,op2,timeOptions){
-		do_GSAP(id,dur,[ops,op2],timeOptions,'staggerFromTo',0.3);
-		// return -------------------------
-		return this;
-	};
+	q.staggerFromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[ops,op2],timeOptions,'staggerFromTo',0.3); return this; };
 
 	q.yoyo = function(id,dur,op,op2,timeOptions){
 
@@ -449,11 +420,11 @@ function GSAPObject(options){
 		// like fromTo, or only state the ending state and by default animate from the resting state of your DOM node.
 		// it does this by checking the attributes of your passed objects (associative arrays) and comparing them to expected values.
 
-		var i,c = 0,c1,c2,c3;
-		var ops = {};
-		var ops2 = {};
-		var timeOps;
-		var styles = jQuery(id).parseStyles();
+		var i,c = 0,c1,c2,c3,
+			ops = {},
+			ops2 = {},
+			timeOps,
+			styles = jQuery(id).parseStyles();
 
 		// see if op2 has been ommited by being replaced with timeOptions
 		if(op2 !== undefined){
@@ -465,60 +436,27 @@ function GSAPObject(options){
 		// if the above is true
 		if(c>0){
 
-			//console.log( 'op2 is timeOps' )
-			//--------------------------------------
-			
 			timeOps = op2
-
-			for( i in op ){
-				if(i !== 'scale'){
-					ops[i] = 0;
-				}else{
-					ops[i] = 1;
-				}
-			}
-
+			for( i in op ){ ops[i] = (i !== 'scale') ? ops[i] = 0 : ops[i] = 1; }
 			ops2 = op;
-			//console.log(ops, ops2, timeOps)
 
 		}else{
 
 			if(op2 === undefined){
-				//console.log('op2 is undefined');
-				//-------------------------------------
 				ops2 = op;
-
-				for( i in op ){
-					if(i !== 'scale'){
-						ops[i] = 0;
-					}else{
-						ops[i] = 1;
-					}
-				}
-
+				for( i in op ){ ops[i] = (i !== 'scale') ? 0 : 1 ; }
 				timeOps = {};
 
 			}else{
-				//console.log('op2 is defined');
-				//-------------------------------------
 				ops = op;
 				ops2 = op2;
-
-				if(timeOptions !== undefined){
-					timeOps = timeOptions;
-				}else{
-					timeOps = {};
-				}
+				timeOps = (timeOptions !== undefined) ? timeOptions : {};
 			}
-
-			
-
-			//console.log(ops, ops2, timeOps)
 
 		}
 
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
-		// return -------------------------
+
 		return this;
 	};
 
@@ -609,8 +547,6 @@ function GSAPObject(options){
 
 		// kind of hackish, but it is the only way to ensure we set the timelines actual length, not timescale
 		this.timeline.addCallback(function(){q.atEnd = true},sync);
-
-		//console.log(this.timeline);
 
 		return this;
 	};
@@ -719,17 +655,15 @@ function GSAP_Router(affectees){
 
 	q.play = function(from,suppressEvents,callback,ignoreAffectees){
 
-		//console.log(this)
-
 		function affectees(_this){
 			var i;
 			var prog = _this.timeline.progress();
-			//console.log(_this, _this.timeline.progress())
+
 			if(ignoreAffectees === undefined || ignoreAffectees === true && _this.affectees.length > 0){
 				for( i in _this.affectees ){
 					if(i !== 'length'){
 						if(prog === 0 || prog === 1){
-							console.log('>> play affectee '+_this.timeline.progress());
+							//console.log('>> play affectee '+_this.timeline.progress());
 							_this.affectees[i].restart();
 						}
 					}
@@ -793,13 +727,7 @@ function GSAP_Router(affectees){
 
 	q.set = function(id,options,ignoreAffectees){
 		
-		if(options.immediateRender === undefined){
-			options.immediateRender = false;
-		}
-		if(options.immediateRender === undefined){
-			options.immediateRender = true;
-		}
-
+		options.immediateRender = options.immediateRender || true;
 		this.timeline.set(id,options);
 
 		return q;
@@ -1193,7 +1121,7 @@ function Button(bind, options){
 	});
 	
 	if(options){
-		q.group = or(undefined,options.group);
+		q.group = options.group || undefined ;
 		if(options.checkbox === '>self'){
 			q.checkbox = q.id;
 		}else{
@@ -1304,7 +1232,6 @@ function Button(bind, options){
 				_this.timeline.call(
 					function(){
 						_this.active = false;
-						//console.log(_this.id+' is not active')
 					}
 				);
 
@@ -1316,7 +1243,6 @@ function Button(bind, options){
 					}
 				}else{
 					_this.restart();
-					//console.log('restarting')
 				}
 				// status switches
 				// --------------------------
@@ -1451,12 +1377,12 @@ function Button(bind, options){
 
 	// Same as lock and unlock except it also affects the elements class, allowing styling.
 	q.enable = function(){
-		q.unlock();
+		q.unlock(); 
 		jQuery(q.id).removeClass('disabled').children().removeClass('disabled');
 	};
 
 	q.disable = function(){
-		q.lock();
+		q.lock(); 
 		jQuery(q.id).addClass('disabled').children().addClass('disabled');
 	};
 
@@ -1593,7 +1519,6 @@ function Img(bind, options){
 					}
 				}
 
-				// Use a shortcut
 				jQuery(q.id).replaceWith(q.sources[index]);
 			}
 			q.current = index;
@@ -1646,7 +1571,6 @@ function Img(bind, options){
 		q.map.areas[i] = {};
 		q.map.areas[i].path = q.path;
 
-
 		q.path = translate(q.path);
 		q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
 
@@ -1659,7 +1583,7 @@ function Img(bind, options){
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){
-				if(func.mouseover !==  undefined) func.mouseover();
+				if(func.mouseover !==  undefined) func.mouseover(); // only assign a function if it was defined.
 			},
 			mouseup:function(){
 				if(func.mouseout !==  undefined) func.mouseout();
@@ -1811,8 +1735,7 @@ function Drag(bind, options){
 		
 		q.interval = function(){
 			if(q.dragging){
-				q.whileDragging();
-				window.requestAnimationFrame(q.interval)
+				q.whileDragging(); window.requestAnimationFrame(q.interval)
 			}else{
 				q.interval = null;
 			}
@@ -1861,11 +1784,7 @@ function Drag(bind, options){
 		};
 
 		// index for hittest purposes
-		if(options.index){
-			q.index = options.index ;
-		}else{
-			q.index = 0;
-		}
+		q.index = (options.index) ? options.index : 0 ;
 		
 		// parent property is used when drag is part of a scrubber and scrubbar
 		if(options.parent){
@@ -1986,19 +1905,18 @@ function ScrubBar(bind, options){
 					td = ( q.controller.duration() )*1000;
 					scrubber_position = Draggable.get(q.scrubber.id).x;
 					trackProgress = scrubber_position/(q.bar.style.width-q.scrubber.style.width);
+					
 					q.controller.gotoAndStop( td*trackProgress/1000 );
 
 				}, (1000/30) );
 			}
 		}else{
 
-			//if(!this.scrubber.down){
-				clearInterval(this.interval);
-				this.interval = undefined;
+			clearInterval(this.interval);
+			this.interval = undefined;
 				
-				if(this.controller.stopped){ this.controller.pause(); }else{ this.controller.play(); }
-				//console.log(this.stopped);
-			//}
+			if(this.controller.stopped){ this.controller.pause(); }else{ this.controller.play(); }
+				
 		}
 
 	};
@@ -2006,7 +1924,6 @@ function ScrubBar(bind, options){
 	q.onDrag = function(){
 		q.watch(true);
 		this.dragging = this.scrubber.dragging;
-		//console.log(this.dragging)
 	};
 
 	q.onDragEnd = function(){
@@ -2014,12 +1931,11 @@ function ScrubBar(bind, options){
 	};
 
 	q.bind = function(options){
-		//console.log(options)
 		if(options){
-			if(options.bar){ q.bar = options.bar; }
-			if(options.scrubber){ q.scrubber = options.scrubber; }
-			if(options.controller){ q.controller = options.controller; }
-			if(options.fill){ q.fill = options.fill; }
+			q.bar = options.bar || undefined ;
+			q.scrubber = options.scrubber || undefined ;
+			q.controller = options.controller || undefined;
+			q.fill = options.fill || undefined ;
 		}
 	};
 
@@ -2031,7 +1947,7 @@ function ProgressBar(bind, options){
 
 	if(options){
 		q.stopped = options.paused || false ;
-		if(options.scrubber){ q.scrubber = options.scrubber; }
+		q.scrubber = options.scrubber || undefined ;
 	}
 
 	q.style = {
@@ -2065,7 +1981,7 @@ function Scrubber(bind,options){
 	q.down = false;
 
 	if(options){
-		q.bar = (options.bar) ? options.bar : 'null';
+		q.bar = options.bar || 'null';
 	}
 
 	return q;

@@ -158,6 +158,8 @@ function GSAPObject(options){
 	var q = new GSAP_Router(true),
 		i,
 		k,
+		l,
+		m,
 		affectees;
 
 	q.timeline = new TimelineMax({ defaultOverwrite:"auto" });
@@ -177,6 +179,8 @@ function GSAPObject(options){
 		if(q.paused) q.timeline.pause();
 
 		q.defaults.ease = options.ease || 'Sine.easeOut';
+		q.defaults.transformPerspective = options.transformPerspective || 0 ;
+		q.defaults.perspective = options.perspective || 0 ;
 		q.defaults.transformOrigin = options.transformOrigin || '50% 50%' ;
 
 	}
@@ -186,11 +190,22 @@ function GSAPObject(options){
 	if(affectees !== false){
 		
 		q.affect = function(item,name){
-			if(name === undefined){
-				// if noe name is provided, it just assigns it a number key.
-				name = ''+q.affectees.length
-			};
-			q.addAffectee(name,item);
+
+			console.log(Object.prototype.toString.call(item), Object.prototype.toString.call(name))
+
+			if(Object.prototype.toString.call(item) === '[object Array]' && Object.prototype.toString.call(name) === '[object Array]'){
+				for( i = 0 , k=item.length ; i<k ; i++ ){
+					if(name[i] === undefined){ name[i] = ''+q.affectees.length };
+					q.addAffectee(name[i],item[i]);
+					console.log('added')
+				}
+			}else if(typeof item === 'string' && typeof name === 'string'){
+				if(name === undefined){ name = ''+q.affectees.length };
+				q.addAffectee(name,item);
+				console.log('added 2')
+			}else{
+				console.log('You must provide an array or a string for both instances')
+			}
 		};
 
 		q.addAffectee = function(name,item){
@@ -230,9 +245,9 @@ function GSAPObject(options){
 		//console.log('id is '+id)
 
 		if(timeOptions){
-			sync = timeOptions.sync || undefined ;
-			repeat = timeOptions.repeat || undefined ;
-			offset = timeOptions.offset || undefined ;
+			sync = timeOptions.sync || 0 ;
+			repeat = timeOptions.repeat || 0 ;
+			offset = timeOptions.offset || 0 ;
 		}
 
 		if(op.length < 2){
@@ -302,11 +317,9 @@ function GSAPObject(options){
 		var newOptions = [];
 
 		for( i in options ){
-			////console.log(newOptions[i]+' --- '+q.defaults[i]);
-			console.log(options[i])
+			//console.log(options[i])
 			newOptions[i] = options[i] || q.defaults[i] ;
-			console.log(newOptions[i])
-			//console.log(newOptions[i]+' --- '+q.defaults[i]);
+			//console.log(newOptions[i])
 		}
 
 		for( i in q.defaults ){
@@ -412,7 +425,7 @@ function GSAPObject(options){
 
 	q.staggerFrom = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3); return this; };
 
-	q.staggerFromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[ops,op2],timeOptions,'staggerFromTo',0.3); return this; };
+	q.staggerFromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[op,op2],timeOptions,'staggerFromTo',0.3); return this; };
 
 	q.yoyo = function(id,dur,op,op2,timeOptions){
 
@@ -433,7 +446,7 @@ function GSAPObject(options){
 			c3 = (op2.offset !== undefined) ? c+=1 : undefined ;
 		}
 
-		// if the above is true
+		// if op2 is timeOptions
 		if(c>0){
 
 			timeOps = op2
@@ -455,6 +468,7 @@ function GSAPObject(options){
 
 		}
 
+		// Animate with Greensock
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
 
 		return this;
@@ -1263,11 +1277,27 @@ function Button(bind, options){
 		return this;
 	};
 
-	q.toggle = function(what,func){
-		if(this.active){
-			what[func[1]]();
-		}else{
-			what[func[0]]();		} 
+	q.toggle = function(ev){
+		
+		var _this = this;
+
+		this.element[ev] = (function(_t,e){
+			return function(){
+				if(_this.active){
+					_this.pause();
+					e.apply(_this,arguments);
+					_this.active = false;
+					//console.log(_this.active)
+					//console.log(_t.active)
+				}else{
+					_this.play();
+					e.apply(_this,arguments);
+					_this.active = true;
+					//console.log(_this.active)
+					//console.log(_t.active)
+				} 
+			}
+		})(this,this.element[ev])
 	};
 
 	// Execute something on a class specific mouse event
@@ -1427,6 +1457,20 @@ function Button(bind, options){
 			})(q.element.onmousedown,q,e);
 		}
 
+		if(e.mouseup){
+			q.element.onmouseup = ( function(e,self,v){
+				//console.log('added mousedown to '+q.id)
+				return function(){
+					if(!self.locked){
+						v.mouseup.call(self,q.id);
+						e.call(self,e);
+					}
+				};
+
+			})(q.element.onmouseup,q,e);
+		}
+
+
 		return q;
 
 	};
@@ -1434,8 +1478,186 @@ function Button(bind, options){
 	return q;
 }
 
+
+// ========================================
+// Crate
+// ----------------------------------------
+
+// This creates a new item of a specified type that wraps other items (contents) in the DOM.
+
+function Crate(wrapper,contents,options){
+
+	var i;
+	var q;
+	var j;
+	var newName = removePrefix(name);
+	var cr8;
+	var wrapIn;
+	var ct = [];
+	var newPos = {};
+	var totals = {};
+	var styles;
+	var thisStyle;
+	var type;
+	var appendTo;
+
+
+	var filteredOptions;
+	var emptyPos = {
+		'margin':'0',
+		'margin-left':'0',
+		'margin-right':'0',
+		'margin-top':'0',
+		'margin-bottom':'0',
+		'left':'0',
+		'right':'0',
+		'top':'0',
+		'bottom':'0',
+		'position':'absolute',
+		'display':'block',
+		'text-align':'left'
+	};
+
+	appendTo = (options) ? options.appendTo : undefined ;
+	wrapIn = jQuery( wrapper )[0] || jQuery('<div id="'+removePrefix(wrapper)[1]+'"></div>').appendTo( appendTo || document.body );
+
+
+	//var relativeTo = jQuery(options.placeHere).getStyles();
+
+	//if(contents.length && contents.length > 1){
+
+		// --------------------------------------------
+		// Preserve Placement
+
+		for(i = 0 ; i<contents.length ; i++){
+			ct[i] = {};
+			ct[i]['left'] = (jQuery(contents[i].id).css('left'));
+			ct[i]['right'] = (jQuery(contents[i].id).css('right'));
+			ct[i]['top'] = (jQuery(contents[i].id).css('top'));
+			ct[i]['bottom'] = (jQuery(contents[i].id).css('bottom'));
+		}
+		for( i = 0 ; i< ct.length ; i++){
+			
+			for( j in ct[i]){
+				if(emptyPos[j] !== undefined){
+					// get the smallest value and use that value
+					if( parseInt(emptyPos[j],10) > 
+						parseInt(ct[i][j],10) 
+					){
+						emptyPos[j] = ct[i][j];
+					}
+				}else{
+					emptyPos[j] = ct[i][j];
+				}
+			}
+		}
+
+	
+		for( i = 0 ; i<contents.length ; i++){
+
+			var _self = jQuery(contents[i].id).getStyles();
+			totals = emptyPos;
+
+			jQuery(contents[i].id).parents().each( function(){
+
+				var _jThis = jQuery(this);
+				styles = _jThis.getStyles();
+
+				for( j in emptyPos ){
+
+					thisStyle = parseInt(styles[j],10);	
+
+					if(!_jThis.is('body') && 
+						!isNaN(thisStyle) && 
+						thisStyle !== parseInt(totals[j])
+					){
+					
+						if(parseInt(relativeTo[j])){
+							if(relativeTo[j]>totals[j]){
+								totals[j] -= ( parseInt(relativeTo[j])-parseInt(thisStyle,10) );
+							}else{
+								totals[j] += ( parseInt(relativeTo[j])+parseInt(thisStyle,10) );
+							}
+						}else{
+							if(relativeTo[j]>totals[j]){
+								totals[j] -= parseInt(thisStyle,10);
+							}else{
+								totals[j] += parseInt(thisStyle,10);
+							}
+						}
+						
+					}
+				}
+
+			});
+
+			//jQuery(contents[i].id).css(totals);
+			jQuery(contents[i].id).appendTo(wrapIn);
+
+			if(options && options.class){ jQuery(wrapIn).addClass( options.class || 'crated' ) }
+			
+
+			//console.log(totals)
+			//console.log(contents[i].id)
+			//console.log('------------------------------');
+		}
+
+	/*}else{
+
+		// ---------------
+		// Simple Crate
+		// ---------------
+
+		if(contents.length <= 1){
+			console.log('pass 1 item, not an array');
+		}else{
+			cr8 = jQuery(contents.id).clone();
+		}
+
+		cr8.empty();
+		cr8.attr('id',newName[1]);
+		cr8.clonePosition(contents.id);
+		jQuery(contents.id).clearPosition();
+		jQuery(contents.id).wrap(cr8);
+
+	}*/
+
+
+	// Create a Jive Object
+	// -----------------------------------
+
+	var validTypes = { 'item':Item, 'button':Button, 'drag':Drag };
+
+	if(options !== undefined){
+		if(options.type){ type = validTypes[ options.type ]; delete options.type; }else{ type = Item; }
+	}else{
+		type = Item;
+	}
+
+	var instance = new type('#'+wrapIn[0].id, options);
+	var names = [];
+
+	if(options){
+		if(options.affect && options.affect === true){
+
+			for( i = 0 , k = contents.length ; i<k ; i++){
+				names.push( wrapIn[0].id+'_crated_'+i);
+			}
+			
+			instance.affect(contents,names);
+			console.log(instance.affectees)
+		}
+	}
+
+	return instance;
+}
+
+// =======================================
+// Img
+// ---------------------------------------
+
 /*
-	Image allows us to control the source of an img tag or add an img to a div.
+	Img allows us to control the source of an img tag or add an img to a div.
 
 	It holds source paths to as many images as you want and will swap out
 	the current img's src attribute with another one you store in the class.
@@ -1620,6 +1842,11 @@ function Img(bind, options){
 	return q;
 }
 
+
+// =======================================
+// DropSpot
+// ---------------------------------------
+
 /*
 DropSpot is Drag's partner in crime, it is mostly intended to be used with the Drag and Drop test class.
 */
@@ -1706,19 +1933,50 @@ function Drag(bind, options){
 	})(q.enable);
 
 	q.bindOn = (function(f){
-		
-		return function(e){
 			
-			if(e.whileDragging){
-				if(q.whileDragging && q.draggingTicker){
-					q.whileDragging = e.whileDragging;
-				};
+		return function(e){
+			if(e.dragging){
+				q.whileDragging = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.dragging.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.whileDragging,q,e);
 			}
 
-			f.call(e,q)
-		}
+			if(e.drag){
+				q.onDrag = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.drag.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.onDrag,q,e);
+			}
+
+			if(e.dragend){
+				q.onDragEnd = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.dragend.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.onDragEnd,q,e);
+			}
+
+			f.call(e,q);
+
+			instance(); // recreate an instance, rebind the functions.
+
+			return q;
+		};
 
 	})(q.bindOn);
+
 
 	q.onDrag = function(){
 		q.dragging = true;
@@ -1809,12 +2067,21 @@ function Drag(bind, options){
 		}
 	};
 
-	q.dragEngine = Draggable.create( q.element, {
-		type:"x,y", 
-		bounds:region,
-		onDrag:q.onDrag,
-		onDragEnd:q.onDragEnd
-	})[0];
+	function instance(){
+
+		if(q.dragEngine !== undefined){
+			q.dragEngine.kill();
+		}
+
+		q.dragEngine = Draggable.create( q.element, {
+			type:"x,y", 
+			bounds:region,
+			onDrag:q.onDrag,
+			onDragEnd:q.onDragEnd
+		})[0];
+	}
+
+	instance();
 
 	return q;
 }

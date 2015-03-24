@@ -181,8 +181,8 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 		newOptions = {},
 		objectCSS = jQuery(element).getStyles();
 
-	console.log('-----------------------------');
-	console.log(options)
+	//console.log('-----------------------------');
+	//console.log(options)
 	for( i in jigLibrary.defaults ){
 		
 		if(options !== undefined){
@@ -191,8 +191,8 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 			newOptions = jigLibrary.defaults;
 		}
 	}
-	console.log(newOptions)
-	console.log(sync)
+	//console.log(newOptions)
+	//console.log(sync)
 
 	created = jigLibrary[preset]( element, newOptions, objectCSS, isLastrepeat);
 	this.stick(created,newOptions,sync);
@@ -210,8 +210,8 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 		}
 	}
 
-	console.log(element, preset, sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i);
-	console.log('-----------------------------');
+	//console.log(element, preset, sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i);
+	//console.log('-----------------------------');
 
 
 	// return -------------------------

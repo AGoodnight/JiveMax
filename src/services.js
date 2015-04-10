@@ -62,11 +62,7 @@ function islockLabel(e){
 	
 	// i just made this private to get in the habit
 	return (function(e){
-		if(e === 'lock'){
-			return true;
-		}else{
-			return false;
-		}
+		return (e === 'lock') ? true : false;
 	})(lead);
 }
 
@@ -82,17 +78,14 @@ function getlockIndex(e){
 
 function checklocks(scene){
 
-	var i;
-	var j;
-
-	var index;
-	var arr;
-	var isFrom;
-	var thisFrom;
-
-	var c_time = scene.timeline.time(); // get the current time
-	//console.log(scene.id)
-	var g = scene.timeline.getLabelsArray();
+	var i,
+		j,
+		index,
+		arr,
+		isFrom,
+		thisFrom,
+		c_time = scene.timeline.time(), // get the current time
+		g = scene.timeline.getLabelsArray();
 
 	// --------------------------------------------
 	for(i = 0 ; i<g.length ; i++ ){
@@ -183,6 +176,9 @@ function useLocalStorage(){
 */
 
 function removePrefix(o){
+
+	// removes the prefix from a string that has a valid prefix.
+
 	var arr=[];
 	switch(o[0]){
 		case '#':
@@ -203,6 +199,8 @@ function removePrefix(o){
 
 function removeUndefined(q){
 
+	// removes undefined elements from object or array.
+
 	var g = {};
 	var i;
 	for(i in q){
@@ -214,6 +212,9 @@ function removeUndefined(q){
 }
 
 function getNodes(nodeString, asStrings){
+
+	// this uses jQuery to get the DOM element/elements
+	// then strips it/them from the jQuery object and returns it/them in an array.
 
 	var temp =[];
 	for( i in jQuery(nodeString) ){
@@ -380,179 +381,6 @@ function isEmpty(obj) {
 
 })(jQuery);
 
-
-// ======================
-// Animator Helpers
-// ----------------------
-
-// This creates a new item of a specified type that encapsulates another item in the DOM.
-// TODO - link to item it is crateing.
-
-function Crate(name,contents,options){
-
-	var i;
-	var q;
-	var j;
-	var newName = removePrefix(name);
-	var cr8;
-	var wrapIn;
-	var ct = [];
-	var newPos = {};
-	var totals = {};
-	var styles;
-	var thisStyle;
-	var type;
-
-
-	var filteredOptions;
-	var emptyPos = {
-		'margin':'0',
-		'margin-left':'0',
-		'margin-right':'0',
-		'margin-top':'0',
-		'margin-bottom':'0',
-		'left':'0',
-		'right':'0',
-		'top':'0',
-		'bottom':'0',
-		'position':'absolute',
-		'display':'block',
-		'text-align':'left'
-	};
-
-	//var relativeTo = jQuery(options.placeHere).getStyles();
-
-	if(contents.length && contents.length > 1){
-
-		// -------------------------
-		// Crate for multiple items
-		// -------------------------
-
-		/*wrapIn = jQuery(options.placeHere);
-
-		// --------------------------------------------
-		// Preserve Placement
-
-		for(i = 0 ; i<contents.length ; i++){
-			ct[i] = {};
-			ct[i]['left'] = (jQuery(contents[i].id).css('left'));
-			ct[i]['right'] = (jQuery(contents[i].id).css('right'));
-			ct[i]['top'] = (jQuery(contents[i].id).css('top'));
-			ct[i]['bottom'] = (jQuery(contents[i].id).css('bottom'));
-		}
-		for( i = 0 ; i< ct.length ; i++){
-			
-			for( j in ct[i]){
-				if(emptyPos[j] !== undefined){
-					// get the smallest value and use that value
-					if( parseInt(emptyPos[j],10) > 
-						parseInt(ct[i][j],10) 
-					){
-						emptyPos[j] = ct[i][j];
-					}
-				}else{
-					emptyPos[j] = ct[i][j];
-				}
-			}
-		}
-
-		// --------------------------------------------
-		// Wrap it all up
-
-		jQuery(options.placeHere)
-			.append('<div id='+newName[1]+'></div>')
-
-		jQuery('#'+newName[1]).css(emptyPos);
-
-		// -------------------------------------------
-		// Adjust positioning on crated elements
-
-		
-
-		for( i = 0 ; i<contents.length ; i++){
-
-			var _self = jQuery(contents[i].id).getStyles();
-			totals = emptyPos;
-
-			jQuery(contents[i].id).parents().each( function(){
-
-				var _jThis = jQuery(this);
-				styles = _jThis.getStyles();
-
-				for( j in emptyPos ){
-
-					thisStyle = parseInt(styles[j],10);	
-
-					if(!_jThis.is('body') && 
-						!isNaN(thisStyle) && 
-						thisStyle !== parseInt(totals[j])
-					){
-					
-						if(parseInt(relativeTo[j])){
-							if(relativeTo[j]>totals[j]){
-								totals[j] -= ( parseInt(relativeTo[j])-parseInt(thisStyle,10) );
-							}else{
-								totals[j] += ( parseInt(relativeTo[j])+parseInt(thisStyle,10) );
-							}
-						}else{
-							if(relativeTo[j]>totals[j]){
-								totals[j] -= parseInt(thisStyle,10);
-							}else{
-								totals[j] += parseInt(thisStyle,10);
-							}
-						}
-						
-					}
-				}
-
-			});
-
-			jQuery(contents[i].id).css(totals);
-			jQuery(contents[i].id).appendTo('#'+newName[1]);
-
-			console.log(totals)
-			console.log(contents[i].id)
-			console.log('------------------------------');
-
-		}*/
-		console.log('Please use only one item');
-	}else{
-
-		// ---------------
-		// Simple Crate
-		// ---------------
-
-		if(contents.length <= 1){
-			console.log('pass 1 item, not an array');
-		}else{
-			cr8 = jQuery(contents.id).clone();
-		}
-
-		cr8.empty();
-		cr8.attr('id',newName[1]);
-		cr8.clonePosition(contents.id);
-		jQuery(contents.id).clearPosition();
-		jQuery(contents.id).wrap(cr8);
-
-	}
-
-
-	// Create a Jive Object
-	// -----------------------------------
-
-	if(options !== undefined){
-		
-		if(options.placeHere){ delete options.placeHere; }
-
-		if(options.type){ type = options.type; delete options.type; }else{ type = Item; }
-
-	}else{
-		type = Item;
-	}
-
-	return new type(name, options);
-}
-
 // ======================
 // GSAP Helpers
 // ----------------------
@@ -640,7 +468,6 @@ function GSAP_method(timeline,id,duration,injection,method){
 	// Forward Tween -------------------------------------------------------
 
 	//console.log(sync)
-	//console.log(timeline,inject,sync)
 	timeline.add( TweenMax[animator].apply(timeline,inject),sync );	
 	
 	// ---------------------------------------------------------------------
@@ -656,10 +483,23 @@ function GSAP_method(timeline,id,duration,injection,method){
 
 		for( i = 0 ; i<repeat-1 ; i++){
 
-			timeline.add( TweenMax[animator].apply(timeline,inject) );
+			if(sync === 0 && i === 0){
+				sync = inject[1]
+				//console.log(sync+' , i === 0 for '+id)
+			}
+
+			if(i > 0){
+				sync += inject[1];
+				//console.log(sync+' , i > 0  for '+id)
+			}
+
+			timeline.add( TweenMax[animator].apply(timeline,inject),sync );
+			//console.log(sync+ ' - '+id)
 
 			if(method === 'yoyo'){
-				timeline.add( TweenMax[animator].apply(timeline,[inject[0],inject[1],inject[3],inject[2]]) );
+				sync = sync+=inject[1];
+				//console.log(sync)
+				timeline.add( TweenMax[animator].apply(timeline,[inject[0],inject[1],inject[3],inject[2]]),sync );
 			}
 
 		}
@@ -903,12 +743,11 @@ function GSAPEvent(name,obj,events,item,index,args){
  		if(args.length > 0){
  		
 	 		newArgs = [item[index]];
-
 	 		for( i = 0 ; i<args.length ; i++){
 	 			newArgs.push(args[i])
 	 		}
-
 	 		newArgs.push(scene);
+	 		console.log('arguments: '+args)
 
 	 		f = events[name].call(obj, item[index], scene, all_items);
 	 	}else{
@@ -934,18 +773,16 @@ function GSAPEvent(name,obj,events,item,index,args){
 
 function or(type,value){
 	return (value) ? value : type;
+	// replaced by 'a || b'
 }
 
 function ifNot(a,value,assign){
 	return (a === value) ? a : assign;
+	// replaced by c = if(!a){b};
 }
 
 function isArray(val){
-	if(typeof val === 'object' && val.length !== undefined){
-		return true;
-	}else{
-		return false;
-	}
+	return (typeof val === 'object' && val.length !== undefined) ? true : false;
 }
 
 function unNull(e){
@@ -953,15 +790,7 @@ function unNull(e){
 }
 
 function parent(parent,variable){
-	if(parent !== undefined){
-		if(parent[variable+''] !== undefined){
-			return true;
-		}else{
-			return false;
-		}
-	}else{
-		return false;
-	}
+	return (parent !== undefined)? ( (parent[variable+''] !== undefined) ? true : false ) : false;
 }
 
 function forAll(obj,method){

@@ -158,6 +158,8 @@ function GSAPObject(options){
 	var q = new GSAP_Router(true),
 		i,
 		k,
+		l,
+		m,
 		affectees;
 
 	q.timeline = new TimelineMax({ defaultOverwrite:"auto" });
@@ -177,6 +179,8 @@ function GSAPObject(options){
 		if(q.paused) q.timeline.pause();
 
 		q.defaults.ease = options.ease || 'Sine.easeOut';
+		q.defaults.transformPerspective = options.transformPerspective || 0 ;
+		q.defaults.perspective = options.perspective || 0 ;
 		q.defaults.transformOrigin = options.transformOrigin || '50% 50%' ;
 
 	}
@@ -186,11 +190,22 @@ function GSAPObject(options){
 	if(affectees !== false){
 		
 		q.affect = function(item,name){
-			if(name === undefined){
-				// if noe name is provided, it just assigns it a number key.
-				name = ''+q.affectees.length
-			};
-			q.addAffectee(name,item);
+
+			console.log(Object.prototype.toString.call(item), Object.prototype.toString.call(name))
+
+			if(Object.prototype.toString.call(item) === '[object Array]' && Object.prototype.toString.call(name) === '[object Array]'){
+				for( i = 0 , k=item.length ; i<k ; i++ ){
+					if(name[i] === undefined){ name[i] = ''+q.affectees.length };
+					q.addAffectee(name[i],item[i]);
+					console.log('added')
+				}
+			}else if(typeof item === 'string' && typeof name === 'string'){
+				if(name === undefined){ name = ''+q.affectees.length };
+				q.addAffectee(name,item);
+				console.log('added 2')
+			}else{
+				console.log('You must provide an array or a string for both instances')
+			}
 		};
 
 		q.addAffectee = function(name,item){
@@ -214,7 +229,7 @@ function GSAPObject(options){
 
 		var repeat,
 			sync;
-			offset = (offset) ? offset : undefined ;
+			offset = offset || undefined ;
 
 		if(q.wrapper !== undefined){
 			if(q.wrapper.id !== undefined && q.wrapper.id !== id){
@@ -227,12 +242,12 @@ function GSAPObject(options){
 			}
 		}
 
-		console.log('id is '+id)
+		//console.log('id is '+id)
 
 		if(timeOptions){
-			sync = timeOptions.sync || undefined ;
-			repeat = timeOptions.repeat || undefined ;
-			offset = timeOptions.offset || undefined ;
+			sync = timeOptions.sync || 0 ;
+			repeat = timeOptions.repeat || 0 ;
+			offset = timeOptions.offset || 0 ;
 		}
 
 		if(op.length < 2){
@@ -287,29 +302,24 @@ function GSAPObject(options){
 			id;
 
 		if(q.wrapper !== undefined){
-			if(q.wrapper.id !== undefined && q.wrapper.id !== e){
-				id = q.wrapper.id+' '+e;
-				////console.log('adding wrapper: '+q.wrapper.id+'  '+id);
-			}
-			if(q.wrapper.id === e){
-				id = e;
-				//console.log('same as wrapper: '+id);
+			if(q.wrapper.id !== undefined){
+				id = (q.wrapper.id !== e) ? q.wrapper.id+' '+e : e;
 			}
 		}else{
 			id = e
 		}
 
 		if(timeOptions){
-			sync = timeOptions.sync|| undefined;
+			sync = (timeOptions.sync !== undefined)? timeOptions.sync : undefined;
 			repeat = timeOptions.repeat || undefined;
 		}
 
 		var newOptions = [];
 
 		for( i in options ){
-			////console.log(newOptions[i]+' --- '+q.defaults[i]);
+			//console.log(options[i])
 			newOptions[i] = options[i] || q.defaults[i] ;
-			//console.log(newOptions[i]+' --- '+q.defaults[i]);
+			//console.log(newOptions[i])
 		}
 
 		for( i in q.defaults ){
@@ -405,43 +415,17 @@ function GSAPObject(options){
 	// -----------------------------------
 	// GSAP Methods
 
-	q.to = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'to');
-		// return -------------------------
-		return this;
-	};
+	q.to = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'to'); return this; };
 
-	q.from = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'from');
-		// return -------------------------
-		return this;
-	};
+	q.from = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'from'); return this; };
 
-	q.fromTo = function(id,dur,op,op2,timeOptions){
-		do_GSAP(id,dur,[op,op2],timeOptions,'fromTo');
-		// return -------------------------
-		return this;
-	};
+	q.fromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[op,op2],timeOptions,'fromTo'); return this; };
 
-	q.staggerTo = function(id,dur,op,timeOptions){
-		do_GSAP(id,dur,[op],timeOptions,'staggerTo',0.3);
-		// return -------------------------
-		return this;
+	q.staggerTo = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'staggerTo',0.3); return this; };
 
-	};
+	q.staggerFrom = function(id,dur,op,timeOptions){ do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3); return this; };
 
-	q.staggerFrom = function(id,dur,op,timeOptions){	
-		//console.log(id)
-		do_GSAP(id,dur,[op],timeOptions,'staggerFrom',0.3);
-		// return -------------------------
-		return this;
-	};
-
-	q.staggerFromTo = function(id,dur,op,op2,timeOptions){
-		do_GSAP(id,dur,[ops,op2],timeOptions,'staggerFromTo',0.3);
-		// return -------------------------
-		return this;
-	};
+	q.staggerFromTo = function(id,dur,op,op2,timeOptions){ do_GSAP(id,dur,[op,op2],timeOptions,'staggerFromTo',0.3); return this; };
 
 	q.yoyo = function(id,dur,op,op2,timeOptions){
 
@@ -449,11 +433,11 @@ function GSAPObject(options){
 		// like fromTo, or only state the ending state and by default animate from the resting state of your DOM node.
 		// it does this by checking the attributes of your passed objects (associative arrays) and comparing them to expected values.
 
-		var i,c = 0,c1,c2,c3;
-		var ops = {};
-		var ops2 = {};
-		var timeOps;
-		var styles = jQuery(id).parseStyles();
+		var i,c = 0,c1,c2,c3,
+			ops = {},
+			ops2 = {},
+			timeOps,
+			styles = jQuery(id).parseStyles();
 
 		// see if op2 has been ommited by being replaced with timeOptions
 		if(op2 !== undefined){
@@ -462,63 +446,31 @@ function GSAPObject(options){
 			c3 = (op2.offset !== undefined) ? c+=1 : undefined ;
 		}
 
-		// if the above is true
+		// if op2 is timeOptions
 		if(c>0){
 
-			//console.log( 'op2 is timeOps' )
-			//--------------------------------------
-			
 			timeOps = op2
-
-			for( i in op ){
-				if(i !== 'scale'){
-					ops[i] = 0;
-				}else{
-					ops[i] = 1;
-				}
-			}
-
+			for( i in op ){ ops[i] = (i !== 'scale') ? ops[i] = 0 : ops[i] = 1; }
 			ops2 = op;
-			//console.log(ops, ops2, timeOps)
 
 		}else{
 
 			if(op2 === undefined){
-				//console.log('op2 is undefined');
-				//-------------------------------------
 				ops2 = op;
-
-				for( i in op ){
-					if(i !== 'scale'){
-						ops[i] = 0;
-					}else{
-						ops[i] = 1;
-					}
-				}
-
+				for( i in op ){ ops[i] = (i !== 'scale') ? 0 : 1 ; }
 				timeOps = {};
 
 			}else{
-				//console.log('op2 is defined');
-				//-------------------------------------
 				ops = op;
 				ops2 = op2;
-
-				if(timeOptions !== undefined){
-					timeOps = timeOptions;
-				}else{
-					timeOps = {};
-				}
+				timeOps = (timeOptions !== undefined) ? timeOptions : {};
 			}
-
-			
-
-			//console.log(ops, ops2, timeOps)
 
 		}
 
+		// Animate with Greensock
 		do_GSAP(id,dur,[ops,ops2],timeOps,'yoyo');
-		// return -------------------------
+
 		return this;
 	};
 
@@ -609,8 +561,6 @@ function GSAPObject(options){
 
 		// kind of hackish, but it is the only way to ensure we set the timelines actual length, not timescale
 		this.timeline.addCallback(function(){q.atEnd = true},sync);
-
-		//console.log(this.timeline);
 
 		return this;
 	};
@@ -719,17 +669,15 @@ function GSAP_Router(affectees){
 
 	q.play = function(from,suppressEvents,callback,ignoreAffectees){
 
-		//console.log(this)
-
 		function affectees(_this){
 			var i;
 			var prog = _this.timeline.progress();
-			//console.log(_this, _this.timeline.progress())
+
 			if(ignoreAffectees === undefined || ignoreAffectees === true && _this.affectees.length > 0){
 				for( i in _this.affectees ){
 					if(i !== 'length'){
 						if(prog === 0 || prog === 1){
-							console.log('>> play affectee '+_this.timeline.progress());
+							//console.log('>> play affectee '+_this.timeline.progress());
 							_this.affectees[i].restart();
 						}
 					}
@@ -793,13 +741,7 @@ function GSAP_Router(affectees){
 
 	q.set = function(id,options,ignoreAffectees){
 		
-		if(options.immediateRender === undefined){
-			options.immediateRender = false;
-		}
-		if(options.immediateRender === undefined){
-			options.immediateRender = true;
-		}
-
+		options.immediateRender = options.immediateRender || true;
 		this.timeline.set(id,options);
 
 		return q;
@@ -1193,7 +1135,7 @@ function Button(bind, options){
 	});
 	
 	if(options){
-		q.group = or(undefined,options.group);
+		q.group = options.group || undefined ;
 		if(options.checkbox === '>self'){
 			q.checkbox = q.id;
 		}else{
@@ -1304,7 +1246,6 @@ function Button(bind, options){
 				_this.timeline.call(
 					function(){
 						_this.active = false;
-						//console.log(_this.id+' is not active')
 					}
 				);
 
@@ -1316,7 +1257,6 @@ function Button(bind, options){
 					}
 				}else{
 					_this.restart();
-					//console.log('restarting')
 				}
 				// status switches
 				// --------------------------
@@ -1337,11 +1277,27 @@ function Button(bind, options){
 		return this;
 	};
 
-	q.toggle = function(what,func){
-		if(this.active){
-			what[func[1]]();
-		}else{
-			what[func[0]]();		} 
+	q.toggle = function(ev){
+		
+		var _this = this;
+
+		this.element[ev] = (function(_t,e){
+			return function(){
+				if(_this.active){
+					_this.pause();
+					e.apply(_this,arguments);
+					_this.active = false;
+					//console.log(_this.active)
+					//console.log(_t.active)
+				}else{
+					_this.play();
+					e.apply(_this,arguments);
+					_this.active = true;
+					//console.log(_this.active)
+					//console.log(_t.active)
+				} 
+			}
+		})(this,this.element[ev])
 	};
 
 	// Execute something on a class specific mouse event
@@ -1451,12 +1407,12 @@ function Button(bind, options){
 
 	// Same as lock and unlock except it also affects the elements class, allowing styling.
 	q.enable = function(){
-		q.unlock();
+		q.unlock(); 
 		jQuery(q.id).removeClass('disabled').children().removeClass('disabled');
 	};
 
 	q.disable = function(){
-		q.lock();
+		q.lock(); 
 		jQuery(q.id).addClass('disabled').children().addClass('disabled');
 	};
 
@@ -1501,6 +1457,20 @@ function Button(bind, options){
 			})(q.element.onmousedown,q,e);
 		}
 
+		if(e.mouseup){
+			q.element.onmouseup = ( function(e,self,v){
+				//console.log('added mousedown to '+q.id)
+				return function(){
+					if(!self.locked){
+						v.mouseup.call(self,q.id);
+						e.call(self,e);
+					}
+				};
+
+			})(q.element.onmouseup,q,e);
+		}
+
+
 		return q;
 
 	};
@@ -1508,8 +1478,186 @@ function Button(bind, options){
 	return q;
 }
 
+
+// ========================================
+// Crate
+// ----------------------------------------
+
+// This creates a new item of a specified type that wraps other items (contents) in the DOM.
+
+function Crate(wrapper,contents,options){
+
+	var i;
+	var q;
+	var j;
+	var newName = removePrefix(name);
+	var cr8;
+	var wrapIn;
+	var ct = [];
+	var newPos = {};
+	var totals = {};
+	var styles;
+	var thisStyle;
+	var type;
+	var appendTo;
+
+
+	var filteredOptions;
+	var emptyPos = {
+		'margin':'0',
+		'margin-left':'0',
+		'margin-right':'0',
+		'margin-top':'0',
+		'margin-bottom':'0',
+		'left':'0',
+		'right':'0',
+		'top':'0',
+		'bottom':'0',
+		'position':'absolute',
+		'display':'block',
+		'text-align':'left'
+	};
+
+	appendTo = (options) ? options.appendTo : undefined ;
+	wrapIn = jQuery( wrapper )[0] || jQuery('<div id="'+removePrefix(wrapper)[1]+'"></div>').appendTo( appendTo || document.body );
+
+
+	//var relativeTo = jQuery(options.placeHere).getStyles();
+
+	//if(contents.length && contents.length > 1){
+
+		// --------------------------------------------
+		// Preserve Placement
+
+		for(i = 0 ; i<contents.length ; i++){
+			ct[i] = {};
+			ct[i]['left'] = (jQuery(contents[i].id).css('left'));
+			ct[i]['right'] = (jQuery(contents[i].id).css('right'));
+			ct[i]['top'] = (jQuery(contents[i].id).css('top'));
+			ct[i]['bottom'] = (jQuery(contents[i].id).css('bottom'));
+		}
+		for( i = 0 ; i< ct.length ; i++){
+			
+			for( j in ct[i]){
+				if(emptyPos[j] !== undefined){
+					// get the smallest value and use that value
+					if( parseInt(emptyPos[j],10) > 
+						parseInt(ct[i][j],10) 
+					){
+						emptyPos[j] = ct[i][j];
+					}
+				}else{
+					emptyPos[j] = ct[i][j];
+				}
+			}
+		}
+
+	
+		for( i = 0 ; i<contents.length ; i++){
+
+			var _self = jQuery(contents[i].id).getStyles();
+			totals = emptyPos;
+
+			jQuery(contents[i].id).parents().each( function(){
+
+				var _jThis = jQuery(this);
+				styles = _jThis.getStyles();
+
+				for( j in emptyPos ){
+
+					thisStyle = parseInt(styles[j],10);	
+
+					if(!_jThis.is('body') && 
+						!isNaN(thisStyle) && 
+						thisStyle !== parseInt(totals[j])
+					){
+					
+						if(parseInt(relativeTo[j])){
+							if(relativeTo[j]>totals[j]){
+								totals[j] -= ( parseInt(relativeTo[j])-parseInt(thisStyle,10) );
+							}else{
+								totals[j] += ( parseInt(relativeTo[j])+parseInt(thisStyle,10) );
+							}
+						}else{
+							if(relativeTo[j]>totals[j]){
+								totals[j] -= parseInt(thisStyle,10);
+							}else{
+								totals[j] += parseInt(thisStyle,10);
+							}
+						}
+						
+					}
+				}
+
+			});
+
+			//jQuery(contents[i].id).css(totals);
+			jQuery(contents[i].id).appendTo(wrapIn);
+
+			if(options && options.class){ jQuery(wrapIn).addClass( options.class || 'crated' ) }
+			
+
+			//console.log(totals)
+			//console.log(contents[i].id)
+			//console.log('------------------------------');
+		}
+
+	/*}else{
+
+		// ---------------
+		// Simple Crate
+		// ---------------
+
+		if(contents.length <= 1){
+			console.log('pass 1 item, not an array');
+		}else{
+			cr8 = jQuery(contents.id).clone();
+		}
+
+		cr8.empty();
+		cr8.attr('id',newName[1]);
+		cr8.clonePosition(contents.id);
+		jQuery(contents.id).clearPosition();
+		jQuery(contents.id).wrap(cr8);
+
+	}*/
+
+
+	// Create a Jive Object
+	// -----------------------------------
+
+	var validTypes = { 'item':Item, 'button':Button, 'drag':Drag };
+
+	if(options !== undefined){
+		if(options.type){ type = validTypes[ options.type ]; delete options.type; }else{ type = Item; }
+	}else{
+		type = Item;
+	}
+
+	var instance = new type('#'+wrapIn[0].id, options);
+	var names = [];
+
+	if(options){
+		if(options.affect && options.affect === true){
+
+			for( i = 0 , k = contents.length ; i<k ; i++){
+				names.push( wrapIn[0].id+'_crated_'+i);
+			}
+			
+			instance.affect(contents,names);
+			console.log(instance.affectees)
+		}
+	}
+
+	return instance;
+}
+
+// =======================================
+// Img
+// ---------------------------------------
+
 /*
-	Image allows us to control the source of an img tag or add an img to a div.
+	Img allows us to control the source of an img tag or add an img to a div.
 
 	It holds source paths to as many images as you want and will swap out
 	the current img's src attribute with another one you store in the class.
@@ -1593,7 +1741,6 @@ function Img(bind, options){
 					}
 				}
 
-				// Use a shortcut
 				jQuery(q.id).replaceWith(q.sources[index]);
 			}
 			q.current = index;
@@ -1646,7 +1793,6 @@ function Img(bind, options){
 		q.map.areas[i] = {};
 		q.map.areas[i].path = q.path;
 
-
 		q.path = translate(q.path);
 		q.map.areas[i].nodeString = '<area name="'+i+'_'+name+'" shape="poly" coords="'+q.path+'"/>';
 
@@ -1659,7 +1805,7 @@ function Img(bind, options){
 		// Now we make our area a button! jQuery let us do this with the CSS selector, this process may ge clunky (nature of the selector) if done too mauch and too often.
 		q.map.areas[i].button = new Button("area[name="+i+'_'+name+"]").bindOn({
 			mouseover:function(){
-				if(func.mouseover !==  undefined) func.mouseover();
+				if(func.mouseover !==  undefined) func.mouseover(); // only assign a function if it was defined.
 			},
 			mouseup:function(){
 				if(func.mouseout !==  undefined) func.mouseout();
@@ -1695,6 +1841,11 @@ function Img(bind, options){
 
 	return q;
 }
+
+
+// =======================================
+// DropSpot
+// ---------------------------------------
 
 /*
 DropSpot is Drag's partner in crime, it is mostly intended to be used with the Drag and Drop test class.
@@ -1782,19 +1933,50 @@ function Drag(bind, options){
 	})(q.enable);
 
 	q.bindOn = (function(f){
-		
-		return function(e){
 			
-			if(e.whileDragging){
-				if(q.whileDragging && q.draggingTicker){
-					q.whileDragging = e.whileDragging;
-				};
+		return function(e){
+			if(e.dragging){
+				q.whileDragging = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.dragging.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.whileDragging,q,e);
 			}
 
-			f.call(e,q)
-		}
+			if(e.drag){
+				q.onDrag = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.drag.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.onDrag,q,e);
+			}
+
+			if(e.dragend){
+				q.onDragEnd = ( function(evnt,self,e){
+					return function(){
+						if(!self.locked){
+							e.dragend.call(self,q.id);
+							evnt.call(self,e);
+						}
+					};
+				})(q.onDragEnd,q,e);
+			}
+
+			f.call(e,q);
+
+			instance(); // recreate an instance, rebind the functions.
+
+			return q;
+		};
 
 	})(q.bindOn);
+
 
 	q.onDrag = function(){
 		q.dragging = true;
@@ -1811,8 +1993,7 @@ function Drag(bind, options){
 		
 		q.interval = function(){
 			if(q.dragging){
-				q.whileDragging();
-				window.requestAnimationFrame(q.interval)
+				q.whileDragging(); window.requestAnimationFrame(q.interval)
 			}else{
 				q.interval = null;
 			}
@@ -1861,11 +2042,7 @@ function Drag(bind, options){
 		};
 
 		// index for hittest purposes
-		if(options.index){
-			q.index = options.index ;
-		}else{
-			q.index = 0;
-		}
+		q.index = (options.index) ? options.index : 0 ;
 		
 		// parent property is used when drag is part of a scrubber and scrubbar
 		if(options.parent){
@@ -1890,12 +2067,21 @@ function Drag(bind, options){
 		}
 	};
 
-	q.dragEngine = Draggable.create( q.element, {
-		type:"x,y", 
-		bounds:region,
-		onDrag:q.onDrag,
-		onDragEnd:q.onDragEnd
-	})[0];
+	function instance(){
+
+		if(q.dragEngine !== undefined){
+			q.dragEngine.kill();
+		}
+
+		q.dragEngine = Draggable.create( q.element, {
+			type:"x,y", 
+			bounds:region,
+			onDrag:q.onDrag,
+			onDragEnd:q.onDragEnd
+		})[0];
+	}
+
+	instance();
 
 	return q;
 }
@@ -1986,19 +2172,18 @@ function ScrubBar(bind, options){
 					td = ( q.controller.duration() )*1000;
 					scrubber_position = Draggable.get(q.scrubber.id).x;
 					trackProgress = scrubber_position/(q.bar.style.width-q.scrubber.style.width);
+					
 					q.controller.gotoAndStop( td*trackProgress/1000 );
 
 				}, (1000/30) );
 			}
 		}else{
 
-			//if(!this.scrubber.down){
-				clearInterval(this.interval);
-				this.interval = undefined;
+			clearInterval(this.interval);
+			this.interval = undefined;
 				
-				if(this.controller.stopped){ this.controller.pause(); }else{ this.controller.play(); }
-				//console.log(this.stopped);
-			//}
+			if(this.controller.stopped){ this.controller.pause(); }else{ this.controller.play(); }
+				
 		}
 
 	};
@@ -2006,7 +2191,6 @@ function ScrubBar(bind, options){
 	q.onDrag = function(){
 		q.watch(true);
 		this.dragging = this.scrubber.dragging;
-		//console.log(this.dragging)
 	};
 
 	q.onDragEnd = function(){
@@ -2014,12 +2198,11 @@ function ScrubBar(bind, options){
 	};
 
 	q.bind = function(options){
-		//console.log(options)
 		if(options){
-			if(options.bar){ q.bar = options.bar; }
-			if(options.scrubber){ q.scrubber = options.scrubber; }
-			if(options.controller){ q.controller = options.controller; }
-			if(options.fill){ q.fill = options.fill; }
+			q.bar = options.bar || undefined ;
+			q.scrubber = options.scrubber || undefined ;
+			q.controller = options.controller || undefined;
+			q.fill = options.fill || undefined ;
 		}
 	};
 
@@ -2031,7 +2214,7 @@ function ProgressBar(bind, options){
 
 	if(options){
 		q.stopped = options.paused || false ;
-		if(options.scrubber){ q.scrubber = options.scrubber; }
+		q.scrubber = options.scrubber || undefined ;
 	}
 
 	q.style = {
@@ -2065,7 +2248,7 @@ function Scrubber(bind,options){
 	q.down = false;
 
 	if(options){
-		q.bar = (options.bar) ? options.bar : 'null';
+		q.bar = options.bar || 'null';
 	}
 
 	return q;

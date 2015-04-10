@@ -155,7 +155,7 @@ TimelineMax.prototype.stick = function(timeline,options,sync){
 
 	// variables ----------------------
 	var tween = TweenMax,
-		name = (options.label) ? options.label : 'untitled',
+		name =  options.label || 'untitled',
 		piggy = (sync === 'piggy' || sync === '>' || sync === undefined) ? true : false;
 
 	/* next we control where the animation is injected into the timeline. 
@@ -181,15 +181,18 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 		newOptions = {},
 		objectCSS = jQuery(element).getStyles();
 
+	//console.log('-----------------------------');
+	//console.log(options)
 	for( i in jigLibrary.defaults ){
 		
 		if(options !== undefined){
-			//console.log(i + ' --- '+options[i])
 			newOptions[i] = (options[i] === undefined) ? jigLibrary.defaults[i] : options[i];
 		}else{
 			newOptions = jigLibrary.defaults;
 		}
 	}
+	//console.log(newOptions)
+	//console.log(sync)
 
 	created = jigLibrary[preset]( element, newOptions, objectCSS, isLastrepeat);
 	this.stick(created,newOptions,sync);
@@ -199,8 +202,6 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 			
 			offset = (sync!==undefined && sync>0)? sync+newOptions.speed*i : newOptions.speed*i ;
 
-			//console.log(sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i+'     '+offset)
-
 			isLastrepeat = (i === repeat-1) ? true : false ;
 			created = jigLibrary[preset]( element, newOptions, objectCSS, isLastrepeat );
 
@@ -208,6 +209,10 @@ TimelineMax.prototype.jig = function(element,preset,options,sync,repeat){
 
 		}
 	}
+
+	//console.log(element, preset, sync+' + '+newOptions.speed+' * '+i+'    '+newOptions.speed+' * '+i);
+	//console.log('-----------------------------');
+
 
 	// return -------------------------
 	return this;
@@ -347,6 +352,8 @@ jigLibrary.hop = function(e,o,css,last){
 jigLibrary.wiggle = function(e,o,css,last){
 	
 	var tl = new TimelineMax();
+
+	console.log(o.strength)
 	
 	tl.to(e,o.speed/2,{
 		rotation: o.strength*10,
